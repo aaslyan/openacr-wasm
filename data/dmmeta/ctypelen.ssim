@@ -1183,7 +1183,7 @@ dmmeta.ctypelen  ctype:samp_make.FTargsrc  len:224  alignment:8  padbytes:5  pla
 dmmeta.ctypelen  ctype:samp_mdb.Comment  len:400  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:samp_mdb.FDb  len:312  alignment:8  padbytes:31  plaindata:N
 dmmeta.ctypelen  ctype:samp_mdb.Project  len:360  alignment:8  padbytes:12  plaindata:N
-dmmeta.ctypelen  ctype:samp_mdb.Quote  len:144  alignment:8  padbytes:2  plaindata:N
+dmmeta.ctypelen  ctype:samp_mdb.Quote  len:120  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:samp_mdb.Task  len:488  alignment:8  padbytes:16  plaindata:N
 dmmeta.ctypelen  ctype:samp_mdb.User  len:240  alignment:8  padbytes:8  plaindata:N
 dmmeta.ctypelen  ctype:samp_meng.CancelOrderMsg  len:10  alignment:1  padbytes:0  plaindata:Y
