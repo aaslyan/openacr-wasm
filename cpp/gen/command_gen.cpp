@@ -7565,6 +7565,244 @@ void command::acr_proc_Uninit(command::acr_proc& parent) {
     acr_Kill(parent); // kill child, ensure forward progress
 }
 
+// --- command.acr_tui..ReadFieldMaybe
+bool command::acr_tui_ReadFieldMaybe(command::acr_tui& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case command_FieldId_in: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.acr_tui..ReadTupleMaybe
+// Read fields of command::acr_tui from attributes of ascii tuple TUPLE
+bool command::acr_tui_ReadTupleMaybe(command::acr_tui &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = acr_tui_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.acr_tui..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::acr_tui_ToCmdline(command::acr_tui& row) {
+    tempstr ret;
+    ret << "bin/acr_tui ";
+    acr_tui_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.acr_tui..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.acr_tui.Argv  printfmt:Tuple
+void command::acr_tui_PrintArgv(command::acr_tui& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.acr_tui..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 command::acr_tui_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case command_FieldId_in: { //
+            *out_anon = false;
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    (void)out_dflt;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- command.acr_tui_proc.acr_tui.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::acr_tui_Start(command::acr_tui_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(acr_tui_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(acr_tui_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= acr_tui_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.acr_tui_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.acr_tui_proc.acr_tui.StartRead
+// Start subprocess & Read output
+algo::Fildes command::acr_tui_StartRead(command::acr_tui_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    acr_tui_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.acr_tui_proc.acr_tui.Kill
+// Kill subprocess and wait
+void command::acr_tui_Kill(command::acr_tui_proc& parent) {
+    if (parent.pid > 0) {
+        kill(parent.pid,9);
+        acr_tui_Wait(parent);
+    }
+}
+
+// --- command.acr_tui_proc.acr_tui.Wait
+// Wait for subprocess to return
+void command::acr_tui_Wait(command::acr_tui_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.acr_tui_proc.acr_tui.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::acr_tui_Exec(command::acr_tui_proc& parent) {
+    acr_tui_Start(parent);
+    acr_tui_Wait(parent);
+    return parent.status;
+}
+
+// --- command.acr_tui_proc.acr_tui.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::acr_tui_ExecX(command::acr_tui_proc& parent) {
+    int rc = acr_tui_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",acr_tui_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.acr_tui_proc.acr_tui.Execv
+// Call execv()
+// Call execv with specified parameters
+int command::acr_tui_Execv(command::acr_tui_proc& parent) {
+    int ret = 0;
+    algo::StringAry args;
+    acr_tui_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[ary_N(args)] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
+}
+
+// --- command.acr_tui_proc.acr_tui.ToCmdline
+algo::tempstr command::acr_tui_ToCmdline(command::acr_tui_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::acr_tui_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.acr_tui_proc.acr_tui.ToArgv
+// Form array from the command line
+void command::acr_tui_ToArgv(command::acr_tui_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
+// --- command.acr_tui_proc..Uninit
+void command::acr_tui_proc_Uninit(command::acr_tui_proc& parent) {
+    command::acr_tui_proc &row = parent; (void)row;
+
+    // command.acr_tui_proc.acr_tui.Uninit (Exec)  //
+    acr_tui_Kill(parent); // kill child, ensure forward progress
+}
+
 // --- command.amc.trace.Print
 // Print back to string
 void command::trace_Print(command::amc& parent, algo::cstring &out) {

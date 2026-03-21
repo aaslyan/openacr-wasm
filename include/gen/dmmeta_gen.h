@@ -317,6 +317,7 @@ extern const char *  dmmeta_Ns_ns_acr_dm;         // acr_dm          fconst:dmme
 extern const char *  dmmeta_Ns_ns_acr_ed;         // acr_ed          fconst:dmmeta.Ns.ns/acr_ed
 extern const char *  dmmeta_Ns_ns_acr_in;         // acr_in          fconst:dmmeta.Ns.ns/acr_in
 extern const char *  dmmeta_Ns_ns_acr_my;         // acr_my          fconst:dmmeta.Ns.ns/acr_my
+extern const char *  dmmeta_Ns_ns_acr_tui;        // acr_tui         fconst:dmmeta.Ns.ns/acr_tui
 extern const char *  dmmeta_Ns_ns_algo;           // algo            fconst:dmmeta.Ns.ns/algo
 extern const char *  dmmeta_Ns_ns_algo_lib;       // algo_lib        fconst:dmmeta.Ns.ns/algo_lib
 extern const char *  dmmeta_Ns_ns_amc;            // amc             fconst:dmmeta.Ns.ns/amc

@@ -87,6 +87,7 @@ const char *dmmeta_Ns_ns_acr_dm      = "acr_dm";
 const char *dmmeta_Ns_ns_acr_ed      = "acr_ed";
 const char *dmmeta_Ns_ns_acr_in      = "acr_in";
 const char *dmmeta_Ns_ns_acr_my      = "acr_my";
+const char *dmmeta_Ns_ns_acr_tui     = "acr_tui";
 const char *dmmeta_Ns_ns_algo        = "algo";
 const char *dmmeta_Ns_ns_algo_lib    = "algo_lib";
 const char *dmmeta_Ns_ns_amc         = "amc";
