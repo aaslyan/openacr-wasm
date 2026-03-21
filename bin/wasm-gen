@@ -1,0 +1,342 @@
+#!/usr/bin/env python3
+"""
+wasm-gen -- Generate Emscripten embind bindings from AMC schema
+Usage: bin/wasm-gen <namespace>
+Output: cpp/<namespace>/wasm_bind.cpp
+
+Reads data/dmmeta/*.ssim to discover ctypes, fields, and data structures
+for the given namespace, then generates a complete wasm_bind.cpp with:
+  - Global DB instances
+  - OS stubs for WASM
+  - Init function with Reserve calls
+  - InsertSsim dispatcher (for each Tpool ctype)
+  - ToSsim serializer (for each Thash ctype)
+  - List accessors (for each FDb Llist)
+  - Find accessors (for each FDb Thash)
+  - Count accessors (for each FDb Llist)
+  - EMSCRIPTEN_BINDINGS registration
+"""
+
+import sys
+import os
+import re
+
+def read_ssim(path):
+    """Read ssim file, return list of dicts with key=first field value, attrs=dict"""
+    rows = []
+    if not os.path.exists(path):
+        return rows
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            parts = line.split('  ')
+            if len(parts) < 2:
+                continue
+            # First part is "table  primarykey"
+            first = parts[0].split()
+            attrs = {}
+            if len(first) >= 2:
+                # primarykey is field:value
+                pk = first[1].split(':', 1)
+                if len(pk) == 2:
+                    attrs[pk[0]] = pk[1]
+            for p in parts[1:]:
+                p = p.strip()
+                if ':' in p:
+                    k, v = p.split(':', 1)
+                    attrs[k] = v.strip('"')
+            rows.append(attrs)
+    return rows
+
+def is_string_type(arg):
+    return 'Smallstr' in arg or 'cstring' in arg or 'strptr' in arg or 'Ctype' in arg
+
+def is_int_type(arg):
+    return arg in ('i8', 'u8', 'i16', 'u16', 'i32', 'u32')
+
+def is_long_type(arg):
+    return arg in ('i64', 'u64')
+
+def is_float_type(arg):
+    return arg in ('float', 'f32', 'double', 'f64')
+
+def is_bool_type(arg):
+    return arg in ('bool',)
+
+def js_conversion(field_name, arg):
+    """Return C++ expression to convert field to JS-compatible value"""
+    if is_string_type(arg):
+        return f'to_str(row->{field_name})'
+    elif is_int_type(arg):
+        return f'(int)row->{field_name}'
+    elif is_long_type(arg):
+        return f'(double)row->{field_name}'
+    elif is_float_type(arg):
+        return f'row->{field_name}'
+    elif is_bool_type(arg):
+        return f'(bool)row->{field_name}'
+    else:
+        # Unknown type - try to_str as fallback (works for any algo:: type with Print)
+        return f'to_str(row->{field_name})'
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: bin/wasm-gen <namespace>", file=sys.stderr)
+        print("Example: bin/wasm-gen samp_mdb", file=sys.stderr)
+        sys.exit(1)
+
+    ns = sys.argv[1]
+
+    # Read schema
+    ctypes = [r for r in read_ssim('data/dmmeta/ctype.ssim') if r.get('ctype', '').startswith(ns + '.')]
+    fields = [r for r in read_ssim('data/dmmeta/field.ssim') if r.get('field', '').startswith(ns + '.')]
+
+    if not ctypes:
+        print(f"Error: no ctypes found for namespace '{ns}'", file=sys.stderr)
+        sys.exit(1)
+
+    # Build maps
+    # ctype_name -> short name (e.g. "samp_mdb.User" -> "User")
+    ctype_names = {}
+    for c in ctypes:
+        full = c['ctype']
+        short = full.split('.')[1]
+        ctype_names[full] = short
+
+    # Fields per ctype
+    ctype_fields = {}  # full_ctype -> [(field_short_name, arg, reftype)]
+    for f in fields:
+        full_field = f['field']  # e.g. "samp_mdb.User.email"
+        parts = full_field.split('.')
+        if len(parts) != 3:
+            continue
+        full_ctype = parts[0] + '.' + parts[1]
+        field_name = parts[2]
+        arg = f.get('arg', '')
+        reftype = f.get('reftype', '')
+        if full_ctype not in ctype_fields:
+            ctype_fields[full_ctype] = []
+        ctype_fields[full_ctype].append((field_name, arg, reftype))
+
+    fdb = ns + '.FDb'
+
+    # Find data structure fields on FDb
+    tpool_types = []  # (field_short, ctype_short, ctype_full)
+    thash_types = []  # (field_short, ctype_short, ctype_full)
+    llist_types = []  # (field_short, ctype_short, ctype_full)
+
+    for field_name, arg, reftype in ctype_fields.get(fdb, []):
+        if arg.startswith(ns + '.') and arg != fdb:
+            ctype_short = arg.split('.')[1]
+            if reftype == 'Tpool':
+                tpool_types.append((field_name, ctype_short, arg))
+            elif reftype == 'Thash':
+                thash_types.append((field_name, ctype_short, arg))
+            elif reftype == 'Llist':
+                llist_types.append((field_name, ctype_short, arg))
+
+    # For each ctype, find its Val fields (for JS object conversion)
+    # and its primary key (first Val field)
+    ctype_val_fields = {}  # ctype_full -> [(name, arg)]
+    ctype_pkey = {}  # ctype_full -> field_name
+    for ct_full, ct_short in ctype_names.items():
+        if ct_full == fdb:
+            continue
+        vals = []
+        for field_name, arg, reftype in ctype_fields.get(ct_full, []):
+            if reftype == 'Val':
+                vals.append((field_name, arg))
+            elif reftype == 'Pkey':
+                vals.append((field_name, arg))
+        if vals:
+            ctype_pkey[ct_full] = vals[0][0]
+        ctype_val_fields[ct_full] = vals
+
+    # Find which thash corresponds to which ctype (for Find functions)
+    # thash field name pattern: ind_<name>
+    thash_map = {}  # ctype_full -> thash_field_name
+    for field_name, ctype_short, ctype_full in thash_types:
+        thash_map[ctype_full] = field_name
+
+    # Generate output
+    out_dir = f'cpp/{ns}'
+    os.makedirs(out_dir, exist_ok=True)
+    out_path = f'{out_dir}/wasm_bind.cpp'
+
+    lines = []
+    def emit(s=''):
+        lines.append(s)
+
+    emit(f'// wasm_bind.cpp -- Emscripten embind bindings for {ns}')
+    emit(f'// AUTO-GENERATED by bin/wasm-gen {ns}')
+    emit(f'// Do not edit manually')
+    emit(f'#include "include/algo.h"')
+    emit(f'#include "include/{ns}.h"')
+    emit(f'#include <emscripten/bind.h>')
+    emit(f'#include <iostream>')
+    emit(f'')
+    emit(f'using namespace emscripten;')
+    emit(f'')
+    emit(f'// Global database instances')
+    emit(f'algo_lib::FDb algo_lib::_db;')
+    emit(f'{ns}::FDb {ns}::_db;')
+    emit(f'')
+    emit(f'// Stubs for OS functions not available in WASM')
+    emit(f'void algo::FatalErrorExit(const char *msg) {{')
+    emit(f'    std::cerr << "FATAL: " << msg << std::endl;')
+    emit(f'    abort();')
+    emit(f'}}')
+    emit(f'')
+    emit(f'void algo_lib::fildes_Cleanup(algo_lib::FLockfile&) {{}}')
+    emit(f'void algo_lib::giveup_time_Step() {{}}')
+    emit(f'')
+    emit(f'const tempstr algo::FileToString(const algo::strptr& fname, algo::FileFlags flags) {{')
+    emit(f'    (void)fname; (void)flags;')
+    emit(f'    return tempstr();')
+    emit(f'}}')
+    emit(f'')
+    emit(f'bool algo::WriteFile(algo::Fildes fd, u8* buf, int n) {{')
+    emit(f'    (void)fd; (void)buf; (void)n;')
+    emit(f'    return false;')
+    emit(f'}}')
+    emit(f'')
+    emit(f'// Helper: convert algo::strptr to std::string for JS')
+    emit(f'static std::string to_str(algo::strptr s) {{')
+    emit(f'    return std::string(s.elems, s.n_elems);')
+    emit(f'}}')
+    emit(f'')
+
+    # Init function
+    emit(f'// --- Init ---')
+    emit(f'static void WasmInit() {{')
+    emit(f'    algo_lib::FDb_Init();')
+    emit(f'    {ns}::FDb_Init();')
+    for field_name, ctype_short, ctype_full in tpool_types:
+        emit(f'    {ns}::{field_name}_Reserve(64);')
+    emit(f'}}')
+    emit(f'')
+
+    # InsertSsim
+    emit(f'// --- Insert from ssim string ---')
+    emit(f'static bool WasmInsertSsim(const std::string& ssim_line) {{')
+    emit(f'    algo::strptr str((char*)ssim_line.c_str(), ssim_line.size());')
+    emit(f'    algo::strptr type_tag = algo::GetTypeTag(str);')
+    emit(f'')
+    for field_name, ctype_short, ctype_full in tpool_types:
+        emit(f'    if (type_tag == "{ctype_full}") {{')
+        emit(f'        {ns}::{ctype_short}* row = {ns}::{field_name}_AllocMaybe();')
+        emit(f'        if (!row) return false;')
+        emit(f'        if (!{ns}::{ctype_short}_ReadStrptrMaybe(*row, str)) {{')
+        emit(f'            {ns}::{field_name}_Delete(*row);')
+        emit(f'            return false;')
+        emit(f'        }}')
+        emit(f'        if (!{ns}::{field_name}_XrefMaybe(*row)) {{')
+        emit(f'            {ns}::{field_name}_Delete(*row);')
+        emit(f'            return false;')
+        emit(f'        }}')
+        emit(f'        return true;')
+        emit(f'    }}')
+    emit(f'    return false;')
+    emit(f'}}')
+    emit(f'')
+
+    # ToSsim
+    emit(f'// --- Serialize to ssim ---')
+    emit(f'static std::string WasmToSsim(const std::string& type, const std::string& key) {{')
+    emit(f'    algo::strptr k((char*)key.c_str(), key.size());')
+    emit(f'    algo::cstring out;')
+    first = True
+    for ctype_full, thash_field in thash_map.items():
+        ctype_short = ctype_names[ctype_full]
+        type_lower = ctype_short.lower()
+        prefix = 'if' if first else '} else if'
+        emit(f'    {prefix} (type == "{type_lower}") {{')
+        emit(f'        {ns}::{ctype_short}* row = {ns}::{thash_field}_Find(k);')
+        emit(f'        if (row) {ns}::{ctype_short}_Print(*row, out);')
+        first = False
+    if not first:
+        emit(f'    }}')
+    emit(f'    return to_str(out);')
+    emit(f'}}')
+    emit(f'')
+
+    # List accessors for each FDb Llist
+    for field_name, ctype_short, ctype_full in llist_types:
+        # Only generate for FDb-level lists (zd_* pattern)
+        if not field_name.startswith('zd_'):
+            continue
+        # Clean name for JS: zd_user -> User, zd_task_priority -> TaskPriority
+        js_name = field_name[3:]  # strip zd_
+        js_name_camel = ''.join(w.capitalize() for w in js_name.split('_'))
+
+        vals = ctype_val_fields.get(ctype_full, [])
+        emit(f'// --- {ctype_short} list via {field_name} ---')
+        emit(f'static val {js_name_camel}List() {{')
+        emit(f'    val arr = val::array();')
+        emit(f'    int i = 0;')
+        emit(f'    for ({ns}::{ctype_short}* row = {ns}::{field_name}_First(); row; row = {ns}::{field_name}_Next(*row)) {{')
+        emit(f'        val obj = val::object();')
+        for vname, varg in vals:
+            emit(f'        obj.set("{vname}", {js_conversion(vname, varg)});')
+        emit(f'        arr.set(i++, obj);')
+        emit(f'    }}')
+        emit(f'    return arr;')
+        emit(f'}}')
+        emit(f'')
+        emit(f'static int {js_name_camel}Count() {{')
+        emit(f'    return {ns}::{field_name}_N();')
+        emit(f'}}')
+        emit(f'')
+
+    # Find accessors for each FDb Thash
+    for ctype_full, thash_field in thash_map.items():
+        ctype_short = ctype_names[ctype_full]
+        vals = ctype_val_fields.get(ctype_full, [])
+        emit(f'// --- {ctype_short} find via {thash_field} ---')
+        emit(f'static val {ctype_short}Find(const std::string& key) {{')
+        emit(f'    {ns}::{ctype_short}* row = {ns}::{thash_field}_Find(algo::strptr((char*)key.c_str(), key.size()));')
+        emit(f'    if (!row) return val::null();')
+        emit(f'    val obj = val::object();')
+        for vname, varg in vals:
+            emit(f'    obj.set("{vname}", {js_conversion(vname, varg)});')
+        emit(f'    return obj;')
+        emit(f'}}')
+        emit(f'')
+
+    # EMSCRIPTEN_BINDINGS
+    emit(f'EMSCRIPTEN_BINDINGS({ns}_wasm) {{')
+    emit(f'    function("init", &WasmInit);')
+    emit(f'    function("insertSsim", &WasmInsertSsim);')
+    emit(f'    function("toSsim", &WasmToSsim);')
+
+    for field_name, ctype_short, ctype_full in llist_types:
+        if not field_name.startswith('zd_'):
+            continue
+        js_name = field_name[3:]
+        js_name_camel = ''.join(w.capitalize() for w in js_name.split('_'))
+        emit(f'    function("{js_name}List", &{js_name_camel}List);')
+        emit(f'    function("{js_name}Count", &{js_name_camel}Count);')
+
+    for ctype_full, thash_field in thash_map.items():
+        ctype_short = ctype_names[ctype_full]
+        type_lower = ctype_short.lower()
+        emit(f'    function("{type_lower}Find", &{ctype_short}Find);')
+
+    emit(f'}}')
+    emit(f'')
+
+    # Write output
+    with open(out_path, 'w') as f:
+        f.write('\n'.join(lines))
+
+    print(f'Generated {out_path}')
+    print(f'  Namespace: {ns}')
+    print(f'  Ctypes: {len(ctype_names) - 1}')  # -1 for FDb
+    print(f'  Tpool (insert): {len(tpool_types)}')
+    print(f'  Thash (find): {len(thash_types)}')
+    print(f'  Llist (list): {len([f for f,_,_ in llist_types if f.startswith("zd_")])}')
+
+if __name__ == '__main__':
+    main()
