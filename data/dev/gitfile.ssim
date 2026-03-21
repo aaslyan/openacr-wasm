@@ -452,6 +452,7 @@ dev.gitfile  gitfile:cpp/gen/ssimfilt_gen.cpp
 dev.gitfile  gitfile:cpp/gen/strconv_gen.cpp
 dev.gitfile  gitfile:cpp/gen/sv2ssim_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ui_gen.cpp
+dev.gitfile  gitfile:cpp/gen/uimsg_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ws_gen.cpp
 dev.gitfile  gitfile:cpp/gen/wsdb_gen.cpp
 dev.gitfile  gitfile:cpp/jkv/jkv.cpp
@@ -970,6 +971,8 @@ dev.gitfile  gitfile:include/gen/sv2ssim_gen.h
 dev.gitfile  gitfile:include/gen/sv2ssim_gen.inl.h
 dev.gitfile  gitfile:include/gen/ui_gen.h
 dev.gitfile  gitfile:include/gen/ui_gen.inl.h
+dev.gitfile  gitfile:include/gen/uimsg_gen.h
+dev.gitfile  gitfile:include/gen/uimsg_gen.inl.h
 dev.gitfile  gitfile:include/gen/ws_gen.h
 dev.gitfile  gitfile:include/gen/ws_gen.inl.h
 dev.gitfile  gitfile:include/gen/wsdb_gen.h
@@ -1432,6 +1435,7 @@ dev.gitfile  gitfile:txt/protocol/ietf/README.md
 dev.gitfile  gitfile:txt/protocol/js/README.md
 dev.gitfile  gitfile:txt/protocol/kafka/README.md
 dev.gitfile  gitfile:txt/protocol/report/README.md
+dev.gitfile  gitfile:txt/protocol/uimsg/README.md
 dev.gitfile  gitfile:txt/protocol/ws/README.md
 dev.gitfile  gitfile:txt/recipe/README.md
 dev.gitfile  gitfile:txt/script/README.md

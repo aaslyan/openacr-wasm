@@ -1108,11 +1108,11 @@ inline  acr_tui::FNs::~FNs() {
 // --- acr_tui.FStyle..Init
 // Set all fields to initial values.
 inline void acr_tui::FStyle_Init(acr_tui::FStyle& style) {
-    style.fg = algo::strptr(default);
-    style.bg = algo::strptr(default);
+    style.fg = algo::strptr("default");
+    style.bg = algo::strptr("default");
     style.bold = bool(false);
     style.underline = bool(false);
-    style.border = algo::strptr(none);
+    style.border = algo::strptr("none");
     style.ind_style_next = (acr_tui::FStyle*)-1; // (acr_tui.FDb.ind_style) not-in-hash
     style.ind_style_hashval = 0; // stored hash value
 }

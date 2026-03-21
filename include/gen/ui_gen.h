@@ -153,14 +153,15 @@ enum ui_FieldIdEnum {                  // ui.FieldId.value
     ,ui_FieldId_selection        = 44
     ,ui_FieldId_p_style          = 45
     ,ui_FieldId_text             = 46
-    ,ui_FieldId_widget_type      = 47
-    ,ui_FieldId_window           = 48
-    ,ui_FieldId_rows             = 49
-    ,ui_FieldId_cols             = 50
-    ,ui_FieldId_value            = 51
+    ,ui_FieldId_focusable        = 47
+    ,ui_FieldId_widget_type      = 48
+    ,ui_FieldId_window           = 49
+    ,ui_FieldId_rows             = 50
+    ,ui_FieldId_cols             = 51
+    ,ui_FieldId_value            = 52
 };
 
-enum { ui_FieldIdEnum_N = 52 };
+enum { ui_FieldIdEnum_N = 53 };
 
 extern const char *  ui_LayoutType_layout_type_absolute;     // absolute      fconst:ui.LayoutType.layout_type/absolute
 extern const char *  ui_LayoutType_layout_type_vertical;     // vertical      fconst:ui.LayoutType.layout_type/vertical
@@ -577,7 +578,7 @@ void                 InputCfg_Print(ui::InputCfg& row, algo::cstring& str) __att
 // --- ui.KeyMap
 struct KeyMap { // ui.KeyMap
     algo::Smallstr50   key_map;    //
-    algo::Smallstr50   p_widget;   // Widget key (empty for global)
+    algo::Smallstr50   p_widget;   // Widget scope (empty for global)
     algo::Smallstr20   key;        // Key name (e.g. j, k, Tab, Enter, q)
     algo::Smallstr50   action;     // Action to perform
     // func:ui.KeyMap..Ctor
@@ -796,7 +797,7 @@ void                 TreeCfg_Print(ui::TreeCfg& row, algo::cstring& str) __attri
 struct Widget { // ui.Widget
     algo::Smallstr50    widget;      //
     algo::Smallstr50    p_window;    // Parent window
-    algo::Smallstr50    p_parent;    // Parent widget key (empty for top-level)
+    algo::Smallstr50    p_parent;    // Parent widget (empty for top-level)
     algo::Smallstr50    type;        // Widget type
     algo::Smallstr50    layout;      //   "absolute"  Layout mode for children
     i32                 row;         //   0  Row position
@@ -807,9 +808,10 @@ struct Widget { // ui.Widget
     bool                visible;     //   true  Visible
     bool                enabled;     //   true  Enabled for interaction
     algo::Smallstr50    selection;   //   "none"  Selection mode
-    algo::Smallstr50    p_style;     // Style key (empty to inherit from parent)
+    algo::Smallstr50    p_style;     // Style (empty to inherit from parent)
     algo::Smallstr100   title;       // Widget title
     algo::Smallstr200   text;        // Static text content (for label, statusbar)
+    bool                focusable;   //   false  Widget can receive focus
     // func:ui.Widget..Ctor
     inline               Widget() __attribute__((nothrow));
 };

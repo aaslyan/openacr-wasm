@@ -64,3 +64,4 @@ dev.target  target:ssim2mysql
 dev.target  target:ssimfilt
 dev.target  target:strconv
 dev.target  target:sv2ssim
+dev.target  target:uimsg

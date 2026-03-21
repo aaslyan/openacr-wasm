@@ -147,7 +147,7 @@ dmmeta.ctypelen  ctype:acr_tui.FNs  len:288  alignment:8  padbytes:2  plaindata:
 dmmeta.ctypelen  ctype:acr_tui.FStyle  len:224  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FTableCfg  len:120  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FTreeCfg  len:224  alignment:8  padbytes:1  plaindata:N
-dmmeta.ctypelen  ctype:acr_tui.FWidget  len:704  alignment:8  padbytes:2  plaindata:N
+dmmeta.ctypelen  ctype:acr_tui.FWidget  len:704  alignment:8  padbytes:1  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FWindow  len:176  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:algo.Attr  len:32  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:algo.Bool  len:1  alignment:1  padbytes:0  plaindata:Y
@@ -1287,7 +1287,7 @@ dmmeta.ctypelen  ctype:ui.SelectionMode  len:52  alignment:1  padbytes:0  plaind
 dmmeta.ctypelen  ctype:ui.Style  len:210  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.TableCfg  len:106  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.TreeCfg  len:212  alignment:4  padbytes:1  plaindata:Y
-dmmeta.ctypelen  ctype:ui.Widget  len:692  alignment:4  padbytes:2  plaindata:Y
+dmmeta.ctypelen  ctype:ui.Widget  len:692  alignment:4  padbytes:1  plaindata:Y
 dmmeta.ctypelen  ctype:ui.WidgetType  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.Window  len:164  alignment:4  padbytes:2  plaindata:Y
 dmmeta.ctypelen  ctype:ws.CloseMsg  len:61  alignment:1  padbytes:0  plaindata:N

@@ -1429,7 +1429,7 @@ struct FKeyMap { // acr_tui.FKeyMap
     acr_tui::FKeyMap*   ind_key_map_next;      // hash next
     u32                 ind_key_map_hashval;   // hash value
     algo::Smallstr50    key_map;               //
-    algo::Smallstr50    p_widget;              // Widget key (empty for global)
+    algo::Smallstr50    p_widget;              // Widget scope (empty for global)
     algo::Smallstr20    key;                   // Key name (e.g. j, k, Tab, Enter, q)
     algo::Smallstr50    action;                // Action to perform
     // func:acr_tui.FKeyMap..AssignOp
@@ -1507,11 +1507,11 @@ struct FStyle { // acr_tui.FStyle
     acr_tui::FStyle*   ind_style_next;      // hash next
     u32                ind_style_hashval;   // hash value
     algo::Smallstr50   style;               //
-    algo::Smallstr50   fg;                  //   default  Foreground color
-    algo::Smallstr50   bg;                  //   default  Background color
+    algo::Smallstr50   fg;                  //   "default"  Foreground color
+    algo::Smallstr50   bg;                  //   "default"  Background color
     bool               bold;                //   false  Bold text
     bool               underline;           //   false  Underline text
-    algo::Smallstr50   border;              //   none  Border drawing style
+    algo::Smallstr50   border;              //   "none"  Border drawing style
     // func:acr_tui.FStyle..AssignOp
     inline acr_tui::FStyle& operator =(const acr_tui::FStyle &rhs) = delete;
     // func:acr_tui.FStyle..CopyCtor
@@ -1628,9 +1628,9 @@ struct FWidget { // acr_tui.FWidget
     u32                 ind_widget_hashval;   // hash value
     algo::Smallstr50    widget;               //
     algo::Smallstr50    p_window;             // Parent window
-    algo::Smallstr50    p_parent;             // Parent widget key (empty for top-level)
+    algo::Smallstr50    p_parent;             // Parent widget (empty for top-level)
     algo::Smallstr50    type;                 // Widget type
-    algo::Smallstr50    layout;               //   absolute  Layout mode for children
+    algo::Smallstr50    layout;               //   "absolute"  Layout mode for children
     i32                 row;                  //   0  Row position
     i32                 col;                  //   0  Column position
     i32                 w;                    //   0  Width
@@ -1638,10 +1638,11 @@ struct FWidget { // acr_tui.FWidget
     i32                 zorder;               //   0  Z-order for overlapping
     bool                visible;              //   true  Visible
     bool                enabled;              //   true  Enabled for interaction
-    algo::Smallstr50    selection;            //   none  Selection mode
-    algo::Smallstr50    p_style;              // Style key (empty to inherit from parent)
+    algo::Smallstr50    selection;            //   "none"  Selection mode
+    algo::Smallstr50    p_style;              // Style (empty to inherit from parent)
     algo::Smallstr100   title;                // Widget title
     algo::Smallstr200   text;                 // Static text content (for label, statusbar)
+    bool                focusable;            //   false  Widget can receive focus
     // func:acr_tui.FWidget..AssignOp
     acr_tui::FWidget&    operator =(const acr_tui::FWidget &rhs) = delete;
     // func:acr_tui.FWidget..CopyCtor

@@ -365,7 +365,7 @@ static void acr_tui::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_tui.Input'  signature:'38adaebfcfb72fad96aac56318f5516dcc5ac8d0'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_tui.Input'  signature:'7742ffbf02c8cd7dc0dba182c29a0fc436662721'");
 }
 
 // --- acr_tui.FDb._db.InsertStrptrMaybe
@@ -467,10 +467,10 @@ bool acr_tui::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = acr_tui::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.window"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.style"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.widget"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.tree_cfg"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.table_cfg"),recursive);
-        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.style"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.key_map"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.input_cfg"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.column"),recursive);
@@ -3858,6 +3858,7 @@ void acr_tui::widget_CopyOut(acr_tui::FWidget &row, ui::Widget &out) {
     out.p_style = row.p_style;
     out.title = row.title;
     out.text = row.text;
+    out.focusable = row.focusable;
 }
 
 // --- acr_tui.FWidget.base.CopyIn
@@ -3879,12 +3880,13 @@ void acr_tui::widget_CopyIn(acr_tui::FWidget &row, ui::Widget &in) {
     row.p_style = in.p_style;
     row.title = in.title;
     row.text = in.text;
+    row.focusable = in.focusable;
 }
 
 // --- acr_tui.FWidget..Init
 // Set all fields to initial values.
 void acr_tui::FWidget_Init(acr_tui::FWidget& widget) {
-    widget.layout = algo::strptr(absolute);
+    widget.layout = algo::strptr("absolute");
     widget.row = i32(0);
     widget.col = i32(0);
     widget.w = i32(0);
@@ -3892,7 +3894,8 @@ void acr_tui::FWidget_Init(acr_tui::FWidget& widget) {
     widget.zorder = i32(0);
     widget.visible = bool(true);
     widget.enabled = bool(true);
-    widget.selection = algo::strptr(none);
+    widget.selection = algo::strptr("none");
+    widget.focusable = bool(false);
     widget.ind_widget_next = (acr_tui::FWidget*)-1; // (acr_tui.FDb.ind_widget) not-in-hash
     widget.ind_widget_hashval = 0; // stored hash value
 }

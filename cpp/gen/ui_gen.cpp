@@ -710,6 +710,7 @@ const char* ui::value_ToCstr(const ui::FieldId& parent) {
         case ui_FieldId_selection          : ret = "selection";  break;
         case ui_FieldId_p_style            : ret = "p_style";  break;
         case ui_FieldId_text               : ret = "text";  break;
+        case ui_FieldId_focusable          : ret = "focusable";  break;
         case ui_FieldId_widget_type        : ret = "widget_type";  break;
         case ui_FieldId_window             : ret = "window";  break;
         case ui_FieldId_rows               : ret = "rows";  break;
@@ -894,6 +895,10 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
         }
         case 9: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('f','o','c','u','s','a','b','l'): {
+                    if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,ui_FieldId_focusable); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('i','n','p','u','t','_','c','f'): {
                     if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,ui_FieldId_input_cfg); ret = true; break; }
                     break;
@@ -1604,6 +1609,9 @@ bool ui::Widget_ReadFieldMaybe(ui::Widget& parent, algo::strptr field, algo::str
         case ui_FieldId_text: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.text, strval);
         } break;
+        case ui_FieldId_focusable: {
+            retval = bool_ReadStrptrMaybe(parent.focusable, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -1639,6 +1647,7 @@ void ui::Widget_Init(ui::Widget& parent) {
     parent.visible = bool(true);
     parent.enabled = bool(true);
     parent.selection = algo::strptr("none");
+    parent.focusable = bool(false);
 }
 
 // --- ui.Widget..Print
@@ -1695,6 +1704,9 @@ void ui::Widget_Print(ui::Widget& row, algo::cstring& str) {
 
     algo::Smallstr200_Print(row.text, temp);
     PrintAttrSpaceReset(str,"text", temp);
+
+    bool_Print(row.focusable, temp);
+    PrintAttrSpaceReset(str,"focusable", temp);
 }
 
 // --- ui.WidgetType..ReadFieldMaybe
