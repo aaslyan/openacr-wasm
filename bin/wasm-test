@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# Build and run WASM tests for AMC-generated data structures
+# Usage: bin/wasm-test
+#
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+EMSDK_DIR="${EMSDK_DIR:-$HOME/emsdk}"
+OUT_DIR="$SCRIPT_DIR/wasm/build"
+
+if [ ! -f "$EMSDK_DIR/emsdk_env.sh" ]; then
+    echo "Error: emsdk not found at $EMSDK_DIR"
+    exit 1
+fi
+
+source "$EMSDK_DIR/emsdk_env.sh" 2>/dev/null
+mkdir -p "$OUT_DIR"
+
+echo "Building samp_mdb WASM tests..."
+
+# Same source list as bin/wasm-build, but with wasm_test.cpp instead of wasm_bind.cpp
+em++ \
+    -O2 \
+    -s MODULARIZE=1 \
+    -s EXPORT_NAME="SampMdbTest" \
+    -s ALLOW_MEMORY_GROWTH=1 \
+    -s ENVIRONMENT='node' \
+    -s ERROR_ON_UNDEFINED_SYMBOLS=0 \
+    --bind \
+    -I"$SCRIPT_DIR" \
+    -I"$SCRIPT_DIR/include" \
+    -DWASM_CRC32_SHIM_DEFINED \
+    -include "$SCRIPT_DIR/include/wasm_crc32_shim.h" \
+    "$SCRIPT_DIR/wasm/wasm_test.cpp" \
+    "$SCRIPT_DIR/cpp/gen/samp_mdb_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/dmmeta_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/_gen.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/lib.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/cpu_hz.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/string.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/fmt.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/errtext.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/crc32.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/prlog.cpp" \
+    "$SCRIPT_DIR/cpp/gen/algo_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/algo_lib_gen.cpp" \
+    -o "$OUT_DIR/samp_mdb_test.js"
+
+echo "Running tests..."
+echo ""
+
+node -e "
+const T = require('$OUT_DIR/samp_mdb_test.js');
+T().then(M => {
+    M.init();
+    const result = M.runTests();
+    console.log(result);
+    if (result.includes('failed') && !result.includes('0 failed')) process.exit(1);
+    process.exit(0);
+}).catch(e => {
+    console.error(e);
+    process.exit(1);
+});
+"
