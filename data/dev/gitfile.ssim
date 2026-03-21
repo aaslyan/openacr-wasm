@@ -448,6 +448,7 @@ dev.gitfile  gitfile:cpp/gen/ssim2mysql_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ssimfilt_gen.cpp
 dev.gitfile  gitfile:cpp/gen/strconv_gen.cpp
 dev.gitfile  gitfile:cpp/gen/sv2ssim_gen.cpp
+dev.gitfile  gitfile:cpp/gen/ui_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ws_gen.cpp
 dev.gitfile  gitfile:cpp/gen/wsdb_gen.cpp
 dev.gitfile  gitfile:cpp/jkv/jkv.cpp
@@ -961,6 +962,8 @@ dev.gitfile  gitfile:include/gen/strconv_gen.h
 dev.gitfile  gitfile:include/gen/strconv_gen.inl.h
 dev.gitfile  gitfile:include/gen/sv2ssim_gen.h
 dev.gitfile  gitfile:include/gen/sv2ssim_gen.inl.h
+dev.gitfile  gitfile:include/gen/ui_gen.h
+dev.gitfile  gitfile:include/gen/ui_gen.inl.h
 dev.gitfile  gitfile:include/gen/ws_gen.h
 dev.gitfile  gitfile:include/gen/ws_gen.inl.h
 dev.gitfile  gitfile:include/gen/wsdb_gen.h
@@ -1744,6 +1747,7 @@ dev.gitfile  gitfile:txt/ssimdb/sampdb/targdep.md
 dev.gitfile  gitfile:txt/ssimdb/sampdb/target.md
 dev.gitfile  gitfile:txt/ssimdb/sampdb/targrec.md
 dev.gitfile  gitfile:txt/ssimdb/sampdb/targsrc.md
+dev.gitfile  gitfile:txt/ssimdb/ui/README.md
 dev.gitfile  gitfile:txt/ssimdb/wsdb/README.md
 dev.gitfile  gitfile:txt/ssimdb/wsdb/status.md
 dev.gitfile  gitfile:txt/tut/README.md

@@ -51,6 +51,7 @@ dev.target  target:mdbg
 dev.target  target:mysql2ssim
 dev.target  target:orgfile
 dev.target  target:samp_make
+dev.target  target:samp_mdb
 dev.target  target:samp_meng
 dev.target  target:samp_regx
 dev.target  target:sandbox
@@ -62,4 +63,3 @@ dev.target  target:ssim2mysql
 dev.target  target:ssimfilt
 dev.target  target:strconv
 dev.target  target:sv2ssim
-dev.target  target:samp_mdb
