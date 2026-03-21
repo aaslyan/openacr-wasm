@@ -1630,7 +1630,7 @@ bool ui::Widget_ReadStrptrMaybe(ui::Widget &parent, algo::strptr in_str) {
 // --- ui.Widget..Init
 // Set all fields to initial values.
 void ui::Widget_Init(ui::Widget& parent) {
-    parent.layout = algo::strptr(absolute);
+    parent.layout = algo::strptr("absolute");
     parent.row = i32(0);
     parent.col = i32(0);
     parent.w = i32(0);
@@ -1638,7 +1638,7 @@ void ui::Widget_Init(ui::Widget& parent) {
     parent.zorder = i32(0);
     parent.visible = bool(true);
     parent.enabled = bool(true);
-    parent.selection = algo::strptr(none);
+    parent.selection = algo::strptr("none");
 }
 
 // --- ui.Widget..Print

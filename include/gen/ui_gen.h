@@ -720,11 +720,11 @@ inline void          SelectionModeCase_Init(ui::SelectionModeCase& parent);
 // --- ui.Style
 struct Style { // ui.Style
     algo::Smallstr50   style;       //
-    algo::Smallstr50   fg;          //   default  Foreground color
-    algo::Smallstr50   bg;          //   default  Background color
+    algo::Smallstr50   fg;          //   "default"  Foreground color
+    algo::Smallstr50   bg;          //   "default"  Background color
     bool               bold;        //   false  Bold text
     bool               underline;   //   false  Underline text
-    algo::Smallstr50   border;      //   none  Border drawing style
+    algo::Smallstr50   border;      //   "none"  Border drawing style
     // func:ui.Style..Ctor
     inline               Style() __attribute__((nothrow));
 };
@@ -798,7 +798,7 @@ struct Widget { // ui.Widget
     algo::Smallstr50    p_window;    // Parent window
     algo::Smallstr50    p_parent;    // Parent widget key (empty for top-level)
     algo::Smallstr50    type;        // Widget type
-    algo::Smallstr50    layout;      //   absolute  Layout mode for children
+    algo::Smallstr50    layout;      //   "absolute"  Layout mode for children
     i32                 row;         //   0  Row position
     i32                 col;         //   0  Column position
     i32                 w;           //   0  Width
@@ -806,7 +806,7 @@ struct Widget { // ui.Widget
     i32                 zorder;      //   0  Z-order for overlapping
     bool                visible;     //   true  Visible
     bool                enabled;     //   true  Enabled for interaction
-    algo::Smallstr50    selection;   //   none  Selection mode
+    algo::Smallstr50    selection;   //   "none"  Selection mode
     algo::Smallstr50    p_style;     // Style key (empty to inherit from parent)
     algo::Smallstr100   title;       // Widget title
     algo::Smallstr200   text;        // Static text content (for label, statusbar)

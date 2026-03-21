@@ -315,11 +315,11 @@ inline  ui::SelectionModeCase::SelectionModeCase(ui_SelectionModeCaseEnum arg) {
 // --- ui.Style..Init
 // Set all fields to initial values.
 inline void ui::Style_Init(ui::Style& parent) {
-    parent.fg = algo::strptr(default);
-    parent.bg = algo::strptr(default);
+    parent.fg = algo::strptr("default");
+    parent.bg = algo::strptr("default");
     parent.bold = bool(false);
     parent.underline = bool(false);
-    parent.border = algo::strptr(none);
+    parent.border = algo::strptr("none");
 }
 
 // --- ui.Style..Ctor

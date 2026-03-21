@@ -1,1 +1,1 @@
-ui.tree_cfg  tree_cfg:projects  p_widget:projects  indent:2  show_lines:Y  child_field:Project.zd_task
+ui.tree_cfg  tree_cfg:ns_tree  p_widget:ns_tree  indent:2  show_lines:Y  child_field:Ns.zd_ctype
