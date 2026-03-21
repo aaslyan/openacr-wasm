@@ -190,12 +190,10 @@ function drawChart() {
 
     for (let i = 0; i < quotes.length; i++) {
         let q = quotes[i];
-        let p = { symbol: q.symbol, price: parseFloat(q.price), ts: parseFloat(q.ts) };
-        if (isNaN(p.price) || isNaN(p.ts)) continue;
-        if (!series[p.symbol]) series[p.symbol] = [];
-        series[p.symbol].push(p);
-        if (p.price < globalMin) globalMin = p.price;
-        if (p.price > globalMax) globalMax = p.price;
+        if (!series[q.symbol]) series[q.symbol] = [];
+        series[q.symbol].push(q);
+        if (q.price < globalMin) globalMin = q.price;
+        if (q.price > globalMax) globalMax = q.price;
     }
 
     let pad = (globalMax - globalMin) * 0.1 || 1;

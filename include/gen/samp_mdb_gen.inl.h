@@ -848,6 +848,8 @@ inline  samp_mdb::Project::~Project() {
 // --- samp_mdb.Quote..Init
 // Set all fields to initial values.
 inline void samp_mdb::Quote_Init(samp_mdb::Quote& quote) {
+    quote.price = double(0.0);
+    quote.ts = i64(0);
     quote.quote_next = (samp_mdb::Quote*)-1; // (samp_mdb.FDb.quote) not-in-tpool's freelist
     quote.zd_quote_next = (samp_mdb::Quote*)-1; // (samp_mdb.FDb.zd_quote) not-in-list
     quote.zd_quote_prev = NULL; // (samp_mdb.FDb.zd_quote)

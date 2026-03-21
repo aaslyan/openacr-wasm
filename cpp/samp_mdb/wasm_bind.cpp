@@ -207,8 +207,8 @@ static val QuoteList() {
         val obj = val::object();
         obj.set("quote", to_str(q->quote));
         obj.set("symbol", to_str(q->symbol));
-        obj.set("price", to_str(q->price));
-        obj.set("ts", to_str(q->ts));
+        obj.set("price", q->price);
+        obj.set("ts", (double)q->ts);
         arr.set(i++, obj);
     }
     return arr;
@@ -221,15 +221,10 @@ static int QuoteCount() {
 // Prune quotes older than cutoff_ms (unix timestamp in ms)
 static int QuotePrune(double cutoff_ms) {
     int removed = 0;
+    i64 cutoff = (i64)cutoff_ms;
     samp_mdb::Quote* q = samp_mdb::zd_quote_First();
     while (q) {
-        // Parse ts string to compare
-        double ts = 0;
-        algo::strptr s = q->ts;
-        for (int j = 0; j < s.n_elems; j++) {
-            ts = ts * 10 + (s.elems[j] - '0');
-        }
-        if (ts >= cutoff_ms) break;
+        if (q->ts >= cutoff) break;
         samp_mdb::Quote* next = samp_mdb::zd_quote_Next(*q);
         samp_mdb::quote_Delete(*q);
         q = next;

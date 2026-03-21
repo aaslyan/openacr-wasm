@@ -1050,8 +1050,8 @@ struct Quote { // samp_mdb.Quote: Price quote with timestamp
     samp_mdb::Quote*   zd_quote_prev;   // previous element
     algo::Smallstr50   quote;           // Primary key - quote ID (symbol:timestamp)
     algo::Smallstr20   symbol;          // Ticker symbol
-    algo::Smallstr20   price;           // Price as string
-    algo::Smallstr20   ts;              // Unix timestamp ms as string
+    double             price;           //   0.0  Price
+    i64                ts;              //   0  Unix timestamp ms
     // func:samp_mdb.Quote..AssignOp
     inline samp_mdb::Quote& operator =(const samp_mdb::Quote &rhs) = delete;
     // func:samp_mdb.Quote..CopyCtor

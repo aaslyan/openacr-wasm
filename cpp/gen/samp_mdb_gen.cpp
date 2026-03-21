@@ -2515,10 +2515,10 @@ bool samp_mdb::Quote_ReadFieldMaybe(samp_mdb::Quote& parent, algo::strptr field,
             retval = algo::Smallstr20_ReadStrptrMaybe(parent.symbol, strval);
         } break;
         case samp_mdb_FieldId_price: {
-            retval = algo::Smallstr20_ReadStrptrMaybe(parent.price, strval);
+            retval = double_ReadStrptrMaybe(parent.price, strval);
         } break;
         case samp_mdb_FieldId_ts: {
-            retval = algo::Smallstr20_ReadStrptrMaybe(parent.ts, strval);
+            retval = i64_ReadStrptrMaybe(parent.ts, strval);
         } break;
         default: {
             retval = false;
@@ -2562,10 +2562,10 @@ void samp_mdb::Quote_Print(samp_mdb::Quote& row, algo::cstring& str) {
     algo::Smallstr20_Print(row.symbol, temp);
     PrintAttrSpaceReset(str,"symbol", temp);
 
-    algo::Smallstr20_Print(row.price, temp);
+    double_Print(row.price, temp);
     PrintAttrSpaceReset(str,"price", temp);
 
-    algo::Smallstr20_Print(row.ts, temp);
+    i64_Print(row.ts, temp);
     PrintAttrSpaceReset(str,"ts", temp);
 }
 
