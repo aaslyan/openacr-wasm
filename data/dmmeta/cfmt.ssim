@@ -784,3 +784,8 @@ dmmeta.cfmt  cfmt:ws.ServerStopMsg.String  printfmt:Tuple  read:Y  print:Y  sep:
 dmmeta.cfmt  cfmt:ws.Side.String  printfmt:Raw  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:ws.StatusCode.String  printfmt:Raw  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:wsdb.Status.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+dmmeta.cfmt  cfmt:samp_mdb.User.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+dmmeta.cfmt  cfmt:samp_mdb.Project.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+dmmeta.cfmt  cfmt:samp_mdb.Task.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+dmmeta.cfmt  cfmt:samp_mdb.Comment.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+dmmeta.cfmt  cfmt:samp_mdb.Quote.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""

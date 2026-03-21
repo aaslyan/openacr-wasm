@@ -81,3 +81,4 @@ dmmeta.ns  ns:strconv  nstype:exe  license:GPL  comment:"A simple string utility
 dmmeta.ns  ns:sv2ssim  nstype:exe  license:GPL  comment:"sv2ssim - Separated Value file processor"
 dmmeta.ns  ns:ws  nstype:protocol  license:GPL  comment:"WebSocket binary protocol"
 dmmeta.ns  ns:wsdb  nstype:ssimdb  license:GPL  comment:"WebSocket db"
+dmmeta.ns  ns:samp_mdb  nstype:lib  license:GPL  comment:"Sample multi-table database for SWIG demo"

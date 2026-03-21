@@ -391,6 +391,7 @@ extern const char *  dmmeta_Ns_ns_strconv;        // strconv         fconst:dmme
 extern const char *  dmmeta_Ns_ns_sv2ssim;        // sv2ssim         fconst:dmmeta.Ns.ns/sv2ssim
 extern const char *  dmmeta_Ns_ns_ws;             // ws              fconst:dmmeta.Ns.ns/ws
 extern const char *  dmmeta_Ns_ns_wsdb;           // wsdb            fconst:dmmeta.Ns.ns/wsdb
+extern const char *  dmmeta_Ns_ns_samp_mdb;       // samp_mdb        fconst:dmmeta.Ns.ns/samp_mdb
 extern const char *  dmmeta_Nstype_nstype_exe;        // exe         fconst:dmmeta.Nstype.nstype/exe
 extern const char *  dmmeta_Nstype_nstype_lib;        // lib         fconst:dmmeta.Nstype.nstype/lib
 extern const char *  dmmeta_Nstype_nstype_none;       // none        fconst:dmmeta.Nstype.nstype/none

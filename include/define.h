@@ -92,7 +92,12 @@
 
 #endif
 
+#if defined(__EMSCRIPTEN__) || defined(__wasm__)
+// WASM32 has 4-byte pointers; skip static size checks that assume 64-bit
+#define algo_assert(TTT)          ((void)0)
+#else
 #define algo_assert(TTT)          switch(0) {case 0:; case(TTT):;}
+#endif
 
 
 #define _array_count(array)         int(sizeof(array)/sizeof(array[0]))

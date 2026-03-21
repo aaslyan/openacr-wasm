@@ -233,3 +233,7 @@ dmmeta.thash  field:ssim2mysql.FDb.ind_ssimfile  hashfld:dmmeta.Ssimfile.ssimfil
 dmmeta.thash  field:ssimfilt.FDb.ind_unstablefld  hashfld:dev.Unstablefld.field  unique:Y  comment:""
 dmmeta.thash  field:sv2ssim.FDb.ind_bltin  hashfld:amcdb.Bltin.ctype  unique:Y  comment:""
 dmmeta.thash  field:sv2ssim.FDb.ind_field  hashfld:sv2ssim.FField.name  unique:Y  comment:""
+dmmeta.thash  field:samp_mdb.FDb.ind_user     hashfld:samp_mdb.User.user        unique:Y  comment:""
+dmmeta.thash  field:samp_mdb.FDb.ind_project  hashfld:samp_mdb.Project.project  unique:Y  comment:""
+dmmeta.thash  field:samp_mdb.FDb.ind_task     hashfld:samp_mdb.Task.task        unique:Y  comment:""
+dmmeta.thash  field:samp_mdb.FDb.ind_comment  hashfld:samp_mdb.Comment.comment  unique:Y  comment:""

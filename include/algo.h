@@ -1561,7 +1561,11 @@ namespace algo { // update-hdr
 
     // When compiled with AOS_SSE42, use intrinsics.
     // Otherwise, the function is defined in crc32.cpp and uses a software implementation
+#ifdef AOS_SSE42
     inline u32 CRC32Step(u32 old, const u8 *x, size_t len);
+#else
+    u32 CRC32Step(u32 old, const u8 *x, size_t len);
+#endif
     inline int P1Mod(int a, int b);
     inline u32 u32_Count1s(u32 x);
     inline u32 u8_Count1s(u8 x);
@@ -1631,6 +1635,9 @@ namespace algo { // update-hdr
     inline u64  FloorLog2(u64 i);
     inline u32 BumpToPow2(u32 i);
     inline u64 BumpToPow2(u64 i);
+#if defined(__EMSCRIPTEN__) || defined(__wasm__)
+    inline unsigned long BumpToPow2(unsigned long i);
+#endif
     inline u64   u64_CeilPow2(u64 a, u64 b);
     inline u32   u32_CeilPow2(u32 a, u32 b);
     inline u64    u64_ModPow2(u64 a, u64 b);

@@ -441,7 +441,7 @@ const tempstr algo::GetDomainname() {
 
 // Die when parent process dies
 void algo_lib::DieWithParent() {
-#if defined(__MACH__) || __FreeBSD__>0 || defined(__CYGWIN__) || defined(WIN32)
+#if defined(__MACH__) || __FreeBSD__>0 || defined(__CYGWIN__) || defined(WIN32) || defined(__EMSCRIPTEN__)
     // sadly, there is no way to make a child exit
     // when a parent dies, so structured concurrency
     // cannot be implemented

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head><title>samp_mdb WASM Test</title></head>
+<body>
+<h2>samp_mdb WASM POC</h2>
+<pre id="output">Loading WASM...</pre>
+<script src="samp_mdb.js"></script>
+<script>
+SampMdb().then(function(Module) {
+    var out = document.getElementById('output');
+    var log = '';
+
+    // Initialize the in-memory database
+    Module.init();
+    log += 'Database initialized\n\n';
+
+    // Insert records via ssim tuples (same format as server)
+    var records = [
+        'samp_mdb.user  user:alice  email:alice@example.com  role:developer',
+        'samp_mdb.user  user:bob  email:bob@example.com  role:manager',
+        'samp_mdb.project  project:webapp  description:"Web Application"  status:active',
+        'samp_mdb.task  task:webapp.task1  title:"Build login page"  priority:1  status:open  p_project:webapp  p_user:alice',
+    ];
+
+    log += 'Inserting ssim records:\n';
+    records.forEach(function(r) {
+        var ok = Module.insertSsim(r);
+        log += '  ' + (ok ? 'OK' : 'FAIL') + ': ' + r + '\n';
+    });
+
+    // Query by key
+    log += '\nQuery ind_user_Find("alice"):\n';
+    var alice = Module.userFind('alice');
+    log += '  ' + JSON.stringify(alice) + '\n';
+
+    // List all users
+    log += '\nAll users (' + Module.userCount() + '):\n';
+    var users = Module.userList();
+    for (var i = 0; i < users.length; i++) {
+        log += '  ' + JSON.stringify(users[i]) + '\n';
+    }
+
+    // List projects
+    log += '\nAll projects:\n';
+    var projects = Module.projectList();
+    for (var i = 0; i < projects.length; i++) {
+        log += '  ' + JSON.stringify(projects[i]) + '\n';
+    }
+
+    // List tasks
+    log += '\nAll tasks:\n';
+    var tasks = Module.taskList();
+    for (var i = 0; i < tasks.length; i++) {
+        log += '  ' + JSON.stringify(tasks[i]) + '\n';
+    }
+
+    log += '\nDone! AMC-generated C++ running in the browser via WASM.';
+    out.textContent = log;
+});
+</script>
+</body>
+</html>

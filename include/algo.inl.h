@@ -230,6 +230,7 @@ inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
 
 #else
 
+#ifndef WASM_CRC32_SHIM_DEFINED
 inline u32 _mm_crc32_u64(u32 prev, u64 val) {
     return CRC32Step(prev, &val, sizeof(val));
 }
@@ -245,6 +246,7 @@ inline u32 _mm_crc32_u16(u32 prev, u16 val) {
 inline u32 _mm_crc32_u8 (u32 prev, u8  val) {
     return CRC32Step(prev, &val, sizeof(val));
 }
+#endif // WASM_CRC32_SHIM_DEFINED
 
 #endif
 
@@ -565,44 +567,52 @@ inline u32 algo::u32_BitScanForward(u32 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanForward(&r,v);
+#elif defined(__EMSCRIPTEN__) || defined(__wasm__)
+    return __builtin_ctz(v);
 #else
     u32 r;
     asm ("bsfl %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#endif
 }
 
 inline u64 algo::u64_BitScanForward(u64 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanForward64(&r,v);
+#elif defined(__EMSCRIPTEN__) || defined(__wasm__)
+    return __builtin_ctzll(v);
 #else
     u64 r;
     asm ("bsfq %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#endif
 }
 
 inline u32 algo::u32_BitScanReverse(u32 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanReverse(&r,v);
+#elif defined(__EMSCRIPTEN__) || defined(__wasm__)
+    return 31 - __builtin_clz(v);
 #else
     u32 r;
     asm ("bsrl %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#endif
 }
 
 inline u64 algo::u64_BitScanReverse(u64 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanReverse64(&r,v);
+#elif defined(__EMSCRIPTEN__) || defined(__wasm__)
+    return 63 - __builtin_clzll(v);
 #else
     u64 r;
     asm ("bsrq %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#endif
 }
 
 inline u32 algo::u16_BitScanForward(u16 v) {
@@ -646,6 +656,14 @@ inline u32 algo::BumpToPow2(u32 i) {
 inline u64 algo::BumpToPow2(u64 i) {
     return u64(1) << CeilingLog2(i);
 }
+
+#if defined(__EMSCRIPTEN__) || defined(__wasm__)
+// On WASM32, size_t is unsigned long (32-bit) which is distinct from both
+// u32 (unsigned int) and u64 (unsigned long long), causing ambiguity
+inline unsigned long algo::BumpToPow2(unsigned long i) {
+    return (unsigned long)(u32(1) << CeilingLog2(u32(i)));
+}
+#endif
 
 
 inline u64   algo::u64_CeilPow2(u64 a, u64 b) {
@@ -696,6 +714,8 @@ inline double algo::get_cpu_hz() {
 inline u64 algo::get_cycles() {
 #ifdef WIN32
     return __rdtsc();
+#elif defined(__EMSCRIPTEN__)
+    return (u64)(emscripten_get_now() * 1e6);
 #else
     unsigned low, high;
     asm volatile (
@@ -750,6 +770,8 @@ inline algo::UnixTime algo::CurrUnixTime(){
 inline u64 algo::rdtscp() {
 #ifdef WIN32
     _ReadBarrier();
+    return get_cycles();
+#elif defined(__EMSCRIPTEN__)
     return get_cycles();
 #else
     unsigned low, high;

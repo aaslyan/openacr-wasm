@@ -90,6 +90,10 @@ void algo_lib::InitCpuHz() {
     if (sysctlbyname("hw.cpufrequency", &freq, &size, NULL, 0) == 0) {
         hz = freq;
     }
+#elif defined(__EMSCRIPTEN__)
+    // emscripten_get_now() returns milliseconds; we convert to nanoseconds in get_cycles()
+    // Use 1GHz as virtual clock rate (1 tick = 1 nanosecond)
+    hz = 1e9;
 #elif defined(__CYGWIN__)
     // sampling /proc/cpuinfo on a windows machine under cygwin
     // can take a unnaturally long time, such as 13 seconds.

@@ -48,6 +48,9 @@ typedef     long double    f80;
 typedef __int64            i64;
 typedef i64                ssize_t;
 typedef unsigned __int64   u64;
+#elif defined(__EMSCRIPTEN__) || defined(__wasm__)
+typedef unsigned long long u64;
+typedef   signed long long i64;
 #else
 typedef unsigned long      u64;
 typedef   signed long      i64;

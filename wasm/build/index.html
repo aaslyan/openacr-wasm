@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>samp_mdb — OpenACR WASM Sync</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: monospace; background: #1a1a2e; color: #e0e0e0; padding: 20px; }
+h1 { color: #00d4ff; margin-bottom: 4px; font-size: 1.4em; }
+.subtitle { color: #666; margin-bottom: 20px; font-size: 0.85em; }
+.container { display: flex; gap: 20px; flex-wrap: wrap; }
+.panel { background: #16213e; border: 1px solid #0f3460; border-radius: 8px; padding: 16px; flex: 1; min-width: 300px; }
+.panel h2 { color: #e94560; font-size: 1em; margin-bottom: 12px; border-bottom: 1px solid #0f3460; padding-bottom: 6px; }
+.panel-wide { flex: 2; min-width: 600px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+th { text-align: left; color: #00d4ff; padding: 4px 8px; border-bottom: 1px solid #0f3460; }
+td { padding: 4px 8px; border-bottom: 1px solid #0a1628; }
+tr:hover td { background: #1a2a4a; }
+.status { position: fixed; top: 10px; right: 10px; padding: 6px 12px; border-radius: 4px; font-size: 0.8em; }
+.status.connected { background: #1b4332; color: #95d5b2; }
+.status.disconnected { background: #3d0000; color: #ff6b6b; }
+.form-row { display: flex; gap: 8px; margin-bottom: 8px; }
+.form-row input { flex: 1; background: #0a1628; border: 1px solid #0f3460; color: #e0e0e0; padding: 6px 8px; border-radius: 4px; font-family: monospace; font-size: 0.85em; }
+.form-row input:focus { outline: none; border-color: #00d4ff; }
+button { background: #e94560; color: white; border: none; padding: 6px 16px; border-radius: 4px; cursor: pointer; font-family: monospace; font-weight: bold; }
+button:hover { background: #ff6b8a; }
+button:disabled { background: #333; cursor: not-allowed; }
+.log { background: #0a1628; border: 1px solid #0f3460; border-radius: 4px; padding: 8px; margin-top: 12px; max-height: 150px; overflow-y: auto; font-size: 0.75em; color: #888; }
+.log .entry { margin-bottom: 2px; }
+.log .ok { color: #95d5b2; }
+.log .err { color: #ff6b6b; }
+.log .ssim { color: #00d4ff; }
+.ssim-raw { background: #0a1628; border: 1px solid #0f3460; border-radius: 4px; padding: 8px; margin-top: 8px; font-size: 0.75em; max-height: 120px; overflow-y: auto; word-break: break-all; }
+.ssim-raw div { color: #00d4ff; margin-bottom: 1px; }
+canvas { width: 100%; height: 250px; display: block; }
+.chart-stats { display: flex; gap: 20px; margin-top: 8px; font-size: 0.8em; }
+.chart-stats .sym { padding: 4px 8px; border-radius: 4px; background: #0a1628; }
+.chart-legend { display: flex; gap: 16px; margin-bottom: 8px; font-size: 0.8em; }
+.chart-legend span { display: flex; align-items: center; gap: 4px; }
+.chart-legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+</style>
+</head>
+<body>
+
+<h1>samp_mdb — OpenACR WASM Sync</h1>
+<div class="subtitle">Same AMC-generated C++ running on server (Node.js) and browser (WASM), syncing via ssim over WebSocket</div>
+<div id="status" class="status disconnected">disconnected</div>
+
+<!-- Price Chart -->
+<div class="container" style="margin-bottom:16px">
+  <div class="panel panel-wide">
+    <h2>Live Price Chart (quotes in AMC database, last 10 min)</h2>
+    <div class="chart-legend">
+      <span><span class="dot" style="background:#00d4ff"></span> AAPL</span>
+      <span><span class="dot" style="background:#e94560"></span> GOOG</span>
+      <span><span class="dot" style="background:#95d5b2"></span> TSLA</span>
+    </div>
+    <canvas id="chart" height="250"></canvas>
+    <div class="chart-stats" id="chart-stats"></div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="panel">
+    <h2>Users</h2>
+    <table><thead><tr><th>user</th><th>email</th><th>role</th></tr></thead><tbody id="users"></tbody></table>
+  </div>
+  <div class="panel">
+    <h2>Projects</h2>
+    <table><thead><tr><th>project</th><th>description</th><th>status</th></tr></thead><tbody id="projects"></tbody></table>
+  </div>
+  <div class="panel">
+    <h2>Tasks</h2>
+    <table><thead><tr><th>task</th><th>title</th><th>pri</th><th>status</th><th>project</th><th>user</th></tr></thead><tbody id="tasks"></tbody></table>
+  </div>
+</div>
+
+<div class="panel" style="margin-top:16px">
+  <h2>Add Records</h2>
+  <div style="display:flex; flex-direction:column; gap:8px">
+    <div class="form-row">
+      <span style="color:#00d4ff; min-width:60px">User</span>
+      <input id="u_user" placeholder="user">
+      <input id="u_email" placeholder="email">
+      <input id="u_role" placeholder="role">
+      <button onclick="addUser()">Add</button>
+    </div>
+    <div class="form-row">
+      <span style="color:#00d4ff; min-width:60px">Project</span>
+      <input id="p_project" placeholder="project">
+      <input id="p_desc" placeholder="description">
+      <input id="p_status" placeholder="status" value="active">
+      <button onclick="addProject()">Add</button>
+    </div>
+    <div class="form-row">
+      <span style="color:#00d4ff; min-width:60px">Task</span>
+      <input id="t_task" placeholder="task">
+      <input id="t_title" placeholder="title">
+      <input id="t_pri" placeholder="priority" value="1" style="max-width:60px">
+      <input id="t_project" placeholder="p_project">
+      <input id="t_user" placeholder="p_user">
+      <button onclick="addTask()">Add</button>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="margin-top:16px">
+  <div class="panel">
+    <h2>ssim wire (records in WASM cache)</h2>
+    <div id="ssim-display" class="ssim-raw"></div>
+  </div>
+  <div class="panel">
+    <h2>Event log</h2>
+    <div id="log" class="log"></div>
+  </div>
+</div>
+
+<script src="samp_mdb.js"></script>
+<script>
+let M = null; // WASM module
+let ws = null;
+
+const SYM_COLORS = { AAPL: '#00d4ff', GOOG: '#e94560', TSLA: '#95d5b2' };
+const QUOTE_WINDOW_MS = 10 * 60 * 1000;
+
+function log(msg, cls) {
+    let el = document.getElementById('log');
+    let d = document.createElement('div');
+    d.className = 'entry ' + (cls||'');
+    d.textContent = msg;
+    el.prepend(d);
+    while (el.children.length > 50) el.removeChild(el.lastChild);
+}
+
+function refreshUI() {
+    if (!M) return;
+    let users = M.userList();
+    document.getElementById('users').innerHTML = users.map(u =>
+        `<tr><td>${u.user}</td><td>${u.email}</td><td>${u.role}</td></tr>`
+    ).join('');
+
+    let projects = M.projectList();
+    document.getElementById('projects').innerHTML = projects.map(p =>
+        `<tr><td>${p.project}</td><td>${p.description}</td><td>${p.status}</td></tr>`
+    ).join('');
+
+    let tasks = M.taskList();
+    document.getElementById('tasks').innerHTML = tasks.map(t =>
+        `<tr><td>${t.task}</td><td>${t.title}</td><td>${t.priority}</td><td>${t.status}</td><td>${t.project||''}</td><td>${t.user||''}</td></tr>`
+    ).join('');
+
+    let ssimEl = document.getElementById('ssim-display');
+    let lines = [];
+    users.forEach(u => lines.push(M.toSsim('user', u.user)));
+    projects.forEach(p => lines.push(M.toSsim('project', p.project)));
+    tasks.forEach(t => lines.push(M.toSsim('task', t.task)));
+    ssimEl.innerHTML = lines.map(l => '<div>' + l + '</div>').join('');
+}
+
+// ============= Chart drawing =============
+function drawChart() {
+    if (!M) return;
+    // Prune old quotes from AMC database
+    M.quotePrune(Date.now() - QUOTE_WINDOW_MS);
+
+    let quotes = M.quoteList();
+    let canvas = document.getElementById('chart');
+    let ctx = canvas.getContext('2d');
+    let dpr = window.devicePixelRatio || 1;
+    let rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    let W = rect.width, H = rect.height;
+
+    ctx.fillStyle = '#0a1628';
+    ctx.fillRect(0, 0, W, H);
+
+    if (quotes.length === 0) {
+        ctx.fillStyle = '#666';
+        ctx.font = '14px monospace';
+        ctx.fillText('Waiting for quotes...', W/2 - 80, H/2);
+        return;
+    }
+
+    // Group by symbol
+    let series = {};
+    let globalMin = Infinity, globalMax = -Infinity;
+    let now = Date.now();
+    let tMin = now - QUOTE_WINDOW_MS;
+
+    for (let i = 0; i < quotes.length; i++) {
+        let q = quotes[i];
+        let p = { symbol: q.symbol, price: parseFloat(q.price), ts: parseFloat(q.ts) };
+        if (isNaN(p.price) || isNaN(p.ts)) continue;
+        if (!series[p.symbol]) series[p.symbol] = [];
+        series[p.symbol].push(p);
+        if (p.price < globalMin) globalMin = p.price;
+        if (p.price > globalMax) globalMax = p.price;
+    }
+
+    let pad = (globalMax - globalMin) * 0.1 || 1;
+    globalMin -= pad;
+    globalMax += pad;
+
+    // Grid lines
+    ctx.strokeStyle = '#1a2a4a';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 4; i++) {
+        let y = 20 + (H - 40) * i / 4;
+        ctx.beginPath(); ctx.moveTo(50, y); ctx.lineTo(W - 10, y); ctx.stroke();
+        let price = globalMax - (globalMax - globalMin) * i / 4;
+        ctx.fillStyle = '#666';
+        ctx.font = '10px monospace';
+        ctx.fillText(price.toFixed(2), 2, y + 3);
+    }
+
+    // Time labels
+    for (let i = 0; i <= 5; i++) {
+        let t = tMin + (now - tMin) * i / 5;
+        let x = 50 + (W - 60) * i / 5;
+        let d = new Date(t);
+        let label = d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+        ctx.fillStyle = '#666';
+        ctx.fillText(label, x - 12, H - 4);
+    }
+
+    // Draw each series
+    for (let sym in series) {
+        let pts = series[sym];
+        ctx.strokeStyle = SYM_COLORS[sym] || '#fff';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        for (let i = 0; i < pts.length; i++) {
+            let x = 50 + (pts[i].ts - tMin) / (now - tMin) * (W - 60);
+            let y = 20 + (1 - (pts[i].price - globalMin) / (globalMax - globalMin)) * (H - 40);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+
+    // Stats
+    let statsEl = document.getElementById('chart-stats');
+    let html = '';
+    for (let sym in series) {
+        let pts = series[sym];
+        let last = pts[pts.length - 1];
+        let first = pts[0];
+        let change = last.price - first.price;
+        let pct = first.price > 0 ? (change / first.price * 100).toFixed(2) : '0.00';
+        let arrow = change >= 0 ? '+' : '';
+        let color = change >= 0 ? '#95d5b2' : '#ff6b6b';
+        html += `<span class="sym" style="border-left:3px solid ${SYM_COLORS[sym]}">${sym} <b>${last.price.toFixed(2)}</b> <span style="color:${color}">${arrow}${pct}%</span></span>`;
+    }
+    html += `<span class="sym" style="color:#666">${M.quoteCount()} quotes in WASM db</span>`;
+    statsEl.innerHTML = html;
+}
+
+function sendInsert(ssim) {
+    if (!ws || ws.readyState !== 1) { log('not connected', 'err'); return; }
+    let ok = M.insertSsim(ssim);
+    if (!ok) { log('local insert failed: ' + ssim, 'err'); return; }
+    ws.send(JSON.stringify({ type: 'insert', ssim: ssim }));
+    log('sent: ' + ssim, 'ssim');
+    refreshUI();
+}
+
+function addUser() {
+    let u = document.getElementById('u_user').value;
+    let e = document.getElementById('u_email').value;
+    let r = document.getElementById('u_role').value;
+    if (!u) return;
+    sendInsert(`samp_mdb.User  user:${u}  email:${e}  role:${r}`);
+    document.getElementById('u_user').value = '';
+    document.getElementById('u_email').value = '';
+}
+
+function addProject() {
+    let p = document.getElementById('p_project').value;
+    let d = document.getElementById('p_desc').value;
+    let s = document.getElementById('p_status').value;
+    if (!p) return;
+    sendInsert(`samp_mdb.Project  project:${p}  description:"${d}"  status:${s}`);
+    document.getElementById('p_project').value = '';
+    document.getElementById('p_desc').value = '';
+}
+
+function addTask() {
+    let t = document.getElementById('t_task').value;
+    let title = document.getElementById('t_title').value;
+    let pri = document.getElementById('t_pri').value;
+    let proj = document.getElementById('t_project').value;
+    let user = document.getElementById('t_user').value;
+    if (!t) return;
+    sendInsert(`samp_mdb.Task  task:${t}  title:"${title}"  priority:${pri}  status:open  p_project:${proj}  p_user:${user}`);
+    document.getElementById('t_task').value = '';
+    document.getElementById('t_title').value = '';
+}
+
+function connect() {
+    let proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    let wsPath = location.pathname.startsWith('/acrdemo') ? '/acrdemo/' : '/';
+    ws = new WebSocket(proto + '//' + location.host + wsPath);
+
+    ws.onopen = () => {
+        document.getElementById('status').className = 'status connected';
+        document.getElementById('status').textContent = 'connected';
+        log('WebSocket connected', 'ok');
+    };
+
+    ws.onmessage = (evt) => {
+        let msg = JSON.parse(evt.data);
+        if (msg.type === 'sync') {
+            log('hydrating ' + msg.records.length + ' records from server', 'ok');
+            msg.records.forEach(ssim => { M.insertSsim(ssim); });
+            refreshUI();
+        } else if (msg.type === 'insert') {
+            let ok = M.insertSsim(msg.ssim);
+            log('remote insert: ' + msg.ssim, ok ? 'ok' : 'err');
+            refreshUI();
+        } else if (msg.type === 'ack') {
+            log('server ack: ' + (msg.ok ? 'ok' : 'fail'), msg.ok ? 'ok' : 'err');
+        } else if (msg.type === 'quote') {
+            // Single quote from server - insert into local WASM db
+            let q = msg.quote;
+            let ssim = `samp_mdb.Quote  quote:${q.symbol}:${q.ts}  symbol:${q.symbol}  price:${q.price}  ts:${q.ts}`;
+            M.insertSsim(ssim);
+        } else if (msg.type === 'quote_history') {
+            // Bulk quote history on connect
+            log('hydrating ' + msg.quotes.length + ' quotes', 'ok');
+            msg.quotes.forEach(q => {
+                let ssim = `samp_mdb.Quote  quote:${q.symbol}:${q.ts}  symbol:${q.symbol}  price:${q.price}  ts:${q.ts}`;
+                M.insertSsim(ssim);
+            });
+        }
+    };
+
+    ws.onclose = () => {
+        document.getElementById('status').className = 'status disconnected';
+        document.getElementById('status').textContent = 'disconnected';
+        log('WebSocket disconnected, reconnecting...', 'err');
+        setTimeout(connect, 2000);
+    };
+}
+
+// Boot
+SampMdb().then(module => {
+    M = module;
+    M.init();
+    log('WASM samp_mdb initialized in browser', 'ok');
+    connect();
+    // Redraw chart every second
+    setInterval(drawChart, 1000);
+});
+</script>
+</body>
+</html>

@@ -1180,6 +1180,12 @@ dmmeta.ctypelen  ctype:samp_make.FTargdep  len:248  alignment:8  padbytes:13  pl
 dmmeta.ctypelen  ctype:samp_make.FTarget  len:312  alignment:8  padbytes:21  plaindata:N
 dmmeta.ctypelen  ctype:samp_make.FTargrec  len:232  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:samp_make.FTargsrc  len:224  alignment:8  padbytes:5  plaindata:N
+dmmeta.ctypelen  ctype:samp_mdb.Comment  len:400  alignment:8  padbytes:6  plaindata:N
+dmmeta.ctypelen  ctype:samp_mdb.FDb  len:312  alignment:8  padbytes:31  plaindata:N
+dmmeta.ctypelen  ctype:samp_mdb.Project  len:360  alignment:8  padbytes:12  plaindata:N
+dmmeta.ctypelen  ctype:samp_mdb.Quote  len:144  alignment:8  padbytes:2  plaindata:N
+dmmeta.ctypelen  ctype:samp_mdb.Task  len:488  alignment:8  padbytes:16  plaindata:N
+dmmeta.ctypelen  ctype:samp_mdb.User  len:240  alignment:8  padbytes:8  plaindata:N
 dmmeta.ctypelen  ctype:samp_meng.CancelOrderMsg  len:10  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:samp_meng.CancelReqMsg  len:10  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:samp_meng.FDb  len:1040  alignment:8  padbytes:20  plaindata:N

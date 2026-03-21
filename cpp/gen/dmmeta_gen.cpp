@@ -164,8 +164,9 @@ const char *dmmeta_Ns_ns_ssimfilt     = "ssimfilt";
 const char *dmmeta_Ns_ns_strconv   = "strconv";
 const char *dmmeta_Ns_ns_sv2ssim   = "sv2ssim";
 
-const char *dmmeta_Ns_ns_ws     = "ws";
-const char *dmmeta_Ns_ns_wsdb   = "wsdb";
+const char *dmmeta_Ns_ns_ws         = "ws";
+const char *dmmeta_Ns_ns_wsdb       = "wsdb";
+const char *dmmeta_Ns_ns_samp_mdb   = "samp_mdb";
 
 // compile-time string constants for dmmeta.Nstype.nstype
 const char *dmmeta_Nstype_nstype_exe   = "exe";

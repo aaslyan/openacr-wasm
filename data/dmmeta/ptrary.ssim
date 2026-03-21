@@ -133,3 +133,4 @@ dmmeta.ptrary  field:src_hdr.FTarget.c_targsrc  unique:Y  heaplike:N
 dmmeta.ptrary  field:ssim2mysql.FCtype.c_field  unique:Y  heaplike:N
 dmmeta.ptrary  field:ssim2mysql.FNs.c_ssimfile  unique:Y  heaplike:N
 dmmeta.ptrary  field:ssim2mysql.FSsimfile.c_column  unique:Y  heaplike:N
+dmmeta.ptrary  field:samp_mdb.Project.c_high_priority_task  unique:N  heaplike:N
