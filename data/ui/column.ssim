@@ -1,0 +1,5 @@
+ui.column  column:users.user    p_widget:users   field:user    title:User    w:15  sortable:Y
+ui.column  column:users.email   p_widget:users   field:email   title:Email   w:23  sortable:N
+ui.column  column:quotes.symbol p_widget:quotes  field:symbol  title:Symbol  w:8   sortable:Y
+ui.column  column:quotes.price  p_widget:quotes  field:price   title:Price   w:12  sortable:N
+ui.column  column:quotes.ts     p_widget:quotes  field:ts      title:Time    w:20  sortable:N

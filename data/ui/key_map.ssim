@@ -1,0 +1,7 @@
+ui.key_map  key_map:global.q       p_widget:""      key:q      action:quit
+ui.key_map  key_map:global.tab     p_widget:""      key:Tab    action:focus_next
+ui.key_map  key_map:users.j        p_widget:users   key:j      action:navigate_next
+ui.key_map  key_map:users.k        p_widget:users   key:k      action:navigate_prev
+ui.key_map  key_map:projects.j     p_widget:projects key:j     action:navigate_next
+ui.key_map  key_map:projects.k     p_widget:projects key:k     action:navigate_prev
+ui.key_map  key_map:projects.enter p_widget:projects key:Enter action:toggle_expand

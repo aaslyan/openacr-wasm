@@ -1,0 +1,5 @@
+ui.style  style:header    fg:cyan     bg:default  bold:Y  underline:N  border:none
+ui.style  style:selected  fg:black    bg:cyan     bold:N  underline:N  border:none
+ui.style  style:panel     fg:default  bg:default  bold:N  underline:N  border:single
+ui.style  style:status    fg:white    bg:blue     bold:N  underline:N  border:none
+ui.style  style:title     fg:yellow   bg:default  bold:Y  underline:N  border:none

@@ -1,0 +1,3 @@
+ui.binding  binding:users     p_widget:users     source_ctype:samp_mdb.User     source_field:zd_user
+ui.binding  binding:projects  p_widget:projects  source_ctype:samp_mdb.Project  source_field:zd_project
+ui.binding  binding:quotes    p_widget:quotes    source_ctype:samp_mdb.Quote    source_field:zd_quote

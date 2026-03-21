@@ -1,0 +1,2 @@
+ui.table_cfg  table_cfg:users   p_widget:users   selectable:Y  header:Y
+ui.table_cfg  table_cfg:quotes  p_widget:quotes  selectable:N  header:Y
