@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>acr_web — OpenACR Schema Browser</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Courier New', monospace; background: #1a1a2e; color: #e0e0e0; }
+#app { max-width: 900px; margin: 0 auto; padding: 10px; }
+#title { color: #00d4ff; font-weight: bold; font-size: 1.1em; padding: 8px 0; }
+#breadcrumb { color: #e9a560; padding: 4px 0 8px 0; font-size: 0.9em; }
+#separator { color: #0f3460; border-bottom: 1px solid #0f3460; margin-bottom: 4px; }
+#items { min-height: 400px; }
+.item { padding: 3px 8px; cursor: pointer; white-space: nowrap; overflow: hidden; font-size: 0.9em; }
+.item:hover { background: #1a2a4a; }
+.item.selected { background: #0f6674; color: #fff; }
+.item .arrow { color: #00d4ff; margin-right: 6px; }
+.item .label { color: #e0e0e0; }
+.item .detail { color: #666; margin-left: 12px; }
+.item.selected .detail { color: #aaa; }
+#status { background: #16213e; border-top: 1px solid #0f3460; padding: 6px 8px; font-size: 0.8em; color: #888; margin-top: 8px; display: flex; gap: 12px; flex-wrap: wrap; }
+.path-tab { cursor: pointer; padding: 2px 8px; border-radius: 3px; }
+.path-tab.active { background: #0f3460; color: #00d4ff; }
+.path-tab:hover { background: #1a2a4a; }
+#view-panel { background: #0a1628; border: 1px solid #0f3460; padding: 8px; margin-top: 8px;
+  font-size: 0.85em; color: #00d4ff; white-space: pre; overflow-x: auto; max-height: 400px; overflow-y: auto; display: none; }
+#loading { color: #666; padding: 20px; text-align: center; }
+kbd { background: #0f3460; padding: 1px 5px; border-radius: 3px; font-size: 0.85em; }
+</style>
+</head>
+<body>
+<div id="app">
+<div id="title">OpenACR Schema Browser</div>
+<div id="breadcrumb"></div>
+<div id="separator"></div>
+<div id="items"><div id="loading">Loading WASM + data...</div></div>
+<div id="view-panel"></div>
+<div id="status">
+    <span id="paths"></span>
+    <span id="info"></span>
+    <span style="color:#555">
+        <kbd>↑↓</kbd> navigate
+        <kbd>Enter</kbd>/<kbd>→</kbd> open
+        <kbd>Esc</kbd>/<kbd>←</kbd> back
+        <kbd>1-3</kbd> paths
+        <kbd>v</kbd> view
+    </span>
+</div>
+</div>
+
+<script src="acr_web.js"></script>
+<script>
+let M = null;
+let viewMode = 0; // 0=list, 1=graph, 2=raw
+
+async function boot() {
+    M = await AcrWeb();
+    M.init();
+
+    // Load all ssim data from server
+    const resp = await fetch('/api/ssim-data');
+    const text = await resp.text();
+    const lines = text.split('\n');
+    let dataLines = 0;
+    let uiLines = 0;
+    for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        // UI records go through loadUiRecord for finput loading
+        if (trimmed.startsWith('ui.')) {
+            M.loadUiRecord(trimmed);
+            uiLines++;
+        }
+        M.loadSsimLine(trimmed);
+        dataLines++;
+    }
+
+    M.initPaths();
+    document.getElementById('loading').textContent =
+        `Loaded ${M.getRecordCount()} records. ${M.getPathCount()} paths.`;
+
+    render();
+    document.addEventListener('keydown', handleKey);
+}
+
+function render() {
+    if (!M) return;
+
+    // Breadcrumb
+    document.getElementById('breadcrumb').textContent = M.getBreadcrumb();
+
+    // Path tabs
+    let pathsHtml = '';
+    for (let i = 0; i < M.getPathCount(); i++) {
+        const name = M.getPathName(i);
+        const active = name === M.getCurrentPath() ? ' active' : '';
+        pathsHtml += `<span class="path-tab${active}" onclick="switchPath(${i})">${i+1}:${name}</span>`;
+    }
+    document.getElementById('paths').innerHTML = pathsHtml;
+
+    // Info
+    const vnames = ['list', 'GRAPH', 'RAW'];
+    document.getElementById('info').textContent =
+        `${M.getItemCount()} items | v:${vnames[viewMode]}`;
+
+    // View panel
+    const viewPanel = document.getElementById('view-panel');
+    if (viewMode !== 0) {
+        viewPanel.style.display = 'block';
+    } else {
+        viewPanel.style.display = 'none';
+    }
+
+    // Items
+    if (viewMode === 0) {
+        const itemsDiv = document.getElementById('items');
+        let html = '';
+        const count = M.getItemCount();
+        const sel = M.getSelectedRow();
+        for (let i = 0; i < count && i < 200; i++) {
+            const item = M.getItem(i);
+            if (!item) continue;
+            const cls = i === sel ? 'item selected' : 'item';
+            const arrow = item.hasChildren ? '▸' : '&nbsp;';
+            const detail = item.detail ? `<span class="detail">${esc(item.detail)}</span>` : '';
+            html += `<div class="${cls}" onclick="clickItem(${i})" ondblclick="dblClickItem(${i})">` +
+                    `<span class="arrow">${arrow}</span>` +
+                    `<span class="label">${esc(item.label)}</span>${detail}</div>`;
+        }
+        itemsDiv.innerHTML = html || '<div style="color:#666;padding:8px">No items</div>';
+
+        // Scroll selected into view
+        const selEl = itemsDiv.querySelector('.selected');
+        if (selEl) selEl.scrollIntoView({ block: 'nearest' });
+    }
+}
+
+function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function handleKey(e) {
+    if (!M) return;
+
+    // View mode: v toggles, Esc goes back to list
+    if (e.key === 'v') {
+        viewMode = (viewMode + 1) % 3;
+        if (viewMode !== 0) loadExternalView();
+        render();
+        e.preventDefault();
+        return;
+    }
+
+    if (viewMode !== 0) {
+        if (e.key === 'Escape' || e.key === 'ArrowLeft' || e.key === 'h') {
+            viewMode = 0;
+            render();
+        }
+        e.preventDefault();
+        return;
+    }
+
+    // Path switching
+    if (e.key >= '1' && e.key <= '9') {
+        const idx = parseInt(e.key) - 1;
+        if (idx < M.getPathCount()) {
+            M.switchPath(idx);
+            render();
+        }
+        e.preventDefault();
+        return;
+    }
+
+    switch (e.key) {
+        case 'j': case 'ArrowDown':
+            M.navigate(1); render(); e.preventDefault(); break;
+        case 'k': case 'ArrowUp':
+            M.navigate(-1); render(); e.preventDefault(); break;
+        case 'Enter': case 'l': case 'ArrowRight':
+            M.activate(); render(); e.preventDefault(); break;
+        case 'Escape': case 'h': case 'ArrowLeft':
+            M.cancel(); render(); e.preventDefault(); break;
+        case 'q':
+            // No quit in browser, just ignore
+            break;
+    }
+}
+
+function clickItem(idx) {
+    // Navigate to item
+    const current = M.getSelectedRow();
+    const diff = idx - current;
+    if (diff !== 0) M.navigate(diff);
+    render();
+}
+
+function dblClickItem(idx) {
+    clickItem(idx);
+    M.activate();
+    render();
+}
+
+function switchPath(idx) {
+    M.switchPath(idx);
+    viewMode = 0;
+    render();
+}
+
+async function loadExternalView() {
+    const viewPanel = document.getElementById('view-panel');
+    const sel = M.getSelectedRow();
+    if (sel < 0 || sel >= M.getItemCount()) {
+        viewPanel.textContent = 'No selection';
+        return;
+    }
+    const item = M.getItem(sel);
+    if (!item) return;
+
+    viewPanel.textContent = 'Loading...';
+
+    try {
+        if (viewMode === 1) {
+            // Graph view: amc_vis
+            const resp = await fetch(`/api/amc-vis?ctype=${encodeURIComponent(item.key)}`);
+            viewPanel.textContent = await resp.text();
+        } else if (viewMode === 2) {
+            // Raw view: acr -t
+            const resp = await fetch(`/api/acr-tree?pattern=${encodeURIComponent(item.key)}`);
+            viewPanel.textContent = await resp.text();
+        }
+    } catch (e) {
+        viewPanel.textContent = 'Error: ' + e.message;
+    }
+}
+
+boot();
+</script>
+</body>
+</html>

@@ -143,6 +143,24 @@ dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
       dmmeta.cfmt  cfmt:ui.DataStep.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
       dmmeta.ctypelen  ctype:ui.DataStep  len:368  alignment:4  padbytes:2  plaindata:Y
 
+    dmmeta.ctype  ctype:ui.EventType  comment:"Widget event that can trigger a message"
+      dmmeta.field  field:ui.EventType.event_type  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/activate      value:activate      comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/select        value:select        comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/deselect      value:deselect      comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/submit        value:submit        comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/cancel        value:cancel        comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/change        value:change        comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/focus         value:focus         comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/blur          value:blur          comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/expand        value:expand        comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/collapse      value:collapse      comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/click         value:click         comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/double_click  value:double_click  comment:""
+
+      dmmeta.cfmt  cfmt:ui.EventType.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.EventType  len:52  alignment:1  padbytes:0  plaindata:Y
+
     dmmeta.ctype  ctype:ui.FilterSource  comment:"Origin of a view filter predicate"
       dmmeta.field  field:ui.FilterSource.filter_source  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
         dmmeta.fconst  fconst:ui.FilterSource.filter_source/fixed    value:fixed    comment:""
@@ -276,6 +294,16 @@ dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
       dmmeta.cfmt  cfmt:ui.TreeCfg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
       dmmeta.ctypelen  ctype:ui.TreeCfg  len:316  alignment:4  padbytes:0  plaindata:Y
 
+    dmmeta.ctype  ctype:ui.Trigger  comment:"Maps widget event to emitted message or command"
+      dmmeta.field  field:ui.Trigger.trigger    arg:algo.Smallstr50   reftype:Val   dflt:""  comment:""
+      dmmeta.field  field:ui.Trigger.p_widget   arg:ui.Widget         reftype:Pkey  dflt:""  comment:"Widget that emits this event"
+      dmmeta.field  field:ui.Trigger.event      arg:ui.EventType      reftype:Pkey  dflt:""  comment:"Widget event (activate, select, submit, etc.)"
+      dmmeta.field  field:ui.Trigger.p_command  arg:ui.Command        reftype:Pkey  dflt:""  comment:"Command to invoke (empty = emit generic message)"
+      dmmeta.field  field:ui.Trigger.msg_ctype  arg:algo.Smallstr100  reftype:Val   dflt:""  comment:"Message ctype to emit (e.g. uimsg.SelectMsg). Empty = use p_command"
+      dmmeta.field  field:ui.Trigger.arg_expr   arg:algo.Smallstr200  reftype:Val   dflt:""  comment:"Argument mapping expression (e.g. row_key=)"
+      dmmeta.cfmt  cfmt:ui.Trigger.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.Trigger  len:512  alignment:1  padbytes:0  plaindata:Y
+
     dmmeta.ctype  ctype:ui.VAlign  comment:"Vertical alignment"
       dmmeta.field  field:ui.VAlign.align  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
         dmmeta.fconst  fconst:ui.VAlign.align/top     value:top     comment:""
@@ -378,6 +406,7 @@ dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
         dmmeta.fconst  fconst:ui.WidgetType.widget_type/separator    value:separator    comment:""
         dmmeta.fconst  fconst:ui.WidgetType.widget_type/progressbar  value:progressbar  comment:""
         dmmeta.fconst  fconst:ui.WidgetType.widget_type/canvas       value:canvas       comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/button       value:button       comment:""
 
       dmmeta.cfmt  cfmt:ui.WidgetType.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
       dmmeta.ctypelen  ctype:ui.WidgetType  len:52  alignment:1  padbytes:0  plaindata:Y
@@ -403,6 +432,7 @@ dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
       dmmeta.ssimfile  ssimfile:ui.context_var     ctype:ui.ContextVar
       dmmeta.ssimfile  ssimfile:ui.data_path       ctype:ui.DataPath
       dmmeta.ssimfile  ssimfile:ui.data_step       ctype:ui.DataStep
+      dmmeta.ssimfile  ssimfile:ui.event_type      ctype:ui.EventType
       dmmeta.ssimfile  ssimfile:ui.filter_source   ctype:ui.FilterSource
       dmmeta.ssimfile  ssimfile:ui.h_align         ctype:ui.HAlign
       dmmeta.ssimfile  ssimfile:ui.input_cfg       ctype:ui.InputCfg
@@ -416,7 +446,8 @@ dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
       dmmeta.ssimfile  ssimfile:ui.style_slot      ctype:ui.StyleSlot
       dmmeta.ssimfile  ssimfile:ui.table_cfg       ctype:ui.TableCfg
       dmmeta.ssimfile  ssimfile:ui.tree_cfg        ctype:ui.TreeCfg
-      dmmeta.ssimfile  ssimfile:ui.v_align         ctype:ui.VAlign
+      dmmeta.ssimfile  ssimfile:ui.trigger       ctype:ui.Trigger
+      dmmeta.ssimfile  ssimfile:ui.v_align       ctype:ui.VAlign
       dmmeta.ssimfile  ssimfile:ui.view          ctype:ui.View
       dmmeta.ssimfile  ssimfile:ui.view_field    ctype:ui.ViewField
       dmmeta.ssimfile  ssimfile:ui.view_filter   ctype:ui.ViewFilter
@@ -440,6 +471,7 @@ dmmeta.field  field:acr_tui.FStyle.base       arg:ui.Style       reftype:Base  d
 dmmeta.field  field:acr_tui.FStyleSlot.base   arg:ui.StyleSlot   reftype:Base  dflt:""  comment:""
 dmmeta.field  field:acr_tui.FTableCfg.base    arg:ui.TableCfg    reftype:Base  dflt:""  comment:""
 dmmeta.field  field:acr_tui.FTreeCfg.base     arg:ui.TreeCfg     reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FTrigger.base     arg:ui.Trigger     reftype:Base  dflt:""  comment:""
 dmmeta.field  field:acr_tui.FView.base        arg:ui.View        reftype:Base  dflt:""  comment:""
 dmmeta.field  field:acr_tui.FViewField.base   arg:ui.ViewField   reftype:Base  dflt:""  comment:""
 dmmeta.field  field:acr_tui.FViewFilter.base  arg:ui.ViewFilter  reftype:Base  dflt:""  comment:""
@@ -460,6 +492,7 @@ dmmeta.thash  field:acr_tui.FDb.ind_style        hashfld:ui.Style.style         
 dmmeta.thash  field:acr_tui.FDb.ind_style_slot   hashfld:ui.StyleSlot.style_slot    unique:Y  comment:""
 dmmeta.thash  field:acr_tui.FDb.ind_table_cfg    hashfld:ui.TableCfg.table_cfg      unique:Y  comment:""
 dmmeta.thash  field:acr_tui.FDb.ind_tree_cfg     hashfld:ui.TreeCfg.tree_cfg        unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_trigger      hashfld:ui.Trigger.trigger         unique:Y  comment:""
 dmmeta.thash  field:acr_tui.FDb.ind_view         hashfld:ui.View.view               unique:Y  comment:""
 dmmeta.thash  field:acr_tui.FDb.ind_view_field   hashfld:ui.ViewField.view_field    unique:Y  comment:""
 dmmeta.thash  field:acr_tui.FDb.ind_view_filter  hashfld:ui.ViewFilter.view_filter  unique:Y  comment:""
@@ -467,4 +500,4 @@ dmmeta.thash  field:acr_tui.FDb.ind_view_sort    hashfld:ui.ViewSort.view_sort  
 dmmeta.thash  field:acr_tui.FDb.ind_view_source  hashfld:ui.ViewSource.view_source  unique:Y  comment:""
 dmmeta.thash  field:acr_tui.FDb.ind_widget       hashfld:ui.Widget.widget           unique:Y  comment:""
 dmmeta.thash  field:acr_tui.FDb.ind_window       hashfld:ui.Window.window           unique:Y  comment:""
-report.acr  n_select:420  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+report.acr  n_select:450  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
