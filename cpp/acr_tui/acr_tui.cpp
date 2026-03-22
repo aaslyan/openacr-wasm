@@ -62,6 +62,9 @@ static int focus_idx = 0;
 static algo::cstring focus_widgets[16];
 static int n_focus = 0;
 static int selected[16] = {};
+static char last_key = 0;
+static algo::Smallstr20 last_key_name;
+static u32 last_msg_type = 0;
 static bool expanded[256] = {};
 
 static algo::strptr FocusedWidget() {
@@ -122,10 +125,12 @@ static UiMsg TranslateKey(char ch) {
     // Map raw key to key name
     algo::Smallstr20 key_name;
     if (ch == '\t') key_name = "Tab";
-    else if (ch == '\r') key_name = "Enter";
+    else if (ch == '\r' || ch == '\n') key_name = "Enter";
     else if (ch == 27) key_name = "Esc";
     else { ch_Add(key_name, ch); }
 
+    last_key = ch;
+    last_key_name = key_name;
     algo::strptr focused = FocusedWidget();
 
     // Match against keymaps
@@ -239,7 +244,10 @@ static void RenderStatusBar(acr_tui::FWidget& w) {
     acr_tui::FStyle* style = FindStyle(w.p_style);
     if (style) ApplyStyle(style);
     algo::cstring text;
-    text << w.text << "  [" << FocusedWidget() << "] msgs:" << msg_log_n;
+    text << "[" << FocusedWidget() << "] msgs:" << msg_log_n
+         << " key:" << (int)last_key << "(" << last_key_name << ")"
+         << " sel:" << selected[focus_idx]
+         << " msg:" << last_msg_type;
     PutStr(w.row, w.col, text, w.w);
     ResetColor();
 }
@@ -407,6 +415,7 @@ void acr_tui::Main() {
         if (read(STDIN_FILENO, &ch, 1) != 1) break;
 
         UiMsg msg = TranslateKey(ch);
+        last_msg_type = msg.type;
         if (msg.type != 0) {
             DispatchMsg(msg);
         }
