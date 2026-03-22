@@ -136,7 +136,7 @@ dmmeta.ctypelen  ctype:acr_in.FTuple  len:128  alignment:8  padbytes:11  plainda
 dmmeta.ctypelen  ctype:acr_my.FDb  len:688  alignment:8  padbytes:14  plaindata:N
 dmmeta.ctypelen  ctype:acr_my.FNsdb  len:171  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_my.FSsimfile  len:154  alignment:1  padbytes:0  plaindata:Y
-dmmeta.ctypelen  ctype:acr_tui.FBinding  len:432  alignment:8  padbytes:8  plaindata:N
+dmmeta.ctypelen  ctype:acr_tui.FBinding  len:480  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FColumn  len:288  alignment:8  padbytes:9  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FCtype  len:272  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FDataPath  len:224  alignment:8  padbytes:8  plaindata:N
@@ -145,7 +145,7 @@ dmmeta.ctypelen  ctype:acr_tui.FDb  len:4224  alignment:8  padbytes:67  plaindat
 dmmeta.ctypelen  ctype:acr_tui.FFconst  len:520  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FField  len:672  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FInputCfg  len:128  alignment:8  padbytes:7  plaindata:N
-dmmeta.ctypelen  ctype:acr_tui.FKeyMap  len:192  alignment:8  padbytes:2  plaindata:N
+dmmeta.ctypelen  ctype:acr_tui.FKeyMap  len:248  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FNs  len:288  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FStyle  len:224  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FTableCfg  len:120  alignment:8  padbytes:2  plaindata:N
@@ -1280,7 +1280,7 @@ dmmeta.ctypelen  ctype:sv2ssim.FField  len:200  alignment:8  padbytes:10  plaind
 dmmeta.ctypelen  ctype:sv2ssim.FSvtype  len:268  alignment:4  padbytes:2  plaindata:Y
 dmmeta.ctypelen  ctype:ui.ActionType  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.Align  len:52  alignment:1  padbytes:0  plaindata:Y
-dmmeta.ctypelen  ctype:ui.Binding  len:412  alignment:1  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:ui.Binding  len:464  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.BindingDir  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.BindingKind  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.BorderStyle  len:52  alignment:1  padbytes:0  plaindata:Y
@@ -1289,15 +1289,17 @@ dmmeta.ctypelen  ctype:ui.Column  len:268  alignment:4  padbytes:1  plaindata:Y
 dmmeta.ctypelen  ctype:ui.Command  len:358  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.DataPath  len:204  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.DataStep  len:368  alignment:4  padbytes:2  plaindata:Y
+dmmeta.ctypelen  ctype:ui.HAlign  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.InputCfg  len:112  alignment:4  padbytes:3  plaindata:Y
-dmmeta.ctypelen  ctype:ui.KeyMap  len:178  alignment:1  padbytes:0  plaindata:Y
-dmmeta.ctypelen  ctype:ui.LayoutCfg  len:184  alignment:4  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:ui.KeyMap  len:230  alignment:1  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:ui.LayoutCfg  len:236  alignment:4  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.LayoutType  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.SelectionMode  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.Style  len:210  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.StyleSlot  len:208  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.TableCfg  len:106  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.TreeCfg  len:264  alignment:4  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:ui.VAlign  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.Widget  len:692  alignment:4  padbytes:1  plaindata:Y
 dmmeta.ctypelen  ctype:ui.WidgetState  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.WidgetType  len:52  alignment:1  padbytes:0  plaindata:Y

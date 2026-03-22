@@ -145,6 +145,7 @@ struct FBinding { // acr_tui.FBinding
     algo::Smallstr100    source_field;          // Source field (e.g. zd_user, ind_user)
     algo::Smallstr50     kind;                  //   "collection"  Binding type
     algo::Smallstr50     dir;                   //   "read"  Binding direction
+    algo::Smallstr50     p_data_path;           // DataPath for traversal (empty for direct binding)
     acr_tui::FBinding*   ind_binding_next;      // hash next
     u32                  ind_binding_hashval;   // hash value
     // func:acr_tui.FBinding..AssignOp
@@ -186,9 +187,9 @@ struct FColumn { // acr_tui.FColumn
     algo::Smallstr50    title;                // Column header title
     i32                 w;                    //   10  Column width
     bool                sortable;             //   false  Column is sortable
-    algo::Smallstr50    align;                //   "left"  Cell alignment
     bool                hidden;               //   false  Column is hidden
     bool                editable;             //   false  Cell is editable
+    algo::Smallstr50    align;                //   "left"  Horizontal cell alignment
     acr_tui::FColumn*   ind_column_next;      // hash next
     u32                 ind_column_hashval;   // hash value
     // func:acr_tui.FColumn..AssignOp
@@ -1830,6 +1831,7 @@ struct FKeyMap { // acr_tui.FKeyMap
     algo::Smallstr50    p_widget;              // Widget scope (empty for global)
     algo::Smallstr20    key;                   // Key name (e.g. j, k, Tab, Enter, q)
     algo::Smallstr50    action;                // Action to perform
+    algo::Smallstr50    p_command;             // Parameterized command (empty = use action directly)
     // func:acr_tui.FKeyMap..AssignOp
     inline acr_tui::FKeyMap& operator =(const acr_tui::FKeyMap &rhs) = delete;
     // func:acr_tui.FKeyMap..CopyCtor

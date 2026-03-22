@@ -301,9 +301,9 @@ inline  ui::ColorCase::ColorCase(ui_ColorCaseEnum arg) {
 inline void ui::Column_Init(ui::Column& parent) {
     parent.w = i32(10);
     parent.sortable = bool(false);
-    parent.align = algo::strptr("left");
     parent.hidden = bool(false);
     parent.editable = bool(false);
+    parent.align = algo::strptr("left");
 }
 
 // --- ui.Column..Ctor
@@ -367,6 +367,49 @@ inline  ui::FieldId::FieldId(i32 in_value)
 // --- ui.FieldId..EnumCtor
 inline  ui::FieldId::FieldId(ui_FieldIdEnum arg) {
     this->value = i32(arg);
+}
+
+// --- ui.HAlign..Ctor
+inline  ui::HAlign::HAlign() {
+}
+
+// --- ui.HAlignCase.align.GetEnum
+// Get value of field as enum type
+inline ui_HAlignCaseEnum ui::align_GetEnum(const ui::HAlignCase& parent) {
+    return ui_HAlignCaseEnum(parent.align);
+}
+
+// --- ui.HAlignCase.align.SetEnum
+// Set value of field from enum type.
+inline void ui::align_SetEnum(ui::HAlignCase& parent, ui_HAlignCaseEnum rhs) {
+    parent.align = u8(rhs);
+}
+
+// --- ui.HAlignCase.align.Cast
+inline  ui::HAlignCase::operator ui_HAlignCaseEnum() const {
+    return ui_HAlignCaseEnum((*this).align);
+}
+
+// --- ui.HAlignCase..Init
+// Set all fields to initial values.
+inline void ui::HAlignCase_Init(ui::HAlignCase& parent) {
+    parent.align = u8(0);
+}
+
+// --- ui.HAlignCase..Ctor
+inline  ui::HAlignCase::HAlignCase() {
+    ui::HAlignCase_Init(*this);
+}
+
+// --- ui.HAlignCase..FieldwiseCtor
+inline  ui::HAlignCase::HAlignCase(u8 in_align)
+    : align(in_align)
+ {
+}
+
+// --- ui.HAlignCase..EnumCtor
+inline  ui::HAlignCase::HAlignCase(ui_HAlignCaseEnum arg) {
+    this->align = u8(arg);
 }
 
 // --- ui.InputCfg..Init
@@ -518,6 +561,49 @@ inline void ui::TreeCfg_Init(ui::TreeCfg& parent) {
 // --- ui.TreeCfg..Ctor
 inline  ui::TreeCfg::TreeCfg() {
     ui::TreeCfg_Init(*this);
+}
+
+// --- ui.VAlign..Ctor
+inline  ui::VAlign::VAlign() {
+}
+
+// --- ui.VAlignCase.align.GetEnum
+// Get value of field as enum type
+inline ui_VAlignCaseEnum ui::align_GetEnum(const ui::VAlignCase& parent) {
+    return ui_VAlignCaseEnum(parent.align);
+}
+
+// --- ui.VAlignCase.align.SetEnum
+// Set value of field from enum type.
+inline void ui::align_SetEnum(ui::VAlignCase& parent, ui_VAlignCaseEnum rhs) {
+    parent.align = u8(rhs);
+}
+
+// --- ui.VAlignCase.align.Cast
+inline  ui::VAlignCase::operator ui_VAlignCaseEnum() const {
+    return ui_VAlignCaseEnum((*this).align);
+}
+
+// --- ui.VAlignCase..Init
+// Set all fields to initial values.
+inline void ui::VAlignCase_Init(ui::VAlignCase& parent) {
+    parent.align = u8(0);
+}
+
+// --- ui.VAlignCase..Ctor
+inline  ui::VAlignCase::VAlignCase() {
+    ui::VAlignCase_Init(*this);
+}
+
+// --- ui.VAlignCase..FieldwiseCtor
+inline  ui::VAlignCase::VAlignCase(u8 in_align)
+    : align(in_align)
+ {
+}
+
+// --- ui.VAlignCase..EnumCtor
+inline  ui::VAlignCase::VAlignCase(ui_VAlignCaseEnum arg) {
+    this->align = u8(arg);
 }
 
 // --- ui.Widget..Ctor
@@ -683,6 +769,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::FieldId &r
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::HAlign &row) {// cfmt:ui.HAlign.String
+    ui::HAlign_Print(const_cast<ui::HAlign&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::InputCfg &row) {// cfmt:ui.InputCfg.String
     ui::InputCfg_Print(const_cast<ui::InputCfg&>(row), str);
     return str;
@@ -725,6 +816,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::TableCfg &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::TreeCfg &row) {// cfmt:ui.TreeCfg.String
     ui::TreeCfg_Print(const_cast<ui::TreeCfg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::VAlign &row) {// cfmt:ui.VAlign.String
+    ui::VAlign_Print(const_cast<ui::VAlign&>(row), str);
     return str;
 }
 

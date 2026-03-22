@@ -53,9 +53,9 @@ inline  acr_tui::FBinding::~FBinding() {
 inline void acr_tui::FColumn_Init(acr_tui::FColumn& column) {
     column.w = i32(10);
     column.sortable = bool(false);
-    column.align = algo::strptr("left");
     column.hidden = bool(false);
     column.editable = bool(false);
+    column.align = algo::strptr("left");
     column.ind_column_next = (acr_tui::FColumn*)-1; // (acr_tui.FDb.ind_column) not-in-hash
     column.ind_column_hashval = 0; // stored hash value
 }

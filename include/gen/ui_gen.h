@@ -97,6 +97,7 @@ extern const char *  ui_Align_align_right;     // right      fconst:ui.Align.ali
 extern const char *  ui_Align_align_top;       // top        fconst:ui.Align.align/top
 extern const char *  ui_Align_align_bottom;    // bottom     fconst:ui.Align.align/bottom
 extern const char *  ui_Align_align_stretch;   // stretch    fconst:ui.Align.align/stretch
+extern const char *  ui_Align_align_left;      // left       fconst:ui.Align.align/left
 
 // --- ui_AlignCaseEnum
 
@@ -106,26 +107,30 @@ enum ui_AlignCaseEnum {          // ui.AlignCase.align
     ,ui_AlignCase_top       = 3
     ,ui_AlignCase_bottom    = 4
     ,ui_AlignCase_stretch   = 5
+    ,ui_AlignCase_left      = 6
 };
 
-enum { ui_AlignCaseEnum_N = 5 };
+enum { ui_AlignCaseEnum_N = 6 };
 
 extern const char *  ui_BindingDir_binding_dir_write;       // write        fconst:ui.BindingDir.binding_dir/write
 extern const char *  ui_BindingDir_binding_dir_readwrite;   // readwrite    fconst:ui.BindingDir.binding_dir/readwrite
+extern const char *  ui_BindingDir_binding_dir_read;        // read         fconst:ui.BindingDir.binding_dir/read
 
 // --- ui_BindingDirCaseEnum
 
 enum ui_BindingDirCaseEnum {            // ui.BindingDirCase.binding_dir
      ui_BindingDirCase_write       = 1
     ,ui_BindingDirCase_readwrite   = 2
+    ,ui_BindingDirCase_read        = 3
 };
 
-enum { ui_BindingDirCaseEnum_N = 2 };
+enum { ui_BindingDirCaseEnum_N = 3 };
 
 extern const char *  ui_BindingKind_binding_kind_collection;   // collection    fconst:ui.BindingKind.binding_kind/collection
 extern const char *  ui_BindingKind_binding_kind_tree;         // tree          fconst:ui.BindingKind.binding_kind/tree
 extern const char *  ui_BindingKind_binding_kind_command;      // command       fconst:ui.BindingKind.binding_kind/command
 extern const char *  ui_BindingKind_binding_kind_property;     // property      fconst:ui.BindingKind.binding_kind/property
+extern const char *  ui_BindingKind_binding_kind_value;        // value         fconst:ui.BindingKind.binding_kind/value
 
 // --- ui_BindingKindCaseEnum
 
@@ -134,9 +139,10 @@ enum ui_BindingKindCaseEnum {             // ui.BindingKindCase.binding_kind
     ,ui_BindingKindCase_tree         = 2
     ,ui_BindingKindCase_command      = 3
     ,ui_BindingKindCase_property     = 4
+    ,ui_BindingKindCase_value        = 5
 };
 
-enum { ui_BindingKindCaseEnum_N = 4 };
+enum { ui_BindingKindCaseEnum_N = 5 };
 
 extern const char *  ui_BorderStyle_border_style_none;      // none       fconst:ui.BorderStyle.border_style/none
 extern const char *  ui_BorderStyle_border_style_single;    // single     fconst:ui.BorderStyle.border_style/single
@@ -194,82 +200,100 @@ enum ui_FieldIdEnum {                    // ui.FieldId.value
     ,ui_FieldId_source_field       = 5
     ,ui_FieldId_kind               = 6
     ,ui_FieldId_dir                = 7
-    ,ui_FieldId_binding_dir        = 8
-    ,ui_FieldId_binding_kind       = 9
-    ,ui_FieldId_border_style       = 10
-    ,ui_FieldId_color              = 11
-    ,ui_FieldId_column             = 12
-    ,ui_FieldId_field              = 13
-    ,ui_FieldId_title              = 14
-    ,ui_FieldId_w                  = 15
-    ,ui_FieldId_sortable           = 16
-    ,ui_FieldId_hidden             = 17
-    ,ui_FieldId_editable           = 18
-    ,ui_FieldId_command            = 19
-    ,ui_FieldId_action             = 20
-    ,ui_FieldId_arg                = 21
-    ,ui_FieldId_data_path          = 22
-    ,ui_FieldId_comment            = 23
-    ,ui_FieldId_data_step          = 24
-    ,ui_FieldId_p_path             = 25
-    ,ui_FieldId_level              = 26
-    ,ui_FieldId_label_field        = 27
-    ,ui_FieldId_detail_field       = 28
-    ,ui_FieldId_link_field         = 29
-    ,ui_FieldId_input_cfg          = 30
-    ,ui_FieldId_maxlen             = 31
-    ,ui_FieldId_key_map            = 32
-    ,ui_FieldId_key                = 33
-    ,ui_FieldId_layout_cfg         = 34
-    ,ui_FieldId_min_w              = 35
-    ,ui_FieldId_min_h              = 36
-    ,ui_FieldId_max_w              = 37
-    ,ui_FieldId_max_h              = 38
-    ,ui_FieldId_flex               = 39
-    ,ui_FieldId_padding            = 40
-    ,ui_FieldId_gap                = 41
-    ,ui_FieldId_layout_type        = 42
-    ,ui_FieldId_selection_mode     = 43
-    ,ui_FieldId_style              = 44
-    ,ui_FieldId_fg                 = 45
-    ,ui_FieldId_bg                 = 46
-    ,ui_FieldId_bold               = 47
-    ,ui_FieldId_underline          = 48
-    ,ui_FieldId_border             = 49
-    ,ui_FieldId_style_slot         = 50
-    ,ui_FieldId_state              = 51
-    ,ui_FieldId_p_style            = 52
-    ,ui_FieldId_table_cfg          = 53
-    ,ui_FieldId_selectable         = 54
-    ,ui_FieldId_header             = 55
-    ,ui_FieldId_tree_cfg           = 56
-    ,ui_FieldId_indent             = 57
-    ,ui_FieldId_show_lines         = 58
-    ,ui_FieldId_child_field        = 59
-    ,ui_FieldId_expanded_default   = 60
-    ,ui_FieldId_widget             = 61
-    ,ui_FieldId_p_window           = 62
-    ,ui_FieldId_p_parent           = 63
-    ,ui_FieldId_type               = 64
-    ,ui_FieldId_layout             = 65
-    ,ui_FieldId_row                = 66
-    ,ui_FieldId_col                = 67
-    ,ui_FieldId_h                  = 68
-    ,ui_FieldId_zorder             = 69
-    ,ui_FieldId_visible            = 70
-    ,ui_FieldId_enabled            = 71
-    ,ui_FieldId_selection          = 72
-    ,ui_FieldId_text               = 73
-    ,ui_FieldId_focusable          = 74
-    ,ui_FieldId_widget_state       = 75
-    ,ui_FieldId_widget_type        = 76
-    ,ui_FieldId_window             = 77
-    ,ui_FieldId_rows               = 78
-    ,ui_FieldId_cols               = 79
-    ,ui_FieldId_value              = 80
+    ,ui_FieldId_p_data_path        = 8
+    ,ui_FieldId_binding_dir        = 9
+    ,ui_FieldId_binding_kind       = 10
+    ,ui_FieldId_border_style       = 11
+    ,ui_FieldId_color              = 12
+    ,ui_FieldId_column             = 13
+    ,ui_FieldId_field              = 14
+    ,ui_FieldId_title              = 15
+    ,ui_FieldId_w                  = 16
+    ,ui_FieldId_sortable           = 17
+    ,ui_FieldId_hidden             = 18
+    ,ui_FieldId_editable           = 19
+    ,ui_FieldId_command            = 20
+    ,ui_FieldId_action             = 21
+    ,ui_FieldId_arg                = 22
+    ,ui_FieldId_data_path          = 23
+    ,ui_FieldId_comment            = 24
+    ,ui_FieldId_data_step          = 25
+    ,ui_FieldId_p_path             = 26
+    ,ui_FieldId_level              = 27
+    ,ui_FieldId_label_field        = 28
+    ,ui_FieldId_detail_field       = 29
+    ,ui_FieldId_link_field         = 30
+    ,ui_FieldId_input_cfg          = 31
+    ,ui_FieldId_maxlen             = 32
+    ,ui_FieldId_key_map            = 33
+    ,ui_FieldId_key                = 34
+    ,ui_FieldId_p_command          = 35
+    ,ui_FieldId_layout_cfg         = 36
+    ,ui_FieldId_min_w              = 37
+    ,ui_FieldId_min_h              = 38
+    ,ui_FieldId_max_w              = 39
+    ,ui_FieldId_max_h              = 40
+    ,ui_FieldId_flex               = 41
+    ,ui_FieldId_padding            = 42
+    ,ui_FieldId_gap                = 43
+    ,ui_FieldId_halign             = 44
+    ,ui_FieldId_valign             = 45
+    ,ui_FieldId_layout_type        = 46
+    ,ui_FieldId_selection_mode     = 47
+    ,ui_FieldId_style              = 48
+    ,ui_FieldId_fg                 = 49
+    ,ui_FieldId_bg                 = 50
+    ,ui_FieldId_bold               = 51
+    ,ui_FieldId_underline          = 52
+    ,ui_FieldId_border             = 53
+    ,ui_FieldId_style_slot         = 54
+    ,ui_FieldId_state              = 55
+    ,ui_FieldId_p_style            = 56
+    ,ui_FieldId_table_cfg          = 57
+    ,ui_FieldId_selectable         = 58
+    ,ui_FieldId_header             = 59
+    ,ui_FieldId_tree_cfg           = 60
+    ,ui_FieldId_indent             = 61
+    ,ui_FieldId_show_lines         = 62
+    ,ui_FieldId_child_field        = 63
+    ,ui_FieldId_expanded_default   = 64
+    ,ui_FieldId_widget             = 65
+    ,ui_FieldId_p_window           = 66
+    ,ui_FieldId_p_parent           = 67
+    ,ui_FieldId_type               = 68
+    ,ui_FieldId_layout             = 69
+    ,ui_FieldId_row                = 70
+    ,ui_FieldId_col                = 71
+    ,ui_FieldId_h                  = 72
+    ,ui_FieldId_zorder             = 73
+    ,ui_FieldId_visible            = 74
+    ,ui_FieldId_enabled            = 75
+    ,ui_FieldId_selection          = 76
+    ,ui_FieldId_text               = 77
+    ,ui_FieldId_focusable          = 78
+    ,ui_FieldId_widget_state       = 79
+    ,ui_FieldId_widget_type        = 80
+    ,ui_FieldId_window             = 81
+    ,ui_FieldId_rows               = 82
+    ,ui_FieldId_cols               = 83
+    ,ui_FieldId_value              = 84
 };
 
-enum { ui_FieldIdEnum_N = 81 };
+enum { ui_FieldIdEnum_N = 85 };
+
+extern const char *  ui_HAlign_align_left;     // left      fconst:ui.HAlign.align/left
+extern const char *  ui_HAlign_align_center;   // center    fconst:ui.HAlign.align/center
+extern const char *  ui_HAlign_align_right;    // right     fconst:ui.HAlign.align/right
+
+// --- ui_HAlignCaseEnum
+
+enum ui_HAlignCaseEnum {         // ui.HAlignCase.align
+     ui_HAlignCase_left     = 1
+    ,ui_HAlignCase_center   = 2
+    ,ui_HAlignCase_right    = 3
+};
+
+enum { ui_HAlignCaseEnum_N = 3 };
 
 extern const char *  ui_LayoutType_layout_type_absolute;     // absolute      fconst:ui.LayoutType.layout_type/absolute
 extern const char *  ui_LayoutType_layout_type_vertical;     // vertical      fconst:ui.LayoutType.layout_type/vertical
@@ -310,6 +334,20 @@ enum ui_SelectionModeCaseEnum {         // ui.SelectionModeCase.selection_mode
 };
 
 enum { ui_SelectionModeCaseEnum_N = 3 };
+
+extern const char *  ui_VAlign_align_top;      // top       fconst:ui.VAlign.align/top
+extern const char *  ui_VAlign_align_middle;   // middle    fconst:ui.VAlign.align/middle
+extern const char *  ui_VAlign_align_bottom;   // bottom    fconst:ui.VAlign.align/bottom
+
+// --- ui_VAlignCaseEnum
+
+enum ui_VAlignCaseEnum {         // ui.VAlignCase.align
+     ui_VAlignCase_top      = 1
+    ,ui_VAlignCase_middle   = 2
+    ,ui_VAlignCase_bottom   = 3
+};
+
+enum { ui_VAlignCaseEnum_N = 3 };
 
 extern const char *  ui_WidgetState_widget_state_focused;    // focused     fconst:ui.WidgetState.widget_state/focused
 extern const char *  ui_WidgetState_widget_state_selected;   // selected    fconst:ui.WidgetState.widget_state/selected
@@ -373,6 +411,7 @@ namespace ui { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 CommandPkey;
     typedef algo::Smallstr50 DataPathPkey;
     typedef algo::Smallstr50 DataStepPkey;
+    typedef algo::Smallstr50 HAlignPkey;
     typedef algo::Smallstr50 InputCfgPkey;
     typedef algo::Smallstr50 KeyMapPkey;
     typedef algo::Smallstr50 LayoutCfgPkey;
@@ -382,6 +421,7 @@ namespace ui { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 StyleSlotPkey;
     typedef algo::Smallstr50 TableCfgPkey;
     typedef algo::Smallstr50 TreeCfgPkey;
+    typedef algo::Smallstr50 VAlignPkey;
     typedef algo::Smallstr50 WidgetPkey;
     typedef algo::Smallstr50 WidgetStatePkey;
     typedef algo::Smallstr50 WidgetTypePkey;
@@ -408,6 +448,8 @@ namespace ui { struct Command; }
 namespace ui { struct DataPath; }
 namespace ui { struct DataStep; }
 namespace ui { struct FieldId; }
+namespace ui { struct HAlign; }
+namespace ui { struct HAlignCase; }
 namespace ui { struct InputCfg; }
 namespace ui { struct KeyMap; }
 namespace ui { struct LayoutCfg; }
@@ -419,6 +461,8 @@ namespace ui { struct Style; }
 namespace ui { struct StyleSlot; }
 namespace ui { struct TableCfg; }
 namespace ui { struct TreeCfg; }
+namespace ui { struct VAlign; }
+namespace ui { struct VAlignCase; }
 namespace ui { struct Widget; }
 namespace ui { struct WidgetState; }
 namespace ui { struct WidgetStateCase; }
@@ -550,13 +594,14 @@ void                 align_SetStrptr(ui::AlignCase& parent, algo::strptr rhs, ui
 inline void          AlignCase_Init(ui::AlignCase& parent);
 
 // --- ui.Binding
-struct Binding { // ui.Binding
+struct Binding { // ui.Binding: Connects widget to data source
     algo::Smallstr50    binding;        //
     algo::Smallstr50    p_widget;       // Widget this binding applies to
     algo::Smallstr100   source_ctype;   // Source ctype (e.g. samp_mdb.User)
     algo::Smallstr100   source_field;   // Source field (e.g. zd_user, ind_user)
     algo::Smallstr50    kind;           //   "collection"  Binding type
     algo::Smallstr50    dir;            //   "read"  Binding direction
+    algo::Smallstr50    p_data_path;    // DataPath for traversal (empty for direct binding)
     // func:ui.Binding..Ctor
     inline               Binding() __attribute__((nothrow));
 };
@@ -820,16 +865,16 @@ void                 color_SetStrptr(ui::ColorCase& parent, algo::strptr rhs, ui
 inline void          ColorCase_Init(ui::ColorCase& parent);
 
 // --- ui.Column
-struct Column { // ui.Column
+struct Column { // ui.Column: Table column definition
     algo::Smallstr50   column;     //
     algo::Smallstr50   p_widget;   // Parent table widget
     algo::Smallstr50   field;      // Field name to display
     algo::Smallstr50   title;      // Column header title
     i32                w;          //   10  Column width
     bool               sortable;   //   false  Column is sortable
-    algo::Smallstr50   align;      //   "left"  Cell alignment
     bool               hidden;     //   false  Column is hidden
     bool               editable;   //   false  Cell is editable
+    algo::Smallstr50   align;      //   "left"  Horizontal cell alignment
     // func:ui.Column..Ctor
     inline               Column() __attribute__((nothrow));
 };
@@ -969,8 +1014,69 @@ inline void          FieldId_Init(ui::FieldId& parent);
 // func:ui.FieldId..Print
 void                 FieldId_Print(ui::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- ui.HAlign
+struct HAlign { // ui.HAlign: Horizontal alignment
+    algo::Smallstr50   align;   //
+    // func:ui.HAlign..Ctor
+    inline               HAlign() __attribute__((nothrow));
+};
+
+// func:ui.HAlign..ReadFieldMaybe
+bool                 HAlign_ReadFieldMaybe(ui::HAlign& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::HAlign from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.HAlign..ReadStrptrMaybe
+bool                 HAlign_ReadStrptrMaybe(ui::HAlign &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ui.HAlign.String  printfmt:Tuple
+// func:ui.HAlign..Print
+void                 HAlign_Print(ui::HAlign& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.HAlignCase
+#pragma pack(push,1)
+struct HAlignCase { // ui.HAlignCase: enum helper Horizontal alignment
+    u8   align;   //   0
+    // func:ui.HAlignCase.align.Cast
+    inline               operator ui_HAlignCaseEnum() const __attribute__((nothrow));
+    // func:ui.HAlignCase..Ctor
+    inline               HAlignCase() __attribute__((nothrow));
+    // func:ui.HAlignCase..FieldwiseCtor
+    explicit inline               HAlignCase(u8 in_align) __attribute__((nothrow));
+    // func:ui.HAlignCase..EnumCtor
+    inline               HAlignCase(ui_HAlignCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+// func:ui.HAlignCase.align.GetEnum
+inline ui_HAlignCaseEnum align_GetEnum(const ui::HAlignCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:ui.HAlignCase.align.SetEnum
+inline void          align_SetEnum(ui::HAlignCase& parent, ui_HAlignCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:ui.HAlignCase.align.ToCstr
+const char*          align_ToCstr(const ui::HAlignCase& parent) __attribute__((nothrow));
+// Convert align to a string. First, attempt conversion to a known string.
+// If no string matches, print align as a numeric value.
+// func:ui.HAlignCase.align.Print
+void                 align_Print(const ui::HAlignCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:ui.HAlignCase.align.SetStrptrMaybe
+bool                 align_SetStrptrMaybe(ui::HAlignCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:ui.HAlignCase.align.SetStrptr
+void                 align_SetStrptr(ui::HAlignCase& parent, algo::strptr rhs, ui_HAlignCaseEnum dflt) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:ui.HAlignCase..Init
+inline void          HAlignCase_Init(ui::HAlignCase& parent);
+
 // --- ui.InputCfg
-struct InputCfg { // ui.InputCfg
+struct InputCfg { // ui.InputCfg: Input widget configuration
     algo::Smallstr50   input_cfg;   //
     algo::Smallstr50   p_widget;    // Input widget
     bool               editable;    //   true  Field is editable
@@ -994,11 +1100,12 @@ inline void          InputCfg_Init(ui::InputCfg& parent);
 void                 InputCfg_Print(ui::InputCfg& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ui.KeyMap
-struct KeyMap { // ui.KeyMap
-    algo::Smallstr50   key_map;    //
-    algo::Smallstr50   p_widget;   // Widget scope (empty for global)
-    algo::Smallstr20   key;        // Key name (e.g. j, k, Tab, Enter, q)
-    algo::Smallstr50   action;     // Action to perform
+struct KeyMap { // ui.KeyMap: Key-to-action or key-to-command mapping
+    algo::Smallstr50   key_map;     //
+    algo::Smallstr50   p_widget;    // Widget scope (empty for global)
+    algo::Smallstr20   key;         // Key name (e.g. j, k, Tab, Enter, q)
+    algo::Smallstr50   action;      // Action to perform
+    algo::Smallstr50   p_command;   // Parameterized command (empty = use action directly)
     // func:ui.KeyMap..Ctor
     inline               KeyMap() __attribute__((nothrow));
 };
@@ -1023,9 +1130,10 @@ struct LayoutCfg { // ui.LayoutCfg: Layout hints for managed (non-absolute) posi
     i32                max_w;        //   0  Maximum width (0=unlimited)
     i32                max_h;        //   0  Maximum height
     i32                flex;         //   0  Flex weight for proportional sizing
-    algo::Smallstr50   align;        //   "left"  Alignment within container
     i32                padding;      //   0  Inner padding
     i32                gap;          //   0  Gap between children
+    algo::Smallstr50   halign;       //   "left"  Horizontal alignment within container
+    algo::Smallstr50   valign;       //   "top"  Vertical alignment within container
     // func:ui.LayoutCfg..Ctor
     inline               LayoutCfg() __attribute__((nothrow));
 };
@@ -1167,7 +1275,7 @@ void                 selection_mode_SetStrptr(ui::SelectionModeCase& parent, alg
 inline void          SelectionModeCase_Init(ui::SelectionModeCase& parent);
 
 // --- ui.Style
-struct Style { // ui.Style
+struct Style { // ui.Style: Visual style: colors, bold, underline, border
     algo::Smallstr50   style;       //
     algo::Smallstr50   fg;          //   "default"  Foreground color
     algo::Smallstr50   bg;          //   "default"  Background color
@@ -1214,7 +1322,7 @@ bool                 StyleSlot_ReadStrptrMaybe(ui::StyleSlot &parent, algo::strp
 void                 StyleSlot_Print(ui::StyleSlot& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ui.TableCfg
-struct TableCfg { // ui.TableCfg
+struct TableCfg { // ui.TableCfg: Table widget configuration
     algo::Smallstr50   table_cfg;    //
     algo::Smallstr50   p_widget;     // Table widget
     bool               selectable;   //   true  Rows are selectable
@@ -1238,7 +1346,7 @@ inline void          TableCfg_Init(ui::TableCfg& parent);
 void                 TableCfg_Print(ui::TableCfg& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ui.TreeCfg
-struct TreeCfg { // ui.TreeCfg
+struct TreeCfg { // ui.TreeCfg: Tree widget configuration (simple mode via child_field)
     algo::Smallstr50    tree_cfg;           //
     algo::Smallstr50    p_widget;           // Tree widget
     i32                 indent;             //   2  Indentation per level
@@ -1264,8 +1372,69 @@ inline void          TreeCfg_Init(ui::TreeCfg& parent);
 // func:ui.TreeCfg..Print
 void                 TreeCfg_Print(ui::TreeCfg& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- ui.VAlign
+struct VAlign { // ui.VAlign: Vertical alignment
+    algo::Smallstr50   align;   //
+    // func:ui.VAlign..Ctor
+    inline               VAlign() __attribute__((nothrow));
+};
+
+// func:ui.VAlign..ReadFieldMaybe
+bool                 VAlign_ReadFieldMaybe(ui::VAlign& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::VAlign from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.VAlign..ReadStrptrMaybe
+bool                 VAlign_ReadStrptrMaybe(ui::VAlign &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ui.VAlign.String  printfmt:Tuple
+// func:ui.VAlign..Print
+void                 VAlign_Print(ui::VAlign& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.VAlignCase
+#pragma pack(push,1)
+struct VAlignCase { // ui.VAlignCase: enum helper Vertical alignment
+    u8   align;   //   0
+    // func:ui.VAlignCase.align.Cast
+    inline               operator ui_VAlignCaseEnum() const __attribute__((nothrow));
+    // func:ui.VAlignCase..Ctor
+    inline               VAlignCase() __attribute__((nothrow));
+    // func:ui.VAlignCase..FieldwiseCtor
+    explicit inline               VAlignCase(u8 in_align) __attribute__((nothrow));
+    // func:ui.VAlignCase..EnumCtor
+    inline               VAlignCase(ui_VAlignCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+// func:ui.VAlignCase.align.GetEnum
+inline ui_VAlignCaseEnum align_GetEnum(const ui::VAlignCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:ui.VAlignCase.align.SetEnum
+inline void          align_SetEnum(ui::VAlignCase& parent, ui_VAlignCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:ui.VAlignCase.align.ToCstr
+const char*          align_ToCstr(const ui::VAlignCase& parent) __attribute__((nothrow));
+// Convert align to a string. First, attempt conversion to a known string.
+// If no string matches, print align as a numeric value.
+// func:ui.VAlignCase.align.Print
+void                 align_Print(const ui::VAlignCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:ui.VAlignCase.align.SetStrptrMaybe
+bool                 align_SetStrptrMaybe(ui::VAlignCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:ui.VAlignCase.align.SetStrptr
+void                 align_SetStrptr(ui::VAlignCase& parent, algo::strptr rhs, ui_VAlignCaseEnum dflt) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:ui.VAlignCase..Init
+inline void          VAlignCase_Init(ui::VAlignCase& parent);
+
 // --- ui.Widget
-struct Widget { // ui.Widget
+struct Widget { // ui.Widget: Universal widget: structure, placement, interaction
     algo::Smallstr50    widget;      //
     algo::Smallstr50    p_window;    // Parent window
     algo::Smallstr50    p_parent;    // Parent widget (empty for top-level)
@@ -1424,7 +1593,7 @@ void                 widget_type_SetStrptr(ui::WidgetTypeCase& parent, algo::str
 inline void          WidgetTypeCase_Init(ui::WidgetTypeCase& parent);
 
 // --- ui.Window
-struct Window { // ui.Window
+struct Window { // ui.Window: Top-level terminal/browser window
     algo::Smallstr50    window;   //
     algo::Smallstr100   title;    // Window title
     i32                 rows;     //   24  Terminal rows
@@ -1463,6 +1632,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const ui::Command &row);//
 inline algo::cstring &operator <<(algo::cstring &str, const ui::DataPath &row);// cfmt:ui.DataPath.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::DataStep &row);// cfmt:ui.DataStep.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::FieldId &row);// cfmt:ui.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::HAlign &row);// cfmt:ui.HAlign.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::InputCfg &row);// cfmt:ui.InputCfg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::KeyMap &row);// cfmt:ui.KeyMap.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::LayoutCfg &row);// cfmt:ui.LayoutCfg.String
@@ -1472,6 +1642,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const ui::Style &row);// c
 inline algo::cstring &operator <<(algo::cstring &str, const ui::StyleSlot &row);// cfmt:ui.StyleSlot.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::TableCfg &row);// cfmt:ui.TableCfg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::TreeCfg &row);// cfmt:ui.TreeCfg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::VAlign &row);// cfmt:ui.VAlign.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::Widget &row);// cfmt:ui.Widget.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::WidgetState &row);// cfmt:ui.WidgetState.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::WidgetType &row);// cfmt:ui.WidgetType.String

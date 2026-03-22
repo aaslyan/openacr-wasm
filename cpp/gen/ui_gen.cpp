@@ -67,10 +67,12 @@ const char *ui_Align_align_right    = "right";
 const char *ui_Align_align_top       = "top";
 const char *ui_Align_align_bottom    = "bottom";
 const char *ui_Align_align_stretch   = "stretch";
+const char *ui_Align_align_left      = "left";
 
 // compile-time string constants for ui.BindingDir.binding_dir
 const char *ui_BindingDir_binding_dir_write       = "write";
 const char *ui_BindingDir_binding_dir_readwrite   = "readwrite";
+const char *ui_BindingDir_binding_dir_read        = "read";
 
 // compile-time string constants for ui.BindingKind.binding_kind
 const char *ui_BindingKind_binding_kind_collection   = "collection";
@@ -78,6 +80,7 @@ const char *ui_BindingKind_binding_kind_tree         = "tree";
 const char *ui_BindingKind_binding_kind_command      = "command";
 
 const char *ui_BindingKind_binding_kind_property   = "property";
+const char *ui_BindingKind_binding_kind_value      = "value";
 
 // compile-time string constants for ui.BorderStyle.border_style
 const char *ui_BorderStyle_border_style_none     = "none";
@@ -98,6 +101,11 @@ const char *ui_Color_color_magenta   = "magenta";
 const char *ui_Color_color_cyan      = "cyan";
 const char *ui_Color_color_white     = "white";
 
+// compile-time string constants for ui.HAlign.align
+const char *ui_HAlign_align_left     = "left";
+const char *ui_HAlign_align_center   = "center";
+const char *ui_HAlign_align_right    = "right";
+
 // compile-time string constants for ui.LayoutType.layout_type
 const char *ui_LayoutType_layout_type_absolute     = "absolute";
 const char *ui_LayoutType_layout_type_vertical     = "vertical";
@@ -113,6 +121,11 @@ const char *ui_LayoutType_layout_type_flow         = "flow";
 const char *ui_SelectionMode_selection_mode_none     = "none";
 const char *ui_SelectionMode_selection_mode_single   = "single";
 const char *ui_SelectionMode_selection_mode_multi    = "multi";
+
+// compile-time string constants for ui.VAlign.align
+const char *ui_VAlign_align_top      = "top";
+const char *ui_VAlign_align_middle   = "middle";
+const char *ui_VAlign_align_bottom   = "bottom";
 
 // compile-time string constants for ui.WidgetState.widget_state
 const char *ui_WidgetState_widget_state_focused    = "focused";
@@ -456,6 +469,7 @@ const char* ui::align_ToCstr(const ui::AlignCase& parent) {
         case ui_AlignCase_top              : ret = "top";  break;
         case ui_AlignCase_bottom           : ret = "bottom";  break;
         case ui_AlignCase_stretch          : ret = "stretch";  break;
+        case ui_AlignCase_left             : ret = "left";  break;
     }
     return ret;
 }
@@ -483,6 +497,14 @@ bool ui::align_SetStrptrMaybe(ui::AlignCase& parent, algo::strptr rhs) {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('t','o','p'): {
                     align_SetEnum(parent,ui_AlignCase_top); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('l','e','f','t'): {
+                    align_SetEnum(parent,ui_AlignCase_left); ret = true; break;
                 }
             }
             break;
@@ -549,6 +571,9 @@ bool ui::Binding_ReadFieldMaybe(ui::Binding& parent, algo::strptr field, algo::s
         case ui_FieldId_dir: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.dir, strval);
         } break;
+        case ui_FieldId_p_data_path: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_data_path, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -596,6 +621,9 @@ void ui::Binding_Print(ui::Binding& row, algo::cstring& str) {
 
     algo::Smallstr50_Print(row.dir, temp);
     PrintAttrSpaceReset(str,"dir", temp);
+
+    algo::Smallstr50_Print(row.p_data_path, temp);
+    PrintAttrSpaceReset(str,"p_data_path", temp);
 }
 
 // --- ui.BindingDir..ReadFieldMaybe
@@ -649,6 +677,7 @@ const char* ui::binding_dir_ToCstr(const ui::BindingDirCase& parent) {
     switch(binding_dir_GetEnum(parent)) {
         case ui_BindingDirCase_write       : ret = "write";  break;
         case ui_BindingDirCase_readwrite   : ret = "readwrite";  break;
+        case ui_BindingDirCase_read        : ret = "read";  break;
     }
     return ret;
 }
@@ -672,6 +701,14 @@ void ui::binding_dir_Print(const ui::BindingDirCase& parent, algo::cstring &lhs)
 bool ui::binding_dir_SetStrptrMaybe(ui::BindingDirCase& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('r','e','a','d'): {
+                    binding_dir_SetEnum(parent,ui_BindingDirCase_read); ret = true; break;
+                }
+            }
+            break;
+        }
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('w','r','i','t','e'): {
@@ -753,6 +790,7 @@ const char* ui::binding_kind_ToCstr(const ui::BindingKindCase& parent) {
         case ui_BindingKindCase_tree       : ret = "tree";  break;
         case ui_BindingKindCase_command    : ret = "command";  break;
         case ui_BindingKindCase_property   : ret = "property";  break;
+        case ui_BindingKindCase_value      : ret = "value";  break;
     }
     return ret;
 }
@@ -780,6 +818,14 @@ bool ui::binding_kind_SetStrptrMaybe(ui::BindingKindCase& parent, algo::strptr r
             switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('t','r','e','e'): {
                     binding_kind_SetEnum(parent,ui_BindingKindCase_tree); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('v','a','l','u','e'): {
+                    binding_kind_SetEnum(parent,ui_BindingKindCase_value); ret = true; break;
                 }
             }
             break;
@@ -1111,14 +1157,14 @@ bool ui::Column_ReadFieldMaybe(ui::Column& parent, algo::strptr field, algo::str
         case ui_FieldId_sortable: {
             retval = bool_ReadStrptrMaybe(parent.sortable, strval);
         } break;
-        case ui_FieldId_align: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.align, strval);
-        } break;
         case ui_FieldId_hidden: {
             retval = bool_ReadStrptrMaybe(parent.hidden, strval);
         } break;
         case ui_FieldId_editable: {
             retval = bool_ReadStrptrMaybe(parent.editable, strval);
+        } break;
+        case ui_FieldId_align: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.align, strval);
         } break;
         default: {
             retval = false;
@@ -1168,14 +1214,14 @@ void ui::Column_Print(ui::Column& row, algo::cstring& str) {
     bool_Print(row.sortable, temp);
     PrintAttrSpaceReset(str,"sortable", temp);
 
-    algo::Smallstr50_Print(row.align, temp);
-    PrintAttrSpaceReset(str,"align", temp);
-
     bool_Print(row.hidden, temp);
     PrintAttrSpaceReset(str,"hidden", temp);
 
     bool_Print(row.editable, temp);
     PrintAttrSpaceReset(str,"editable", temp);
+
+    algo::Smallstr50_Print(row.align, temp);
+    PrintAttrSpaceReset(str,"align", temp);
 }
 
 // --- ui.Command..ReadFieldMaybe
@@ -1381,6 +1427,7 @@ const char* ui::value_ToCstr(const ui::FieldId& parent) {
         case ui_FieldId_source_field       : ret = "source_field";  break;
         case ui_FieldId_kind               : ret = "kind";  break;
         case ui_FieldId_dir                : ret = "dir";  break;
+        case ui_FieldId_p_data_path        : ret = "p_data_path";  break;
         case ui_FieldId_binding_dir        : ret = "binding_dir";  break;
         case ui_FieldId_binding_kind       : ret = "binding_kind";  break;
         case ui_FieldId_border_style       : ret = "border_style";  break;
@@ -1407,6 +1454,7 @@ const char* ui::value_ToCstr(const ui::FieldId& parent) {
         case ui_FieldId_maxlen             : ret = "maxlen";  break;
         case ui_FieldId_key_map            : ret = "key_map";  break;
         case ui_FieldId_key                : ret = "key";  break;
+        case ui_FieldId_p_command          : ret = "p_command";  break;
         case ui_FieldId_layout_cfg         : ret = "layout_cfg";  break;
         case ui_FieldId_min_w              : ret = "min_w";  break;
         case ui_FieldId_min_h              : ret = "min_h";  break;
@@ -1415,6 +1463,8 @@ const char* ui::value_ToCstr(const ui::FieldId& parent) {
         case ui_FieldId_flex               : ret = "flex";  break;
         case ui_FieldId_padding            : ret = "padding";  break;
         case ui_FieldId_gap                : ret = "gap";  break;
+        case ui_FieldId_halign             : ret = "halign";  break;
+        case ui_FieldId_valign             : ret = "valign";  break;
         case ui_FieldId_layout_type        : ret = "layout_type";  break;
         case ui_FieldId_selection_mode     : ret = "selection_mode";  break;
         case ui_FieldId_style              : ret = "style";  break;
@@ -1600,6 +1650,9 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('c','o','l','u','m','n'): {
                     value_SetEnum(parent,ui_FieldId_column); ret = true; break;
                 }
+                case LE_STR6('h','a','l','i','g','n'): {
+                    value_SetEnum(parent,ui_FieldId_halign); ret = true; break;
+                }
                 case LE_STR6('h','e','a','d','e','r'): {
                     value_SetEnum(parent,ui_FieldId_header); ret = true; break;
                 }
@@ -1617,6 +1670,9 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('p','_','p','a','t','h'): {
                     value_SetEnum(parent,ui_FieldId_p_path); ret = true; break;
+                }
+                case LE_STR6('v','a','l','i','g','n'): {
+                    value_SetEnum(parent,ui_FieldId_valign); ret = true; break;
                 }
                 case LE_STR6('w','i','d','g','e','t'): {
                     value_SetEnum(parent,ui_FieldId_widget); ret = true; break;
@@ -1700,6 +1756,10 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,ui_FieldId_input_cfg); ret = true; break; }
                     break;
                 }
+                case LE_STR8('p','_','c','o','m','m','a','n'): {
+                    if (memcmp(rhs.elems+8,"d",1)==0) { value_SetEnum(parent,ui_FieldId_p_command); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('s','e','l','e','c','t','i','o'): {
                     if (memcmp(rhs.elems+8,"n",1)==0) { value_SetEnum(parent,ui_FieldId_selection); ret = true; break; }
                     break;
@@ -1760,6 +1820,10 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('l','a','y','o','u','t','_','t'): {
                     if (memcmp(rhs.elems+8,"ype",3)==0) { value_SetEnum(parent,ui_FieldId_layout_type); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('p','_','d','a','t','a','_','p'): {
+                    if (memcmp(rhs.elems+8,"ath",3)==0) { value_SetEnum(parent,ui_FieldId_p_data_path); ret = true; break; }
                     break;
                 }
                 case LE_STR8('w','i','d','g','e','t','_','t'): {
@@ -1854,6 +1918,116 @@ void ui::FieldId_Print(ui::FieldId& row, algo::cstring& str) {
     ui::value_Print(row, str);
 }
 
+// --- ui.HAlign..ReadFieldMaybe
+bool ui::HAlign_ReadFieldMaybe(ui::HAlign& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_align: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.align, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.HAlign..ReadStrptrMaybe
+// Read fields of ui::HAlign from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::HAlign_ReadStrptrMaybe(ui::HAlign &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.h_align") || algo::StripTypeTag(in_str, "ui.HAlign");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && HAlign_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.HAlign..Print
+// print string representation of ROW to string STR
+// cfmt:ui.HAlign.String  printfmt:Tuple
+void ui::HAlign_Print(ui::HAlign& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.h_align";
+
+    algo::Smallstr50_Print(row.align, temp);
+    PrintAttrSpaceReset(str,"align", temp);
+}
+
+// --- ui.HAlignCase.align.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* ui::align_ToCstr(const ui::HAlignCase& parent) {
+    const char *ret = NULL;
+    switch(align_GetEnum(parent)) {
+        case ui_HAlignCase_left            : ret = "left";  break;
+        case ui_HAlignCase_center          : ret = "center";  break;
+        case ui_HAlignCase_right           : ret = "right";  break;
+    }
+    return ret;
+}
+
+// --- ui.HAlignCase.align.Print
+// Convert align to a string. First, attempt conversion to a known string.
+// If no string matches, print align as a numeric value.
+void ui::align_Print(const ui::HAlignCase& parent, algo::cstring &lhs) {
+    const char *strval = align_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.align;
+    }
+}
+
+// --- ui.HAlignCase.align.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool ui::align_SetStrptrMaybe(ui::HAlignCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('l','e','f','t'): {
+                    align_SetEnum(parent,ui_HAlignCase_left); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('r','i','g','h','t'): {
+                    align_SetEnum(parent,ui_HAlignCase_right); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('c','e','n','t','e','r'): {
+                    align_SetEnum(parent,ui_HAlignCase_center); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- ui.HAlignCase.align.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void ui::align_SetStrptr(ui::HAlignCase& parent, algo::strptr rhs, ui_HAlignCaseEnum dflt) {
+    if (!align_SetStrptrMaybe(parent,rhs)) align_SetEnum(parent,dflt);
+}
+
 // --- ui.InputCfg..ReadFieldMaybe
 bool ui::InputCfg_ReadFieldMaybe(ui::InputCfg& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -1933,6 +2107,9 @@ bool ui::KeyMap_ReadFieldMaybe(ui::KeyMap& parent, algo::strptr field, algo::str
         case ui_FieldId_action: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.action, strval);
         } break;
+        case ui_FieldId_p_command: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_command, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -1974,6 +2151,9 @@ void ui::KeyMap_Print(ui::KeyMap& row, algo::cstring& str) {
 
     algo::Smallstr50_Print(row.action, temp);
     PrintAttrSpaceReset(str,"action", temp);
+
+    algo::Smallstr50_Print(row.p_command, temp);
+    PrintAttrSpaceReset(str,"p_command", temp);
 }
 
 // --- ui.LayoutCfg..ReadFieldMaybe
@@ -2003,14 +2183,17 @@ bool ui::LayoutCfg_ReadFieldMaybe(ui::LayoutCfg& parent, algo::strptr field, alg
         case ui_FieldId_flex: {
             retval = i32_ReadStrptrMaybe(parent.flex, strval);
         } break;
-        case ui_FieldId_align: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.align, strval);
-        } break;
         case ui_FieldId_padding: {
             retval = i32_ReadStrptrMaybe(parent.padding, strval);
         } break;
         case ui_FieldId_gap: {
             retval = i32_ReadStrptrMaybe(parent.gap, strval);
+        } break;
+        case ui_FieldId_halign: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.halign, strval);
+        } break;
+        case ui_FieldId_valign: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.valign, strval);
         } break;
         default: {
             retval = false;
@@ -2043,9 +2226,10 @@ void ui::LayoutCfg_Init(ui::LayoutCfg& parent) {
     parent.max_w = i32(0);
     parent.max_h = i32(0);
     parent.flex = i32(0);
-    parent.align = algo::strptr("left");
     parent.padding = i32(0);
     parent.gap = i32(0);
+    parent.halign = algo::strptr("left");
+    parent.valign = algo::strptr("top");
 }
 
 // --- ui.LayoutCfg..Print
@@ -2076,14 +2260,17 @@ void ui::LayoutCfg_Print(ui::LayoutCfg& row, algo::cstring& str) {
     i32_Print(row.flex, temp);
     PrintAttrSpaceReset(str,"flex", temp);
 
-    algo::Smallstr50_Print(row.align, temp);
-    PrintAttrSpaceReset(str,"align", temp);
-
     i32_Print(row.padding, temp);
     PrintAttrSpaceReset(str,"padding", temp);
 
     i32_Print(row.gap, temp);
     PrintAttrSpaceReset(str,"gap", temp);
+
+    algo::Smallstr50_Print(row.halign, temp);
+    PrintAttrSpaceReset(str,"halign", temp);
+
+    algo::Smallstr50_Print(row.valign, temp);
+    PrintAttrSpaceReset(str,"valign", temp);
 }
 
 // --- ui.LayoutType..ReadFieldMaybe
@@ -2608,6 +2795,111 @@ void ui::TreeCfg_Print(ui::TreeCfg& row, algo::cstring& str) {
 
     bool_Print(row.expanded_default, temp);
     PrintAttrSpaceReset(str,"expanded_default", temp);
+}
+
+// --- ui.VAlign..ReadFieldMaybe
+bool ui::VAlign_ReadFieldMaybe(ui::VAlign& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_align: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.align, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.VAlign..ReadStrptrMaybe
+// Read fields of ui::VAlign from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::VAlign_ReadStrptrMaybe(ui::VAlign &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.v_align") || algo::StripTypeTag(in_str, "ui.VAlign");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && VAlign_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.VAlign..Print
+// print string representation of ROW to string STR
+// cfmt:ui.VAlign.String  printfmt:Tuple
+void ui::VAlign_Print(ui::VAlign& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.v_align";
+
+    algo::Smallstr50_Print(row.align, temp);
+    PrintAttrSpaceReset(str,"align", temp);
+}
+
+// --- ui.VAlignCase.align.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* ui::align_ToCstr(const ui::VAlignCase& parent) {
+    const char *ret = NULL;
+    switch(align_GetEnum(parent)) {
+        case ui_VAlignCase_top             : ret = "top";  break;
+        case ui_VAlignCase_middle          : ret = "middle";  break;
+        case ui_VAlignCase_bottom          : ret = "bottom";  break;
+    }
+    return ret;
+}
+
+// --- ui.VAlignCase.align.Print
+// Convert align to a string. First, attempt conversion to a known string.
+// If no string matches, print align as a numeric value.
+void ui::align_Print(const ui::VAlignCase& parent, algo::cstring &lhs) {
+    const char *strval = align_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.align;
+    }
+}
+
+// --- ui.VAlignCase.align.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool ui::align_SetStrptrMaybe(ui::VAlignCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('t','o','p'): {
+                    align_SetEnum(parent,ui_VAlignCase_top); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('b','o','t','t','o','m'): {
+                    align_SetEnum(parent,ui_VAlignCase_bottom); ret = true; break;
+                }
+                case LE_STR6('m','i','d','d','l','e'): {
+                    align_SetEnum(parent,ui_VAlignCase_middle); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- ui.VAlignCase.align.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void ui::align_SetStrptr(ui::VAlignCase& parent, algo::strptr rhs, ui_VAlignCaseEnum dflt) {
+    if (!align_SetStrptrMaybe(parent,rhs)) align_SetEnum(parent,dflt);
 }
 
 // --- ui.Widget..ReadFieldMaybe

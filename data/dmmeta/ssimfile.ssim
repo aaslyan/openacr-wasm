@@ -255,6 +255,7 @@ dmmeta.ssimfile  ssimfile:ui.column  ctype:ui.Column
 dmmeta.ssimfile  ssimfile:ui.command  ctype:ui.Command
 dmmeta.ssimfile  ssimfile:ui.data_path  ctype:ui.DataPath
 dmmeta.ssimfile  ssimfile:ui.data_step  ctype:ui.DataStep
+dmmeta.ssimfile  ssimfile:ui.h_align  ctype:ui.HAlign
 dmmeta.ssimfile  ssimfile:ui.input_cfg  ctype:ui.InputCfg
 dmmeta.ssimfile  ssimfile:ui.key_map  ctype:ui.KeyMap
 dmmeta.ssimfile  ssimfile:ui.layout_cfg  ctype:ui.LayoutCfg
@@ -264,6 +265,7 @@ dmmeta.ssimfile  ssimfile:ui.style  ctype:ui.Style
 dmmeta.ssimfile  ssimfile:ui.style_slot  ctype:ui.StyleSlot
 dmmeta.ssimfile  ssimfile:ui.table_cfg  ctype:ui.TableCfg
 dmmeta.ssimfile  ssimfile:ui.tree_cfg  ctype:ui.TreeCfg
+dmmeta.ssimfile  ssimfile:ui.v_align  ctype:ui.VAlign
 dmmeta.ssimfile  ssimfile:ui.widget  ctype:ui.Widget
 dmmeta.ssimfile  ssimfile:ui.widget_state  ctype:ui.WidgetState
 dmmeta.ssimfile  ssimfile:ui.widget_type  ctype:ui.WidgetType

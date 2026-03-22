@@ -115,6 +115,7 @@ void acr_tui::binding_CopyOut(acr_tui::FBinding &row, ui::Binding &out) {
     out.source_field = row.source_field;
     out.kind = row.kind;
     out.dir = row.dir;
+    out.p_data_path = row.p_data_path;
 }
 
 // --- acr_tui.FBinding.base.CopyIn
@@ -126,6 +127,7 @@ void acr_tui::binding_CopyIn(acr_tui::FBinding &row, ui::Binding &in) {
     row.source_field = in.source_field;
     row.kind = in.kind;
     row.dir = in.dir;
+    row.p_data_path = in.p_data_path;
 }
 
 // --- acr_tui.FBinding..Uninit
@@ -143,9 +145,9 @@ void acr_tui::column_CopyOut(acr_tui::FColumn &row, ui::Column &out) {
     out.title = row.title;
     out.w = row.w;
     out.sortable = row.sortable;
-    out.align = row.align;
     out.hidden = row.hidden;
     out.editable = row.editable;
+    out.align = row.align;
 }
 
 // --- acr_tui.FColumn.base.CopyIn
@@ -157,9 +159,9 @@ void acr_tui::column_CopyIn(acr_tui::FColumn &row, ui::Column &in) {
     row.title = in.title;
     row.w = in.w;
     row.sortable = in.sortable;
-    row.align = in.align;
     row.hidden = in.hidden;
     row.editable = in.editable;
+    row.align = in.align;
 }
 
 // --- acr_tui.FColumn..Uninit
@@ -431,7 +433,7 @@ static void acr_tui::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_tui.Input'  signature:'c9363a0924cfcf51e97e42f0b03567d4bf65bf86'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_tui.Input'  signature:'d0914ec2409fd05f987b79658367fd74979ad1a3'");
 }
 
 // --- acr_tui.FDb._db.InsertStrptrMaybe
@@ -4609,6 +4611,7 @@ void acr_tui::key_map_CopyOut(acr_tui::FKeyMap &row, ui::KeyMap &out) {
     out.p_widget = row.p_widget;
     out.key = row.key;
     out.action = row.action;
+    out.p_command = row.p_command;
 }
 
 // --- acr_tui.FKeyMap.base.CopyIn
@@ -4618,6 +4621,7 @@ void acr_tui::key_map_CopyIn(acr_tui::FKeyMap &row, ui::KeyMap &in) {
     row.p_widget = in.p_widget;
     row.key = in.key;
     row.action = in.action;
+    row.p_command = in.p_command;
 }
 
 // --- acr_tui.FKeyMap..Uninit
