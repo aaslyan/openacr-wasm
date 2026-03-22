@@ -69,8 +69,145 @@ inline  ui::ActionTypeCase::ActionTypeCase(ui_ActionTypeCaseEnum arg) {
     this->action_type = u8(arg);
 }
 
+// --- ui.Align..Ctor
+inline  ui::Align::Align() {
+}
+
+// --- ui.AlignCase.align.GetEnum
+// Get value of field as enum type
+inline ui_AlignCaseEnum ui::align_GetEnum(const ui::AlignCase& parent) {
+    return ui_AlignCaseEnum(parent.align);
+}
+
+// --- ui.AlignCase.align.SetEnum
+// Set value of field from enum type.
+inline void ui::align_SetEnum(ui::AlignCase& parent, ui_AlignCaseEnum rhs) {
+    parent.align = u8(rhs);
+}
+
+// --- ui.AlignCase.align.Cast
+inline  ui::AlignCase::operator ui_AlignCaseEnum() const {
+    return ui_AlignCaseEnum((*this).align);
+}
+
+// --- ui.AlignCase..Init
+// Set all fields to initial values.
+inline void ui::AlignCase_Init(ui::AlignCase& parent) {
+    parent.align = u8(0);
+}
+
+// --- ui.AlignCase..Ctor
+inline  ui::AlignCase::AlignCase() {
+    ui::AlignCase_Init(*this);
+}
+
+// --- ui.AlignCase..FieldwiseCtor
+inline  ui::AlignCase::AlignCase(u8 in_align)
+    : align(in_align)
+ {
+}
+
+// --- ui.AlignCase..EnumCtor
+inline  ui::AlignCase::AlignCase(ui_AlignCaseEnum arg) {
+    this->align = u8(arg);
+}
+
+// --- ui.Binding..Init
+// Set all fields to initial values.
+inline void ui::Binding_Init(ui::Binding& parent) {
+    parent.kind = algo::strptr("collection");
+    parent.dir = algo::strptr("read");
+}
+
 // --- ui.Binding..Ctor
 inline  ui::Binding::Binding() {
+    ui::Binding_Init(*this);
+}
+
+// --- ui.BindingDir..Ctor
+inline  ui::BindingDir::BindingDir() {
+}
+
+// --- ui.BindingDirCase.binding_dir.GetEnum
+// Get value of field as enum type
+inline ui_BindingDirCaseEnum ui::binding_dir_GetEnum(const ui::BindingDirCase& parent) {
+    return ui_BindingDirCaseEnum(parent.binding_dir);
+}
+
+// --- ui.BindingDirCase.binding_dir.SetEnum
+// Set value of field from enum type.
+inline void ui::binding_dir_SetEnum(ui::BindingDirCase& parent, ui_BindingDirCaseEnum rhs) {
+    parent.binding_dir = u8(rhs);
+}
+
+// --- ui.BindingDirCase.binding_dir.Cast
+inline  ui::BindingDirCase::operator ui_BindingDirCaseEnum() const {
+    return ui_BindingDirCaseEnum((*this).binding_dir);
+}
+
+// --- ui.BindingDirCase..Init
+// Set all fields to initial values.
+inline void ui::BindingDirCase_Init(ui::BindingDirCase& parent) {
+    parent.binding_dir = u8(0);
+}
+
+// --- ui.BindingDirCase..Ctor
+inline  ui::BindingDirCase::BindingDirCase() {
+    ui::BindingDirCase_Init(*this);
+}
+
+// --- ui.BindingDirCase..FieldwiseCtor
+inline  ui::BindingDirCase::BindingDirCase(u8 in_binding_dir)
+    : binding_dir(in_binding_dir)
+ {
+}
+
+// --- ui.BindingDirCase..EnumCtor
+inline  ui::BindingDirCase::BindingDirCase(ui_BindingDirCaseEnum arg) {
+    this->binding_dir = u8(arg);
+}
+
+// --- ui.BindingKind..Ctor
+inline  ui::BindingKind::BindingKind() {
+}
+
+// --- ui.BindingKindCase.binding_kind.GetEnum
+// Get value of field as enum type
+inline ui_BindingKindCaseEnum ui::binding_kind_GetEnum(const ui::BindingKindCase& parent) {
+    return ui_BindingKindCaseEnum(parent.binding_kind);
+}
+
+// --- ui.BindingKindCase.binding_kind.SetEnum
+// Set value of field from enum type.
+inline void ui::binding_kind_SetEnum(ui::BindingKindCase& parent, ui_BindingKindCaseEnum rhs) {
+    parent.binding_kind = u8(rhs);
+}
+
+// --- ui.BindingKindCase.binding_kind.Cast
+inline  ui::BindingKindCase::operator ui_BindingKindCaseEnum() const {
+    return ui_BindingKindCaseEnum((*this).binding_kind);
+}
+
+// --- ui.BindingKindCase..Init
+// Set all fields to initial values.
+inline void ui::BindingKindCase_Init(ui::BindingKindCase& parent) {
+    parent.binding_kind = u8(0);
+}
+
+// --- ui.BindingKindCase..Ctor
+inline  ui::BindingKindCase::BindingKindCase() {
+    ui::BindingKindCase_Init(*this);
+}
+
+// --- ui.BindingKindCase..FieldwiseCtor
+inline  ui::BindingKindCase::BindingKindCase(u8 in_binding_kind)
+    : binding_kind(in_binding_kind)
+ {
+}
+
+// --- ui.BindingKindCase..EnumCtor
+inline  ui::BindingKindCase::BindingKindCase(ui_BindingKindCaseEnum arg) {
+    this->binding_kind = u8(arg);
 }
 
 // --- ui.BorderStyle..Ctor
@@ -164,11 +301,33 @@ inline  ui::ColorCase::ColorCase(ui_ColorCaseEnum arg) {
 inline void ui::Column_Init(ui::Column& parent) {
     parent.w = i32(10);
     parent.sortable = bool(false);
+    parent.align = algo::strptr("left");
+    parent.hidden = bool(false);
+    parent.editable = bool(false);
 }
 
 // --- ui.Column..Ctor
 inline  ui::Column::Column() {
     ui::Column_Init(*this);
+}
+
+// --- ui.Command..Ctor
+inline  ui::Command::Command() {
+}
+
+// --- ui.DataPath..Ctor
+inline  ui::DataPath::DataPath() {
+}
+
+// --- ui.DataStep..Init
+// Set all fields to initial values.
+inline void ui::DataStep_Init(ui::DataStep& parent) {
+    parent.level = i32(0);
+}
+
+// --- ui.DataStep..Ctor
+inline  ui::DataStep::DataStep() {
+    ui::DataStep_Init(*this);
 }
 
 // --- ui.FieldId.value.GetEnum
@@ -224,6 +383,11 @@ inline  ui::InputCfg::InputCfg() {
 
 // --- ui.KeyMap..Ctor
 inline  ui::KeyMap::KeyMap() {
+}
+
+// --- ui.LayoutCfg..Ctor
+inline  ui::LayoutCfg::LayoutCfg() {
+    ui::LayoutCfg_Init(*this);
 }
 
 // --- ui.LayoutType..Ctor
@@ -327,6 +491,10 @@ inline  ui::Style::Style() {
     ui::Style_Init(*this);
 }
 
+// --- ui.StyleSlot..Ctor
+inline  ui::StyleSlot::StyleSlot() {
+}
+
 // --- ui.TableCfg..Init
 // Set all fields to initial values.
 inline void ui::TableCfg_Init(ui::TableCfg& parent) {
@@ -344,6 +512,7 @@ inline  ui::TableCfg::TableCfg() {
 inline void ui::TreeCfg_Init(ui::TreeCfg& parent) {
     parent.indent = i32(2);
     parent.show_lines = bool(true);
+    parent.expanded_default = bool(false);
 }
 
 // --- ui.TreeCfg..Ctor
@@ -354,6 +523,49 @@ inline  ui::TreeCfg::TreeCfg() {
 // --- ui.Widget..Ctor
 inline  ui::Widget::Widget() {
     ui::Widget_Init(*this);
+}
+
+// --- ui.WidgetState..Ctor
+inline  ui::WidgetState::WidgetState() {
+}
+
+// --- ui.WidgetStateCase.widget_state.GetEnum
+// Get value of field as enum type
+inline ui_WidgetStateCaseEnum ui::widget_state_GetEnum(const ui::WidgetStateCase& parent) {
+    return ui_WidgetStateCaseEnum(parent.widget_state);
+}
+
+// --- ui.WidgetStateCase.widget_state.SetEnum
+// Set value of field from enum type.
+inline void ui::widget_state_SetEnum(ui::WidgetStateCase& parent, ui_WidgetStateCaseEnum rhs) {
+    parent.widget_state = u8(rhs);
+}
+
+// --- ui.WidgetStateCase.widget_state.Cast
+inline  ui::WidgetStateCase::operator ui_WidgetStateCaseEnum() const {
+    return ui_WidgetStateCaseEnum((*this).widget_state);
+}
+
+// --- ui.WidgetStateCase..Init
+// Set all fields to initial values.
+inline void ui::WidgetStateCase_Init(ui::WidgetStateCase& parent) {
+    parent.widget_state = u8(0);
+}
+
+// --- ui.WidgetStateCase..Ctor
+inline  ui::WidgetStateCase::WidgetStateCase() {
+    ui::WidgetStateCase_Init(*this);
+}
+
+// --- ui.WidgetStateCase..FieldwiseCtor
+inline  ui::WidgetStateCase::WidgetStateCase(u8 in_widget_state)
+    : widget_state(in_widget_state)
+ {
+}
+
+// --- ui.WidgetStateCase..EnumCtor
+inline  ui::WidgetStateCase::WidgetStateCase(ui_WidgetStateCaseEnum arg) {
+    this->widget_state = u8(arg);
 }
 
 // --- ui.WidgetType..Ctor
@@ -416,8 +628,23 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::ActionType
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::Align &row) {// cfmt:ui.Align.String
+    ui::Align_Print(const_cast<ui::Align&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::Binding &row) {// cfmt:ui.Binding.String
     ui::Binding_Print(const_cast<ui::Binding&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::BindingDir &row) {// cfmt:ui.BindingDir.String
+    ui::BindingDir_Print(const_cast<ui::BindingDir&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::BindingKind &row) {// cfmt:ui.BindingKind.String
+    ui::BindingKind_Print(const_cast<ui::BindingKind&>(row), str);
     return str;
 }
 
@@ -436,6 +663,21 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::Column &ro
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::Command &row) {// cfmt:ui.Command.String
+    ui::Command_Print(const_cast<ui::Command&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::DataPath &row) {// cfmt:ui.DataPath.String
+    ui::DataPath_Print(const_cast<ui::DataPath&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::DataStep &row) {// cfmt:ui.DataStep.String
+    ui::DataStep_Print(const_cast<ui::DataStep&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::FieldId &row) {// cfmt:ui.FieldId.String
     ui::FieldId_Print(const_cast<ui::FieldId&>(row), str);
     return str;
@@ -448,6 +690,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::InputCfg &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::KeyMap &row) {// cfmt:ui.KeyMap.String
     ui::KeyMap_Print(const_cast<ui::KeyMap&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::LayoutCfg &row) {// cfmt:ui.LayoutCfg.String
+    ui::LayoutCfg_Print(const_cast<ui::LayoutCfg&>(row), str);
     return str;
 }
 
@@ -466,6 +713,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::Style &row
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::StyleSlot &row) {// cfmt:ui.StyleSlot.String
+    ui::StyleSlot_Print(const_cast<ui::StyleSlot&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::TableCfg &row) {// cfmt:ui.TableCfg.String
     ui::TableCfg_Print(const_cast<ui::TableCfg&>(row), str);
     return str;
@@ -478,6 +730,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::TreeCfg &r
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::Widget &row) {// cfmt:ui.Widget.String
     ui::Widget_Print(const_cast<ui::Widget&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::WidgetState &row) {// cfmt:ui.WidgetState.String
+    ui::WidgetState_Print(const_cast<ui::WidgetState&>(row), str);
     return str;
 }
 

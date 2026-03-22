@@ -1,0 +1,4 @@
+ui.data_step  data_step:schema.0  p_path:schema  level:0  source_ctype:dmmeta.Ns      label_field:ns      detail_field:comment  link_field:""
+ui.data_step  data_step:schema.1  p_path:schema  level:1  source_ctype:dmmeta.Ctype   label_field:ctype   detail_field:comment  link_field:.LL
+ui.data_step  data_step:schema.2  p_path:schema  level:2  source_ctype:dmmeta.Field   label_field:field   detail_field:arg      link_field:.LL
+ui.data_step  data_step:schema.3  p_path:schema  level:3  source_ctype:dmmeta.Fconst  label_field:fconst  detail_field:value    link_field:.LL

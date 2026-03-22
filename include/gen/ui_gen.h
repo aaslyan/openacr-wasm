@@ -38,6 +38,23 @@ extern const char *  ui_ActionType_action_type_scroll_down;     // scroll_down  
 extern const char *  ui_ActionType_action_type_focus_next;      // focus_next       fconst:ui.ActionType.action_type/focus_next
 extern const char *  ui_ActionType_action_type_focus_prev;      // focus_prev       fconst:ui.ActionType.action_type/focus_prev
 extern const char *  ui_ActionType_action_type_quit;            // quit             fconst:ui.ActionType.action_type/quit
+extern const char *  ui_ActionType_action_type_activate;        // activate         fconst:ui.ActionType.action_type/activate
+extern const char *  ui_ActionType_action_type_cancel;          // cancel           fconst:ui.ActionType.action_type/cancel
+extern const char *  ui_ActionType_action_type_submit;          // submit           fconst:ui.ActionType.action_type/submit
+extern const char *  ui_ActionType_action_type_open;            // open             fconst:ui.ActionType.action_type/open
+extern const char *  ui_ActionType_action_type_close;           // close            fconst:ui.ActionType.action_type/close
+extern const char *  ui_ActionType_action_type_copy;            // copy             fconst:ui.ActionType.action_type/copy
+extern const char *  ui_ActionType_action_type_paste;           // paste            fconst:ui.ActionType.action_type/paste
+extern const char *  ui_ActionType_action_type_refresh;         // refresh          fconst:ui.ActionType.action_type/refresh
+extern const char *  ui_ActionType_action_type_search;          // search           fconst:ui.ActionType.action_type/search
+extern const char *  ui_ActionType_action_type_page_up;         // page_up          fconst:ui.ActionType.action_type/page_up
+extern const char *  ui_ActionType_action_type_page_down;       // page_down        fconst:ui.ActionType.action_type/page_down
+extern const char *  ui_ActionType_action_type_home;            // home             fconst:ui.ActionType.action_type/home
+extern const char *  ui_ActionType_action_type_end;             // end              fconst:ui.ActionType.action_type/end
+extern const char *  ui_ActionType_action_type_sort;            // sort             fconst:ui.ActionType.action_type/sort
+extern const char *  ui_ActionType_action_type_filter;          // filter           fconst:ui.ActionType.action_type/filter
+extern const char *  ui_ActionType_action_type_expand_all;      // expand_all       fconst:ui.ActionType.action_type/expand_all
+extern const char *  ui_ActionType_action_type_collapse_all;    // collapse_all     fconst:ui.ActionType.action_type/collapse_all
 
 // --- ui_ActionTypeCaseEnum
 
@@ -54,9 +71,72 @@ enum ui_ActionTypeCaseEnum {                 // ui.ActionTypeCase.action_type
     ,ui_ActionTypeCase_focus_next      = 10
     ,ui_ActionTypeCase_focus_prev      = 11
     ,ui_ActionTypeCase_quit            = 12
+    ,ui_ActionTypeCase_activate        = 13
+    ,ui_ActionTypeCase_cancel          = 14
+    ,ui_ActionTypeCase_submit          = 15
+    ,ui_ActionTypeCase_open            = 16
+    ,ui_ActionTypeCase_close           = 17
+    ,ui_ActionTypeCase_copy            = 18
+    ,ui_ActionTypeCase_paste           = 19
+    ,ui_ActionTypeCase_refresh         = 20
+    ,ui_ActionTypeCase_search          = 21
+    ,ui_ActionTypeCase_page_up         = 22
+    ,ui_ActionTypeCase_page_down       = 23
+    ,ui_ActionTypeCase_home            = 24
+    ,ui_ActionTypeCase_end             = 25
+    ,ui_ActionTypeCase_sort            = 26
+    ,ui_ActionTypeCase_filter          = 27
+    ,ui_ActionTypeCase_expand_all      = 28
+    ,ui_ActionTypeCase_collapse_all    = 29
 };
 
-enum { ui_ActionTypeCaseEnum_N = 12 };
+enum { ui_ActionTypeCaseEnum_N = 29 };
+
+extern const char *  ui_Align_align_center;    // center     fconst:ui.Align.align/center
+extern const char *  ui_Align_align_right;     // right      fconst:ui.Align.align/right
+extern const char *  ui_Align_align_top;       // top        fconst:ui.Align.align/top
+extern const char *  ui_Align_align_bottom;    // bottom     fconst:ui.Align.align/bottom
+extern const char *  ui_Align_align_stretch;   // stretch    fconst:ui.Align.align/stretch
+
+// --- ui_AlignCaseEnum
+
+enum ui_AlignCaseEnum {          // ui.AlignCase.align
+     ui_AlignCase_center    = 1
+    ,ui_AlignCase_right     = 2
+    ,ui_AlignCase_top       = 3
+    ,ui_AlignCase_bottom    = 4
+    ,ui_AlignCase_stretch   = 5
+};
+
+enum { ui_AlignCaseEnum_N = 5 };
+
+extern const char *  ui_BindingDir_binding_dir_write;       // write        fconst:ui.BindingDir.binding_dir/write
+extern const char *  ui_BindingDir_binding_dir_readwrite;   // readwrite    fconst:ui.BindingDir.binding_dir/readwrite
+
+// --- ui_BindingDirCaseEnum
+
+enum ui_BindingDirCaseEnum {            // ui.BindingDirCase.binding_dir
+     ui_BindingDirCase_write       = 1
+    ,ui_BindingDirCase_readwrite   = 2
+};
+
+enum { ui_BindingDirCaseEnum_N = 2 };
+
+extern const char *  ui_BindingKind_binding_kind_collection;   // collection    fconst:ui.BindingKind.binding_kind/collection
+extern const char *  ui_BindingKind_binding_kind_tree;         // tree          fconst:ui.BindingKind.binding_kind/tree
+extern const char *  ui_BindingKind_binding_kind_command;      // command       fconst:ui.BindingKind.binding_kind/command
+extern const char *  ui_BindingKind_binding_kind_property;     // property      fconst:ui.BindingKind.binding_kind/property
+
+// --- ui_BindingKindCaseEnum
+
+enum ui_BindingKindCaseEnum {             // ui.BindingKindCase.binding_kind
+     ui_BindingKindCase_collection   = 1
+    ,ui_BindingKindCase_tree         = 2
+    ,ui_BindingKindCase_command      = 3
+    ,ui_BindingKindCase_property     = 4
+};
+
+enum { ui_BindingKindCaseEnum_N = 4 };
 
 extern const char *  ui_BorderStyle_border_style_none;      // none       fconst:ui.BorderStyle.border_style/none
 extern const char *  ui_BorderStyle_border_style_single;    // single     fconst:ui.BorderStyle.border_style/single
@@ -105,67 +185,101 @@ enum { ui_ColorCaseEnum_N = 9 };
 
 // --- ui_FieldIdEnum
 
-enum ui_FieldIdEnum {                  // ui.FieldId.value
-     ui_FieldId_action_type      = 0
-    ,ui_FieldId_binding          = 1
-    ,ui_FieldId_p_widget         = 2
-    ,ui_FieldId_source_ctype     = 3
-    ,ui_FieldId_source_field     = 4
-    ,ui_FieldId_border_style     = 5
-    ,ui_FieldId_color            = 6
-    ,ui_FieldId_column           = 7
-    ,ui_FieldId_field            = 8
-    ,ui_FieldId_title            = 9
-    ,ui_FieldId_w                = 10
-    ,ui_FieldId_sortable         = 11
-    ,ui_FieldId_input_cfg        = 12
-    ,ui_FieldId_editable         = 13
-    ,ui_FieldId_maxlen           = 14
-    ,ui_FieldId_key_map          = 15
-    ,ui_FieldId_key              = 16
-    ,ui_FieldId_action           = 17
-    ,ui_FieldId_layout_type      = 18
-    ,ui_FieldId_selection_mode   = 19
-    ,ui_FieldId_style            = 20
-    ,ui_FieldId_fg               = 21
-    ,ui_FieldId_bg               = 22
-    ,ui_FieldId_bold             = 23
-    ,ui_FieldId_underline        = 24
-    ,ui_FieldId_border           = 25
-    ,ui_FieldId_table_cfg        = 26
-    ,ui_FieldId_selectable       = 27
-    ,ui_FieldId_header           = 28
-    ,ui_FieldId_tree_cfg         = 29
-    ,ui_FieldId_indent           = 30
-    ,ui_FieldId_show_lines       = 31
-    ,ui_FieldId_child_field      = 32
-    ,ui_FieldId_widget           = 33
-    ,ui_FieldId_p_window         = 34
-    ,ui_FieldId_p_parent         = 35
-    ,ui_FieldId_type             = 36
-    ,ui_FieldId_layout           = 37
-    ,ui_FieldId_row              = 38
-    ,ui_FieldId_col              = 39
-    ,ui_FieldId_h                = 40
-    ,ui_FieldId_zorder           = 41
-    ,ui_FieldId_visible          = 42
-    ,ui_FieldId_enabled          = 43
-    ,ui_FieldId_selection        = 44
-    ,ui_FieldId_p_style          = 45
-    ,ui_FieldId_text             = 46
-    ,ui_FieldId_focusable        = 47
-    ,ui_FieldId_widget_type      = 48
-    ,ui_FieldId_window           = 49
-    ,ui_FieldId_rows             = 50
-    ,ui_FieldId_cols             = 51
-    ,ui_FieldId_value            = 52
+enum ui_FieldIdEnum {                    // ui.FieldId.value
+     ui_FieldId_action_type        = 0
+    ,ui_FieldId_align              = 1
+    ,ui_FieldId_binding            = 2
+    ,ui_FieldId_p_widget           = 3
+    ,ui_FieldId_source_ctype       = 4
+    ,ui_FieldId_source_field       = 5
+    ,ui_FieldId_kind               = 6
+    ,ui_FieldId_dir                = 7
+    ,ui_FieldId_binding_dir        = 8
+    ,ui_FieldId_binding_kind       = 9
+    ,ui_FieldId_border_style       = 10
+    ,ui_FieldId_color              = 11
+    ,ui_FieldId_column             = 12
+    ,ui_FieldId_field              = 13
+    ,ui_FieldId_title              = 14
+    ,ui_FieldId_w                  = 15
+    ,ui_FieldId_sortable           = 16
+    ,ui_FieldId_hidden             = 17
+    ,ui_FieldId_editable           = 18
+    ,ui_FieldId_command            = 19
+    ,ui_FieldId_action             = 20
+    ,ui_FieldId_arg                = 21
+    ,ui_FieldId_data_path          = 22
+    ,ui_FieldId_comment            = 23
+    ,ui_FieldId_data_step          = 24
+    ,ui_FieldId_p_path             = 25
+    ,ui_FieldId_level              = 26
+    ,ui_FieldId_label_field        = 27
+    ,ui_FieldId_detail_field       = 28
+    ,ui_FieldId_link_field         = 29
+    ,ui_FieldId_input_cfg          = 30
+    ,ui_FieldId_maxlen             = 31
+    ,ui_FieldId_key_map            = 32
+    ,ui_FieldId_key                = 33
+    ,ui_FieldId_layout_cfg         = 34
+    ,ui_FieldId_min_w              = 35
+    ,ui_FieldId_min_h              = 36
+    ,ui_FieldId_max_w              = 37
+    ,ui_FieldId_max_h              = 38
+    ,ui_FieldId_flex               = 39
+    ,ui_FieldId_padding            = 40
+    ,ui_FieldId_gap                = 41
+    ,ui_FieldId_layout_type        = 42
+    ,ui_FieldId_selection_mode     = 43
+    ,ui_FieldId_style              = 44
+    ,ui_FieldId_fg                 = 45
+    ,ui_FieldId_bg                 = 46
+    ,ui_FieldId_bold               = 47
+    ,ui_FieldId_underline          = 48
+    ,ui_FieldId_border             = 49
+    ,ui_FieldId_style_slot         = 50
+    ,ui_FieldId_state              = 51
+    ,ui_FieldId_p_style            = 52
+    ,ui_FieldId_table_cfg          = 53
+    ,ui_FieldId_selectable         = 54
+    ,ui_FieldId_header             = 55
+    ,ui_FieldId_tree_cfg           = 56
+    ,ui_FieldId_indent             = 57
+    ,ui_FieldId_show_lines         = 58
+    ,ui_FieldId_child_field        = 59
+    ,ui_FieldId_expanded_default   = 60
+    ,ui_FieldId_widget             = 61
+    ,ui_FieldId_p_window           = 62
+    ,ui_FieldId_p_parent           = 63
+    ,ui_FieldId_type               = 64
+    ,ui_FieldId_layout             = 65
+    ,ui_FieldId_row                = 66
+    ,ui_FieldId_col                = 67
+    ,ui_FieldId_h                  = 68
+    ,ui_FieldId_zorder             = 69
+    ,ui_FieldId_visible            = 70
+    ,ui_FieldId_enabled            = 71
+    ,ui_FieldId_selection          = 72
+    ,ui_FieldId_text               = 73
+    ,ui_FieldId_focusable          = 74
+    ,ui_FieldId_widget_state       = 75
+    ,ui_FieldId_widget_type        = 76
+    ,ui_FieldId_window             = 77
+    ,ui_FieldId_rows               = 78
+    ,ui_FieldId_cols               = 79
+    ,ui_FieldId_value              = 80
 };
 
-enum { ui_FieldIdEnum_N = 53 };
+enum { ui_FieldIdEnum_N = 81 };
 
 extern const char *  ui_LayoutType_layout_type_absolute;     // absolute      fconst:ui.LayoutType.layout_type/absolute
 extern const char *  ui_LayoutType_layout_type_vertical;     // vertical      fconst:ui.LayoutType.layout_type/vertical
 extern const char *  ui_LayoutType_layout_type_horizontal;   // horizontal    fconst:ui.LayoutType.layout_type/horizontal
+extern const char *  ui_LayoutType_layout_type_grid;         // grid          fconst:ui.LayoutType.layout_type/grid
+extern const char *  ui_LayoutType_layout_type_stack;        // stack         fconst:ui.LayoutType.layout_type/stack
+extern const char *  ui_LayoutType_layout_type_dock;         // dock          fconst:ui.LayoutType.layout_type/dock
+extern const char *  ui_LayoutType_layout_type_split;        // split         fconst:ui.LayoutType.layout_type/split
+extern const char *  ui_LayoutType_layout_type_form;         // form          fconst:ui.LayoutType.layout_type/form
+extern const char *  ui_LayoutType_layout_type_flow;         // flow          fconst:ui.LayoutType.layout_type/flow
 
 // --- ui_LayoutTypeCaseEnum
 
@@ -173,9 +287,15 @@ enum ui_LayoutTypeCaseEnum {             // ui.LayoutTypeCase.layout_type
      ui_LayoutTypeCase_absolute     = 1
     ,ui_LayoutTypeCase_vertical     = 2
     ,ui_LayoutTypeCase_horizontal   = 3
+    ,ui_LayoutTypeCase_grid         = 4
+    ,ui_LayoutTypeCase_stack        = 5
+    ,ui_LayoutTypeCase_dock         = 6
+    ,ui_LayoutTypeCase_split        = 7
+    ,ui_LayoutTypeCase_form         = 8
+    ,ui_LayoutTypeCase_flow         = 9
 };
 
-enum { ui_LayoutTypeCaseEnum_N = 3 };
+enum { ui_LayoutTypeCaseEnum_N = 9 };
 
 extern const char *  ui_SelectionMode_selection_mode_none;     // none      fconst:ui.SelectionMode.selection_mode/none
 extern const char *  ui_SelectionMode_selection_mode_single;   // single    fconst:ui.SelectionMode.selection_mode/single
@@ -190,6 +310,24 @@ enum ui_SelectionModeCaseEnum {         // ui.SelectionModeCase.selection_mode
 };
 
 enum { ui_SelectionModeCaseEnum_N = 3 };
+
+extern const char *  ui_WidgetState_widget_state_focused;    // focused     fconst:ui.WidgetState.widget_state/focused
+extern const char *  ui_WidgetState_widget_state_selected;   // selected    fconst:ui.WidgetState.widget_state/selected
+extern const char *  ui_WidgetState_widget_state_disabled;   // disabled    fconst:ui.WidgetState.widget_state/disabled
+extern const char *  ui_WidgetState_widget_state_editing;    // editing     fconst:ui.WidgetState.widget_state/editing
+extern const char *  ui_WidgetState_widget_state_error;      // error       fconst:ui.WidgetState.widget_state/error
+
+// --- ui_WidgetStateCaseEnum
+
+enum ui_WidgetStateCaseEnum {           // ui.WidgetStateCase.widget_state
+     ui_WidgetStateCase_focused    = 1
+    ,ui_WidgetStateCase_selected   = 2
+    ,ui_WidgetStateCase_disabled   = 3
+    ,ui_WidgetStateCase_editing    = 4
+    ,ui_WidgetStateCase_error      = 5
+};
+
+enum { ui_WidgetStateCaseEnum_N = 5 };
 
 extern const char *  ui_WidgetType_widget_type_label;         // label          fconst:ui.WidgetType.widget_type/label
 extern const char *  ui_WidgetType_widget_type_table;         // table          fconst:ui.WidgetType.widget_type/table
@@ -225,18 +363,27 @@ enum { ui_WidgetTypeCaseEnum_N = 12 };
 
 namespace ui { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 ActionTypePkey;
+    typedef algo::Smallstr50 AlignPkey;
     typedef algo::Smallstr50 BindingPkey;
+    typedef algo::Smallstr50 BindingDirPkey;
+    typedef algo::Smallstr50 BindingKindPkey;
     typedef algo::Smallstr50 BorderStylePkey;
     typedef algo::Smallstr50 ColorPkey;
     typedef algo::Smallstr50 ColumnPkey;
+    typedef algo::Smallstr50 CommandPkey;
+    typedef algo::Smallstr50 DataPathPkey;
+    typedef algo::Smallstr50 DataStepPkey;
     typedef algo::Smallstr50 InputCfgPkey;
     typedef algo::Smallstr50 KeyMapPkey;
+    typedef algo::Smallstr50 LayoutCfgPkey;
     typedef algo::Smallstr50 LayoutTypePkey;
     typedef algo::Smallstr50 SelectionModePkey;
     typedef algo::Smallstr50 StylePkey;
+    typedef algo::Smallstr50 StyleSlotPkey;
     typedef algo::Smallstr50 TableCfgPkey;
     typedef algo::Smallstr50 TreeCfgPkey;
     typedef algo::Smallstr50 WidgetPkey;
+    typedef algo::Smallstr50 WidgetStatePkey;
     typedef algo::Smallstr50 WidgetTypePkey;
     typedef algo::Smallstr50 WindowPkey;
 } // gen:ns_pkeytypedef
@@ -245,23 +392,36 @@ namespace ui { // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace ui { struct ActionType; }
 namespace ui { struct ActionTypeCase; }
+namespace ui { struct Align; }
+namespace ui { struct AlignCase; }
 namespace ui { struct Binding; }
+namespace ui { struct BindingDir; }
+namespace ui { struct BindingDirCase; }
+namespace ui { struct BindingKind; }
+namespace ui { struct BindingKindCase; }
 namespace ui { struct BorderStyle; }
 namespace ui { struct BorderStyleCase; }
 namespace ui { struct Color; }
 namespace ui { struct ColorCase; }
 namespace ui { struct Column; }
+namespace ui { struct Command; }
+namespace ui { struct DataPath; }
+namespace ui { struct DataStep; }
 namespace ui { struct FieldId; }
 namespace ui { struct InputCfg; }
 namespace ui { struct KeyMap; }
+namespace ui { struct LayoutCfg; }
 namespace ui { struct LayoutType; }
 namespace ui { struct LayoutTypeCase; }
 namespace ui { struct SelectionMode; }
 namespace ui { struct SelectionModeCase; }
 namespace ui { struct Style; }
+namespace ui { struct StyleSlot; }
 namespace ui { struct TableCfg; }
 namespace ui { struct TreeCfg; }
 namespace ui { struct Widget; }
+namespace ui { struct WidgetState; }
+namespace ui { struct WidgetStateCase; }
 namespace ui { struct WidgetType; }
 namespace ui { struct WidgetTypeCase; }
 namespace ui { struct Window; }
@@ -328,12 +488,75 @@ void                 action_type_SetStrptr(ui::ActionTypeCase& parent, algo::str
 // func:ui.ActionTypeCase..Init
 inline void          ActionTypeCase_Init(ui::ActionTypeCase& parent);
 
+// --- ui.Align
+struct Align { // ui.Align: Alignment for layout and cells
+    algo::Smallstr50   align;   //
+    // func:ui.Align..Ctor
+    inline               Align() __attribute__((nothrow));
+};
+
+// func:ui.Align..ReadFieldMaybe
+bool                 Align_ReadFieldMaybe(ui::Align& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::Align from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.Align..ReadStrptrMaybe
+bool                 Align_ReadStrptrMaybe(ui::Align &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ui.Align.String  printfmt:Tuple
+// func:ui.Align..Print
+void                 Align_Print(ui::Align& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.AlignCase
+#pragma pack(push,1)
+struct AlignCase { // ui.AlignCase: enum helper Alignment for layout and cells
+    u8   align;   //   0
+    // func:ui.AlignCase.align.Cast
+    inline               operator ui_AlignCaseEnum() const __attribute__((nothrow));
+    // func:ui.AlignCase..Ctor
+    inline               AlignCase() __attribute__((nothrow));
+    // func:ui.AlignCase..FieldwiseCtor
+    explicit inline               AlignCase(u8 in_align) __attribute__((nothrow));
+    // func:ui.AlignCase..EnumCtor
+    inline               AlignCase(ui_AlignCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+// func:ui.AlignCase.align.GetEnum
+inline ui_AlignCaseEnum align_GetEnum(const ui::AlignCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:ui.AlignCase.align.SetEnum
+inline void          align_SetEnum(ui::AlignCase& parent, ui_AlignCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:ui.AlignCase.align.ToCstr
+const char*          align_ToCstr(const ui::AlignCase& parent) __attribute__((nothrow));
+// Convert align to a string. First, attempt conversion to a known string.
+// If no string matches, print align as a numeric value.
+// func:ui.AlignCase.align.Print
+void                 align_Print(const ui::AlignCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:ui.AlignCase.align.SetStrptrMaybe
+bool                 align_SetStrptrMaybe(ui::AlignCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:ui.AlignCase.align.SetStrptr
+void                 align_SetStrptr(ui::AlignCase& parent, algo::strptr rhs, ui_AlignCaseEnum dflt) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:ui.AlignCase..Init
+inline void          AlignCase_Init(ui::AlignCase& parent);
+
 // --- ui.Binding
 struct Binding { // ui.Binding
     algo::Smallstr50    binding;        //
     algo::Smallstr50    p_widget;       // Widget this binding applies to
     algo::Smallstr100   source_ctype;   // Source ctype (e.g. samp_mdb.User)
     algo::Smallstr100   source_field;   // Source field (e.g. zd_user, ind_user)
+    algo::Smallstr50    kind;           //   "collection"  Binding type
+    algo::Smallstr50    dir;            //   "read"  Binding direction
     // func:ui.Binding..Ctor
     inline               Binding() __attribute__((nothrow));
 };
@@ -344,10 +567,135 @@ bool                 Binding_ReadFieldMaybe(ui::Binding& parent, algo::strptr fi
 // The format of the string is an ssim Tuple
 // func:ui.Binding..ReadStrptrMaybe
 bool                 Binding_ReadStrptrMaybe(ui::Binding &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ui.Binding..Init
+inline void          Binding_Init(ui::Binding& parent);
 // print string representation of ROW to string STR
 // cfmt:ui.Binding.String  printfmt:Tuple
 // func:ui.Binding..Print
 void                 Binding_Print(ui::Binding& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.BindingDir
+struct BindingDir { // ui.BindingDir: Binding direction
+    algo::Smallstr50   binding_dir;   //
+    // func:ui.BindingDir..Ctor
+    inline               BindingDir() __attribute__((nothrow));
+};
+
+// func:ui.BindingDir..ReadFieldMaybe
+bool                 BindingDir_ReadFieldMaybe(ui::BindingDir& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::BindingDir from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.BindingDir..ReadStrptrMaybe
+bool                 BindingDir_ReadStrptrMaybe(ui::BindingDir &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ui.BindingDir.String  printfmt:Tuple
+// func:ui.BindingDir..Print
+void                 BindingDir_Print(ui::BindingDir& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.BindingDirCase
+#pragma pack(push,1)
+struct BindingDirCase { // ui.BindingDirCase: enum helper Binding direction
+    u8   binding_dir;   //   0
+    // func:ui.BindingDirCase.binding_dir.Cast
+    inline               operator ui_BindingDirCaseEnum() const __attribute__((nothrow));
+    // func:ui.BindingDirCase..Ctor
+    inline               BindingDirCase() __attribute__((nothrow));
+    // func:ui.BindingDirCase..FieldwiseCtor
+    explicit inline               BindingDirCase(u8 in_binding_dir) __attribute__((nothrow));
+    // func:ui.BindingDirCase..EnumCtor
+    inline               BindingDirCase(ui_BindingDirCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+// func:ui.BindingDirCase.binding_dir.GetEnum
+inline ui_BindingDirCaseEnum binding_dir_GetEnum(const ui::BindingDirCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:ui.BindingDirCase.binding_dir.SetEnum
+inline void          binding_dir_SetEnum(ui::BindingDirCase& parent, ui_BindingDirCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:ui.BindingDirCase.binding_dir.ToCstr
+const char*          binding_dir_ToCstr(const ui::BindingDirCase& parent) __attribute__((nothrow));
+// Convert binding_dir to a string. First, attempt conversion to a known string.
+// If no string matches, print binding_dir as a numeric value.
+// func:ui.BindingDirCase.binding_dir.Print
+void                 binding_dir_Print(const ui::BindingDirCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:ui.BindingDirCase.binding_dir.SetStrptrMaybe
+bool                 binding_dir_SetStrptrMaybe(ui::BindingDirCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:ui.BindingDirCase.binding_dir.SetStrptr
+void                 binding_dir_SetStrptr(ui::BindingDirCase& parent, algo::strptr rhs, ui_BindingDirCaseEnum dflt) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:ui.BindingDirCase..Init
+inline void          BindingDirCase_Init(ui::BindingDirCase& parent);
+
+// --- ui.BindingKind
+struct BindingKind { // ui.BindingKind: Type of data binding
+    algo::Smallstr50   binding_kind;   //
+    // func:ui.BindingKind..Ctor
+    inline               BindingKind() __attribute__((nothrow));
+};
+
+// func:ui.BindingKind..ReadFieldMaybe
+bool                 BindingKind_ReadFieldMaybe(ui::BindingKind& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::BindingKind from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.BindingKind..ReadStrptrMaybe
+bool                 BindingKind_ReadStrptrMaybe(ui::BindingKind &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ui.BindingKind.String  printfmt:Tuple
+// func:ui.BindingKind..Print
+void                 BindingKind_Print(ui::BindingKind& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.BindingKindCase
+#pragma pack(push,1)
+struct BindingKindCase { // ui.BindingKindCase: enum helper Type of data binding
+    u8   binding_kind;   //   0
+    // func:ui.BindingKindCase.binding_kind.Cast
+    inline               operator ui_BindingKindCaseEnum() const __attribute__((nothrow));
+    // func:ui.BindingKindCase..Ctor
+    inline               BindingKindCase() __attribute__((nothrow));
+    // func:ui.BindingKindCase..FieldwiseCtor
+    explicit inline               BindingKindCase(u8 in_binding_kind) __attribute__((nothrow));
+    // func:ui.BindingKindCase..EnumCtor
+    inline               BindingKindCase(ui_BindingKindCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+// func:ui.BindingKindCase.binding_kind.GetEnum
+inline ui_BindingKindCaseEnum binding_kind_GetEnum(const ui::BindingKindCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:ui.BindingKindCase.binding_kind.SetEnum
+inline void          binding_kind_SetEnum(ui::BindingKindCase& parent, ui_BindingKindCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:ui.BindingKindCase.binding_kind.ToCstr
+const char*          binding_kind_ToCstr(const ui::BindingKindCase& parent) __attribute__((nothrow));
+// Convert binding_kind to a string. First, attempt conversion to a known string.
+// If no string matches, print binding_kind as a numeric value.
+// func:ui.BindingKindCase.binding_kind.Print
+void                 binding_kind_Print(const ui::BindingKindCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:ui.BindingKindCase.binding_kind.SetStrptrMaybe
+bool                 binding_kind_SetStrptrMaybe(ui::BindingKindCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:ui.BindingKindCase.binding_kind.SetStrptr
+void                 binding_kind_SetStrptr(ui::BindingKindCase& parent, algo::strptr rhs, ui_BindingKindCaseEnum dflt) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:ui.BindingKindCase..Init
+inline void          BindingKindCase_Init(ui::BindingKindCase& parent);
 
 // --- ui.BorderStyle
 struct BorderStyle { // ui.BorderStyle: Border drawing style
@@ -479,6 +827,9 @@ struct Column { // ui.Column
     algo::Smallstr50   title;      // Column header title
     i32                w;          //   10  Column width
     bool               sortable;   //   false  Column is sortable
+    algo::Smallstr50   align;      //   "left"  Cell alignment
+    bool               hidden;     //   false  Column is hidden
+    bool               editable;   //   false  Cell is editable
     // func:ui.Column..Ctor
     inline               Column() __attribute__((nothrow));
 };
@@ -496,6 +847,73 @@ inline void          Column_Init(ui::Column& parent);
 // cfmt:ui.Column.String  printfmt:Tuple
 // func:ui.Column..Print
 void                 Column_Print(ui::Column& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.Command
+struct Command { // ui.Command: Named command with optional argument
+    algo::Smallstr50    command;    //
+    algo::Smallstr50    action;     // Action to perform
+    algo::Smallstr50    p_widget;   // Target widget
+    algo::Smallstr200   arg;        // Command argument (column name, tab id, etc.)
+    // func:ui.Command..Ctor
+    inline               Command() __attribute__((nothrow));
+};
+
+// func:ui.Command..ReadFieldMaybe
+bool                 Command_ReadFieldMaybe(ui::Command& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::Command from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.Command..ReadStrptrMaybe
+bool                 Command_ReadStrptrMaybe(ui::Command &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ui.Command.String  printfmt:Tuple
+// func:ui.Command..Print
+void                 Command_Print(ui::Command& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.DataPath
+struct DataPath { // ui.DataPath: Named navigation path through relational data
+    algo::Smallstr50   data_path;   //
+    algo::Comment      comment;     // Description of this path
+    // func:ui.DataPath..Ctor
+    inline               DataPath() __attribute__((nothrow));
+};
+
+// func:ui.DataPath..ReadFieldMaybe
+bool                 DataPath_ReadFieldMaybe(ui::DataPath& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::DataPath from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.DataPath..ReadStrptrMaybe
+bool                 DataPath_ReadStrptrMaybe(ui::DataPath &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ui.DataPath.String  printfmt:Tuple
+// func:ui.DataPath..Print
+void                 DataPath_Print(ui::DataPath& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.DataStep
+struct DataStep { // ui.DataStep: One level in a data navigation path
+    algo::Smallstr50    data_step;      //
+    algo::Smallstr50    p_path;         // Parent data path
+    i32                 level;          //   0  Depth level (0=root)
+    algo::Smallstr100   source_ctype;   // Ctype to display at this level
+    algo::Smallstr50    label_field;    // Field to show as label
+    algo::Smallstr50    detail_field;   // Field to show as detail/description
+    algo::Smallstr50    link_field;     // Pathcomp to match parent key (e.g. ctype.LL for namespace prefix)
+    // func:ui.DataStep..Ctor
+    inline               DataStep() __attribute__((nothrow));
+};
+
+// func:ui.DataStep..ReadFieldMaybe
+bool                 DataStep_ReadFieldMaybe(ui::DataStep& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::DataStep from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.DataStep..ReadStrptrMaybe
+bool                 DataStep_ReadStrptrMaybe(ui::DataStep &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ui.DataStep..Init
+inline void          DataStep_Init(ui::DataStep& parent);
+// print string representation of ROW to string STR
+// cfmt:ui.DataStep.String  printfmt:Tuple
+// func:ui.DataStep..Print
+void                 DataStep_Print(ui::DataStep& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ui.FieldId
 #pragma pack(push,1)
@@ -595,6 +1013,36 @@ bool                 KeyMap_ReadStrptrMaybe(ui::KeyMap &parent, algo::strptr in_
 // cfmt:ui.KeyMap.String  printfmt:Tuple
 // func:ui.KeyMap..Print
 void                 KeyMap_Print(ui::KeyMap& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.LayoutCfg
+struct LayoutCfg { // ui.LayoutCfg: Layout hints for managed (non-absolute) positioning
+    algo::Smallstr50   layout_cfg;   //
+    algo::Smallstr50   p_widget;     // Widget this layout applies to
+    i32                min_w;        //   0  Minimum width (0=no minimum)
+    i32                min_h;        //   0  Minimum height
+    i32                max_w;        //   0  Maximum width (0=unlimited)
+    i32                max_h;        //   0  Maximum height
+    i32                flex;         //   0  Flex weight for proportional sizing
+    algo::Smallstr50   align;        //   "left"  Alignment within container
+    i32                padding;      //   0  Inner padding
+    i32                gap;          //   0  Gap between children
+    // func:ui.LayoutCfg..Ctor
+    inline               LayoutCfg() __attribute__((nothrow));
+};
+
+// func:ui.LayoutCfg..ReadFieldMaybe
+bool                 LayoutCfg_ReadFieldMaybe(ui::LayoutCfg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::LayoutCfg from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.LayoutCfg..ReadStrptrMaybe
+bool                 LayoutCfg_ReadStrptrMaybe(ui::LayoutCfg &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:ui.LayoutCfg..Init
+void                 LayoutCfg_Init(ui::LayoutCfg& parent);
+// print string representation of ROW to string STR
+// cfmt:ui.LayoutCfg.String  printfmt:Tuple
+// func:ui.LayoutCfg..Print
+void                 LayoutCfg_Print(ui::LayoutCfg& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ui.LayoutType
 struct LayoutType { // ui.LayoutType: Widget layout mode
@@ -744,6 +1192,27 @@ inline void          Style_Init(ui::Style& parent);
 // func:ui.Style..Print
 void                 Style_Print(ui::Style& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- ui.StyleSlot
+struct StyleSlot { // ui.StyleSlot: Maps widget state to style override
+    algo::Smallstr50   style_slot;   //
+    algo::Smallstr50   p_widget;     // Widget this applies to
+    algo::Smallstr50   state;        // Widget state this style applies to
+    algo::Smallstr50   p_style;      // Style to apply in this state
+    // func:ui.StyleSlot..Ctor
+    inline               StyleSlot() __attribute__((nothrow));
+};
+
+// func:ui.StyleSlot..ReadFieldMaybe
+bool                 StyleSlot_ReadFieldMaybe(ui::StyleSlot& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::StyleSlot from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.StyleSlot..ReadStrptrMaybe
+bool                 StyleSlot_ReadStrptrMaybe(ui::StyleSlot &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ui.StyleSlot.String  printfmt:Tuple
+// func:ui.StyleSlot..Print
+void                 StyleSlot_Print(ui::StyleSlot& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- ui.TableCfg
 struct TableCfg { // ui.TableCfg
     algo::Smallstr50   table_cfg;    //
@@ -770,11 +1239,13 @@ void                 TableCfg_Print(ui::TableCfg& row, algo::cstring& str) __att
 
 // --- ui.TreeCfg
 struct TreeCfg { // ui.TreeCfg
-    algo::Smallstr50    tree_cfg;      //
-    algo::Smallstr50    p_widget;      // Tree widget
-    i32                 indent;        //   2  Indentation per level
-    bool                show_lines;    //   true  Draw tree connection lines
-    algo::Smallstr100   child_field;   // Field that provides children (e.g. Project.zd_task)
+    algo::Smallstr50    tree_cfg;           //
+    algo::Smallstr50    p_widget;           // Tree widget
+    i32                 indent;             //   2  Indentation per level
+    bool                show_lines;         //   true  Draw tree connection lines
+    algo::Smallstr100   child_field;        // Field that provides children (e.g. Project.zd_task)
+    algo::Smallstr50    label_field;        // Field to display as node label
+    bool                expanded_default;   //   false  Nodes expanded by default
     // func:ui.TreeCfg..Ctor
     inline               TreeCfg() __attribute__((nothrow));
 };
@@ -829,6 +1300,67 @@ void                 Widget_Init(ui::Widget& parent);
 // cfmt:ui.Widget.String  printfmt:Tuple
 // func:ui.Widget..Print
 void                 Widget_Print(ui::Widget& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.WidgetState
+struct WidgetState { // ui.WidgetState: Widget visual state
+    algo::Smallstr50   widget_state;   //
+    // func:ui.WidgetState..Ctor
+    inline               WidgetState() __attribute__((nothrow));
+};
+
+// func:ui.WidgetState..ReadFieldMaybe
+bool                 WidgetState_ReadFieldMaybe(ui::WidgetState& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::WidgetState from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.WidgetState..ReadStrptrMaybe
+bool                 WidgetState_ReadStrptrMaybe(ui::WidgetState &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ui.WidgetState.String  printfmt:Tuple
+// func:ui.WidgetState..Print
+void                 WidgetState_Print(ui::WidgetState& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.WidgetStateCase
+#pragma pack(push,1)
+struct WidgetStateCase { // ui.WidgetStateCase: enum helper Widget visual state
+    u8   widget_state;   //   0
+    // func:ui.WidgetStateCase.widget_state.Cast
+    inline               operator ui_WidgetStateCaseEnum() const __attribute__((nothrow));
+    // func:ui.WidgetStateCase..Ctor
+    inline               WidgetStateCase() __attribute__((nothrow));
+    // func:ui.WidgetStateCase..FieldwiseCtor
+    explicit inline               WidgetStateCase(u8 in_widget_state) __attribute__((nothrow));
+    // func:ui.WidgetStateCase..EnumCtor
+    inline               WidgetStateCase(ui_WidgetStateCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+// func:ui.WidgetStateCase.widget_state.GetEnum
+inline ui_WidgetStateCaseEnum widget_state_GetEnum(const ui::WidgetStateCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:ui.WidgetStateCase.widget_state.SetEnum
+inline void          widget_state_SetEnum(ui::WidgetStateCase& parent, ui_WidgetStateCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:ui.WidgetStateCase.widget_state.ToCstr
+const char*          widget_state_ToCstr(const ui::WidgetStateCase& parent) __attribute__((nothrow));
+// Convert widget_state to a string. First, attempt conversion to a known string.
+// If no string matches, print widget_state as a numeric value.
+// func:ui.WidgetStateCase.widget_state.Print
+void                 widget_state_Print(const ui::WidgetStateCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:ui.WidgetStateCase.widget_state.SetStrptrMaybe
+bool                 widget_state_SetStrptrMaybe(ui::WidgetStateCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:ui.WidgetStateCase.widget_state.SetStrptr
+void                 widget_state_SetStrptr(ui::WidgetStateCase& parent, algo::strptr rhs, ui_WidgetStateCaseEnum dflt) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:ui.WidgetStateCase..Init
+inline void          WidgetStateCase_Init(ui::WidgetStateCase& parent);
 
 // --- ui.WidgetType
 struct WidgetType { // ui.WidgetType: Type of UI widget
@@ -920,19 +1452,28 @@ namespace ui { // gen:ns_func
 // gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ui::ActionType &row);// cfmt:ui.ActionType.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::Align &row);// cfmt:ui.Align.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::Binding &row);// cfmt:ui.Binding.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::BindingDir &row);// cfmt:ui.BindingDir.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::BindingKind &row);// cfmt:ui.BindingKind.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::BorderStyle &row);// cfmt:ui.BorderStyle.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::Color &row);// cfmt:ui.Color.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::Column &row);// cfmt:ui.Column.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::Command &row);// cfmt:ui.Command.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::DataPath &row);// cfmt:ui.DataPath.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::DataStep &row);// cfmt:ui.DataStep.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::FieldId &row);// cfmt:ui.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::InputCfg &row);// cfmt:ui.InputCfg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::KeyMap &row);// cfmt:ui.KeyMap.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::LayoutCfg &row);// cfmt:ui.LayoutCfg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::LayoutType &row);// cfmt:ui.LayoutType.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::SelectionMode &row);// cfmt:ui.SelectionMode.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::Style &row);// cfmt:ui.Style.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::StyleSlot &row);// cfmt:ui.StyleSlot.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::TableCfg &row);// cfmt:ui.TableCfg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::TreeCfg &row);// cfmt:ui.TreeCfg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::Widget &row);// cfmt:ui.Widget.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::WidgetState &row);// cfmt:ui.WidgetState.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::WidgetType &row);// cfmt:ui.WidgetType.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::Window &row);// cfmt:ui.Window.String
 }

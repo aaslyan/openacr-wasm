@@ -234,3 +234,82 @@ text        Smallstr200     Static text content
 3. **Pure handlers** — state updates have no side effects
 4. **One schema, many renderers** — terminal, browser, test harness
 5. **Grow by addition** — new tables extend, never break existing ones
+
+## Review Notes
+
+The architectural direction is strong. The most valuable property is the clean
+split between declarative UI data, pure message handling, and thin rendering
+backends. That gives the framework portability, replayability, and a very good
+test surface.
+
+The main risk is over-indirection. When structure, layout, style, binding,
+commands, and interaction are all data-driven, the system can become difficult
+to author and debug unless the missing semantics are made explicit.
+
+### Recommended Improvements
+
+1. **Add a small typed expression system**
+
+Direct bindings are a good base, but real screens need computed visibility,
+enabled state, derived labels, formatting, filters, and conditional styling.
+These should be handled by one constrained expression model rather than many
+special-purpose tables.
+
+2. **Define stable widget identity and state lifetime**
+
+Focus, selection, expansion, edit state, and scroll position should be modeled
+with explicit ownership rules. The framework should define which state is
+ephemeral, which is persisted, and how row or node identity survives refreshes
+and reordering.
+
+3. **Separate intent from effects**
+
+The message pipeline is the right model for user intent. Side effects such as
+file I/O, clipboard access, network calls, timers, and notifications should
+flow through a separate effect queue so state handlers remain pure.
+
+4. **Plan for dependency tracking**
+
+A fully generic renderer is simple and correct, but eventually expensive. The
+design should leave room for invalidation, dirty propagation, and partial
+recompute so updates only touch affected widgets.
+
+5. **Make one layout model dominant**
+
+Supporting both absolute and managed layouts is practical, but the framework
+will be easier to author if one managed layout model is the default for most
+screens and absolute positioning is reserved for exceptional cases.
+
+6. **Treat large-data behavior as a first-class concern**
+
+Tables and trees eventually need viewport-based rendering, lazy expansion,
+incremental search, and efficient scrolling. These should be part of the design
+contract, not just later optimizations.
+
+7. **Promote validation and form semantics earlier**
+
+Once editable widgets exist, the framework needs parse state, dirty state,
+touched state, validation errors, submit behavior, and cancel behavior. Those
+are core interaction semantics, not optional additions.
+
+8. **Version the schema and message protocol**
+
+If UI definitions are data and message streams are replayable, compatibility
+rules should be explicit. The framework should define versioning, migration,
+and rejection rules for both `ui.*` and `uimsg.*`.
+
+9. **Invest in inspection and authoring tools**
+
+This architecture depends heavily on tooling. A UI inspector, message trace
+viewer, schema linter, and hot-reload path for `ssim` edits will matter as much
+as new widget types.
+
+### Overall Assessment
+
+The concept is correct. The next improvements should focus less on adding more
+widgets and more on making the system easier to reason about at scale:
+
+- expression evaluation
+- effect handling
+- state identity rules
+- inspection and lint tooling

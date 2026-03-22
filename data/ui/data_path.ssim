@@ -1,0 +1,1 @@
+ui.data_path  data_path:schema  comment:"Browse OpenACR schema: ns → ctype → field → fconst"

@@ -253,6 +253,8 @@ dmmeta.ssimfile  ssimfile:ui.border_style  ctype:ui.BorderStyle
 dmmeta.ssimfile  ssimfile:ui.color  ctype:ui.Color
 dmmeta.ssimfile  ssimfile:ui.column  ctype:ui.Column
 dmmeta.ssimfile  ssimfile:ui.command  ctype:ui.Command
+dmmeta.ssimfile  ssimfile:ui.data_path  ctype:ui.DataPath
+dmmeta.ssimfile  ssimfile:ui.data_step  ctype:ui.DataStep
 dmmeta.ssimfile  ssimfile:ui.input_cfg  ctype:ui.InputCfg
 dmmeta.ssimfile  ssimfile:ui.key_map  ctype:ui.KeyMap
 dmmeta.ssimfile  ssimfile:ui.layout_cfg  ctype:ui.LayoutCfg

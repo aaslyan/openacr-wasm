@@ -12205,6 +12205,7 @@ inline bool          Smallstr20_Update(algo::Smallstr20 &lhs, algo::Smallstr20& 
 void                 Smallstr20_Print(algo::Smallstr20& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- algo.Smallstr200
+#pragma pack(push,1)
 struct Smallstr200 { // algo.Smallstr200: inline string with length field
     enum { ch_max = 200 };
     u8 ch[200+1];
@@ -12230,6 +12231,7 @@ struct Smallstr200 { // algo.Smallstr200: inline string with length field
     // func:algo.Smallstr200..CopyCtor
     inline               Smallstr200(const algo::Smallstr200 &rhs) __attribute__((nothrow));
 };
+#pragma pack(pop)
 
 // Append character to string.
 // If there is no space for an extra character, do nothing.
