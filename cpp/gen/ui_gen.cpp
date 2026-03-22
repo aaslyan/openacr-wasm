@@ -60,15 +60,6 @@ const char *ui_ActionType_action_type_filter         = "filter";
 const char *ui_ActionType_action_type_expand_all     = "expand_all";
 const char *ui_ActionType_action_type_collapse_all   = "collapse_all";
 
-// compile-time string constants for ui.Align.align
-const char *ui_Align_align_center   = "center";
-const char *ui_Align_align_right    = "right";
-
-const char *ui_Align_align_top       = "top";
-const char *ui_Align_align_bottom    = "bottom";
-const char *ui_Align_align_stretch   = "stretch";
-const char *ui_Align_align_left      = "left";
-
 // compile-time string constants for ui.BindingDir.binding_dir
 const char *ui_BindingDir_binding_dir_write       = "write";
 const char *ui_BindingDir_binding_dir_readwrite   = "readwrite";
@@ -101,10 +92,25 @@ const char *ui_Color_color_magenta   = "magenta";
 const char *ui_Color_color_cyan      = "cyan";
 const char *ui_Color_color_white     = "white";
 
+// compile-time string constants for ui.FilterSource.filter_source
+const char *ui_FilterSource_filter_source_fixed     = "fixed";
+const char *ui_FilterSource_filter_source_context   = "context";
+const char *ui_FilterSource_filter_source_widget    = "widget";
+const char *ui_FilterSource_filter_source_runtime   = "runtime";
+
 // compile-time string constants for ui.HAlign.align
 const char *ui_HAlign_align_left     = "left";
 const char *ui_HAlign_align_center   = "center";
 const char *ui_HAlign_align_right    = "right";
+
+// compile-time string constants for ui.JoinKind.join_kind
+const char *ui_JoinKind_join_kind_base    = "base";
+const char *ui_JoinKind_join_kind_inner   = "inner";
+const char *ui_JoinKind_join_kind_left    = "left";
+const char *ui_JoinKind_join_kind_right   = "right";
+
+const char *ui_JoinKind_join_kind_full    = "full";
+const char *ui_JoinKind_join_kind_cross   = "cross";
 
 // compile-time string constants for ui.LayoutType.layout_type
 const char *ui_LayoutType_layout_type_absolute     = "absolute";
@@ -121,6 +127,10 @@ const char *ui_LayoutType_layout_type_flow         = "flow";
 const char *ui_SelectionMode_selection_mode_none     = "none";
 const char *ui_SelectionMode_selection_mode_single   = "single";
 const char *ui_SelectionMode_selection_mode_multi    = "multi";
+
+// compile-time string constants for ui.SortDir.sort_dir
+const char *ui_SortDir_sort_dir_asc    = "asc";
+const char *ui_SortDir_sort_dir_desc   = "desc";
 
 // compile-time string constants for ui.VAlign.align
 const char *ui_VAlign_align_top      = "top";
@@ -415,138 +425,6 @@ void ui::action_type_SetStrptr(ui::ActionTypeCase& parent, algo::strptr rhs, ui_
     if (!action_type_SetStrptrMaybe(parent,rhs)) action_type_SetEnum(parent,dflt);
 }
 
-// --- ui.Align..ReadFieldMaybe
-bool ui::Align_ReadFieldMaybe(ui::Align& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    ui::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case ui_FieldId_align: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.align, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- ui.Align..ReadStrptrMaybe
-// Read fields of ui::Align from an ascii string.
-// The format of the string is an ssim Tuple
-bool ui::Align_ReadStrptrMaybe(ui::Align &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "ui.align") || algo::StripTypeTag(in_str, "ui.Align");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Align_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- ui.Align..Print
-// print string representation of ROW to string STR
-// cfmt:ui.Align.String  printfmt:Tuple
-void ui::Align_Print(ui::Align& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "ui.align";
-
-    algo::Smallstr50_Print(row.align, temp);
-    PrintAttrSpaceReset(str,"align", temp);
-}
-
-// --- ui.AlignCase.align.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* ui::align_ToCstr(const ui::AlignCase& parent) {
-    const char *ret = NULL;
-    switch(align_GetEnum(parent)) {
-        case ui_AlignCase_center           : ret = "center";  break;
-        case ui_AlignCase_right            : ret = "right";  break;
-        case ui_AlignCase_top              : ret = "top";  break;
-        case ui_AlignCase_bottom           : ret = "bottom";  break;
-        case ui_AlignCase_stretch          : ret = "stretch";  break;
-        case ui_AlignCase_left             : ret = "left";  break;
-    }
-    return ret;
-}
-
-// --- ui.AlignCase.align.Print
-// Convert align to a string. First, attempt conversion to a known string.
-// If no string matches, print align as a numeric value.
-void ui::align_Print(const ui::AlignCase& parent, algo::cstring &lhs) {
-    const char *strval = align_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.align;
-    }
-}
-
-// --- ui.AlignCase.align.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool ui::align_SetStrptrMaybe(ui::AlignCase& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 3: {
-            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
-                case LE_STR3('t','o','p'): {
-                    align_SetEnum(parent,ui_AlignCase_top); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 4: {
-            switch (u64(algo::ReadLE32(rhs.elems))) {
-                case LE_STR4('l','e','f','t'): {
-                    align_SetEnum(parent,ui_AlignCase_left); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 5: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
-                case LE_STR5('r','i','g','h','t'): {
-                    align_SetEnum(parent,ui_AlignCase_right); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 6: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
-                case LE_STR6('b','o','t','t','o','m'): {
-                    align_SetEnum(parent,ui_AlignCase_bottom); ret = true; break;
-                }
-                case LE_STR6('c','e','n','t','e','r'): {
-                    align_SetEnum(parent,ui_AlignCase_center); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 7: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
-                case LE_STR7('s','t','r','e','t','c','h'): {
-                    align_SetEnum(parent,ui_AlignCase_stretch); ret = true; break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- ui.AlignCase.align.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void ui::align_SetStrptr(ui::AlignCase& parent, algo::strptr rhs, ui_AlignCaseEnum dflt) {
-    if (!align_SetStrptrMaybe(parent,rhs)) align_SetEnum(parent,dflt);
-}
-
 // --- ui.Binding..ReadFieldMaybe
 bool ui::Binding_ReadFieldMaybe(ui::Binding& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -573,6 +451,12 @@ bool ui::Binding_ReadFieldMaybe(ui::Binding& parent, algo::strptr field, algo::s
         } break;
         case ui_FieldId_p_data_path: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_data_path, strval);
+        } break;
+        case ui_FieldId_p_view: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_view, strval);
+        } break;
+        case ui_FieldId_expr: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.expr, strval);
         } break;
         default: {
             retval = false;
@@ -624,6 +508,12 @@ void ui::Binding_Print(ui::Binding& row, algo::cstring& str) {
 
     algo::Smallstr50_Print(row.p_data_path, temp);
     PrintAttrSpaceReset(str,"p_data_path", temp);
+
+    algo::Smallstr50_Print(row.p_view, temp);
+    PrintAttrSpaceReset(str,"p_view", temp);
+
+    algo::Smallstr200_Print(row.expr, temp);
+    PrintAttrSpaceReset(str,"expr", temp);
 }
 
 // --- ui.BindingDir..ReadFieldMaybe
@@ -1285,6 +1175,79 @@ void ui::Command_Print(ui::Command& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"arg", temp);
 }
 
+// --- ui.ContextVar..ReadFieldMaybe
+bool ui::ContextVar_ReadFieldMaybe(ui::ContextVar& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_context_var: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.context_var, strval);
+        } break;
+        case ui_FieldId_p_window: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_window, strval);
+        } break;
+        case ui_FieldId_name: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.name, strval);
+        } break;
+        case ui_FieldId_datatype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.datatype, strval);
+        } break;
+        case ui_FieldId_default_expr: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.default_expr, strval);
+        } break;
+        case ui_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.ContextVar..ReadStrptrMaybe
+// Read fields of ui::ContextVar from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::ContextVar_ReadStrptrMaybe(ui::ContextVar &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.context_var") || algo::StripTypeTag(in_str, "ui.ContextVar");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && ContextVar_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.ContextVar..Print
+// print string representation of ROW to string STR
+// cfmt:ui.ContextVar.String  printfmt:Tuple
+void ui::ContextVar_Print(ui::ContextVar& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.context_var";
+
+    algo::Smallstr50_Print(row.context_var, temp);
+    PrintAttrSpaceReset(str,"context_var", temp);
+
+    algo::Smallstr50_Print(row.p_window, temp);
+    PrintAttrSpaceReset(str,"p_window", temp);
+
+    algo::Smallstr50_Print(row.name, temp);
+    PrintAttrSpaceReset(str,"name", temp);
+
+    algo::Smallstr50_Print(row.datatype, temp);
+    PrintAttrSpaceReset(str,"datatype", temp);
+
+    algo::Smallstr200_Print(row.default_expr, temp);
+    PrintAttrSpaceReset(str,"default_expr", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- ui.DataPath..ReadFieldMaybe
 bool ui::DataPath_ReadFieldMaybe(ui::DataPath& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -1420,7 +1383,6 @@ const char* ui::value_ToCstr(const ui::FieldId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ui_FieldId_action_type        : ret = "action_type";  break;
-        case ui_FieldId_align              : ret = "align";  break;
         case ui_FieldId_binding            : ret = "binding";  break;
         case ui_FieldId_p_widget           : ret = "p_widget";  break;
         case ui_FieldId_source_ctype       : ret = "source_ctype";  break;
@@ -1428,6 +1390,8 @@ const char* ui::value_ToCstr(const ui::FieldId& parent) {
         case ui_FieldId_kind               : ret = "kind";  break;
         case ui_FieldId_dir                : ret = "dir";  break;
         case ui_FieldId_p_data_path        : ret = "p_data_path";  break;
+        case ui_FieldId_p_view             : ret = "p_view";  break;
+        case ui_FieldId_expr               : ret = "expr";  break;
         case ui_FieldId_binding_dir        : ret = "binding_dir";  break;
         case ui_FieldId_binding_kind       : ret = "binding_kind";  break;
         case ui_FieldId_border_style       : ret = "border_style";  break;
@@ -1439,19 +1403,27 @@ const char* ui::value_ToCstr(const ui::FieldId& parent) {
         case ui_FieldId_sortable           : ret = "sortable";  break;
         case ui_FieldId_hidden             : ret = "hidden";  break;
         case ui_FieldId_editable           : ret = "editable";  break;
+        case ui_FieldId_align              : ret = "align";  break;
         case ui_FieldId_command            : ret = "command";  break;
         case ui_FieldId_action             : ret = "action";  break;
         case ui_FieldId_arg                : ret = "arg";  break;
-        case ui_FieldId_data_path          : ret = "data_path";  break;
+        case ui_FieldId_context_var        : ret = "context_var";  break;
+        case ui_FieldId_p_window           : ret = "p_window";  break;
+        case ui_FieldId_name               : ret = "name";  break;
+        case ui_FieldId_datatype           : ret = "datatype";  break;
+        case ui_FieldId_default_expr       : ret = "default_expr";  break;
         case ui_FieldId_comment            : ret = "comment";  break;
+        case ui_FieldId_data_path          : ret = "data_path";  break;
         case ui_FieldId_data_step          : ret = "data_step";  break;
         case ui_FieldId_p_path             : ret = "p_path";  break;
         case ui_FieldId_level              : ret = "level";  break;
         case ui_FieldId_label_field        : ret = "label_field";  break;
         case ui_FieldId_detail_field       : ret = "detail_field";  break;
         case ui_FieldId_link_field         : ret = "link_field";  break;
+        case ui_FieldId_filter_source      : ret = "filter_source";  break;
         case ui_FieldId_input_cfg          : ret = "input_cfg";  break;
         case ui_FieldId_maxlen             : ret = "maxlen";  break;
+        case ui_FieldId_join_kind          : ret = "join_kind";  break;
         case ui_FieldId_key_map            : ret = "key_map";  break;
         case ui_FieldId_key                : ret = "key";  break;
         case ui_FieldId_p_command          : ret = "p_command";  break;
@@ -1467,6 +1439,7 @@ const char* ui::value_ToCstr(const ui::FieldId& parent) {
         case ui_FieldId_valign             : ret = "valign";  break;
         case ui_FieldId_layout_type        : ret = "layout_type";  break;
         case ui_FieldId_selection_mode     : ret = "selection_mode";  break;
+        case ui_FieldId_sort_dir           : ret = "sort_dir";  break;
         case ui_FieldId_style              : ret = "style";  break;
         case ui_FieldId_fg                 : ret = "fg";  break;
         case ui_FieldId_bg                 : ret = "bg";  break;
@@ -1484,8 +1457,18 @@ const char* ui::value_ToCstr(const ui::FieldId& parent) {
         case ui_FieldId_show_lines         : ret = "show_lines";  break;
         case ui_FieldId_child_field        : ret = "child_field";  break;
         case ui_FieldId_expanded_default   : ret = "expanded_default";  break;
+        case ui_FieldId_view               : ret = "view";  break;
+        case ui_FieldId_base_ctype         : ret = "base_ctype";  break;
+        case ui_FieldId_view_field         : ret = "view_field";  break;
+        case ui_FieldId_view_filter        : ret = "view_filter";  break;
+        case ui_FieldId_source             : ret = "source";  break;
+        case ui_FieldId_enabled            : ret = "enabled";  break;
+        case ui_FieldId_priority           : ret = "priority";  break;
+        case ui_FieldId_view_sort          : ret = "view_sort";  break;
+        case ui_FieldId_view_source        : ret = "view_source";  break;
+        case ui_FieldId_alias              : ret = "alias";  break;
+        case ui_FieldId_join_expr          : ret = "join_expr";  break;
         case ui_FieldId_widget             : ret = "widget";  break;
-        case ui_FieldId_p_window           : ret = "p_window";  break;
         case ui_FieldId_p_parent           : ret = "p_parent";  break;
         case ui_FieldId_type               : ret = "type";  break;
         case ui_FieldId_layout             : ret = "layout";  break;
@@ -1494,7 +1477,6 @@ const char* ui::value_ToCstr(const ui::FieldId& parent) {
         case ui_FieldId_h                  : ret = "h";  break;
         case ui_FieldId_zorder             : ret = "zorder";  break;
         case ui_FieldId_visible            : ret = "visible";  break;
-        case ui_FieldId_enabled            : ret = "enabled";  break;
         case ui_FieldId_selection          : ret = "selection";  break;
         case ui_FieldId_text               : ret = "text";  break;
         case ui_FieldId_focusable          : ret = "focusable";  break;
@@ -1580,11 +1562,17 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('c','o','l','s'): {
                     value_SetEnum(parent,ui_FieldId_cols); ret = true; break;
                 }
+                case LE_STR4('e','x','p','r'): {
+                    value_SetEnum(parent,ui_FieldId_expr); ret = true; break;
+                }
                 case LE_STR4('f','l','e','x'): {
                     value_SetEnum(parent,ui_FieldId_flex); ret = true; break;
                 }
                 case LE_STR4('k','i','n','d'): {
                     value_SetEnum(parent,ui_FieldId_kind); ret = true; break;
+                }
+                case LE_STR4('n','a','m','e'): {
+                    value_SetEnum(parent,ui_FieldId_name); ret = true; break;
                 }
                 case LE_STR4('r','o','w','s'): {
                     value_SetEnum(parent,ui_FieldId_rows); ret = true; break;
@@ -1595,11 +1583,17 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('t','y','p','e'): {
                     value_SetEnum(parent,ui_FieldId_type); ret = true; break;
                 }
+                case LE_STR4('v','i','e','w'): {
+                    value_SetEnum(parent,ui_FieldId_view); ret = true; break;
+                }
             }
             break;
         }
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('a','l','i','a','s'): {
+                    value_SetEnum(parent,ui_FieldId_alias); ret = true; break;
+                }
                 case LE_STR5('a','l','i','g','n'): {
                     value_SetEnum(parent,ui_FieldId_align); ret = true; break;
                 }
@@ -1671,6 +1665,12 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('p','_','p','a','t','h'): {
                     value_SetEnum(parent,ui_FieldId_p_path); ret = true; break;
                 }
+                case LE_STR6('p','_','v','i','e','w'): {
+                    value_SetEnum(parent,ui_FieldId_p_view); ret = true; break;
+                }
+                case LE_STR6('s','o','u','r','c','e'): {
+                    value_SetEnum(parent,ui_FieldId_source); ret = true; break;
+                }
                 case LE_STR6('v','a','l','i','g','n'): {
                     value_SetEnum(parent,ui_FieldId_valign); ret = true; break;
                 }
@@ -1717,6 +1717,9 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
         }
         case 8: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','a','t','a','t','y','p','e'): {
+                    value_SetEnum(parent,ui_FieldId_datatype); ret = true; break;
+                }
                 case LE_STR8('e','d','i','t','a','b','l','e'): {
                     value_SetEnum(parent,ui_FieldId_editable); ret = true; break;
                 }
@@ -1728,6 +1731,12 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('p','_','w','i','n','d','o','w'): {
                     value_SetEnum(parent,ui_FieldId_p_window); ret = true; break;
+                }
+                case LE_STR8('p','r','i','o','r','i','t','y'): {
+                    value_SetEnum(parent,ui_FieldId_priority); ret = true; break;
+                }
+                case LE_STR8('s','o','r','t','_','d','i','r'): {
+                    value_SetEnum(parent,ui_FieldId_sort_dir); ret = true; break;
                 }
                 case LE_STR8('s','o','r','t','a','b','l','e'): {
                     value_SetEnum(parent,ui_FieldId_sortable); ret = true; break;
@@ -1756,6 +1765,14 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,ui_FieldId_input_cfg); ret = true; break; }
                     break;
                 }
+                case LE_STR8('j','o','i','n','_','e','x','p'): {
+                    if (memcmp(rhs.elems+8,"r",1)==0) { value_SetEnum(parent,ui_FieldId_join_expr); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('j','o','i','n','_','k','i','n'): {
+                    if (memcmp(rhs.elems+8,"d",1)==0) { value_SetEnum(parent,ui_FieldId_join_kind); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('p','_','c','o','m','m','a','n'): {
                     if (memcmp(rhs.elems+8,"d",1)==0) { value_SetEnum(parent,ui_FieldId_p_command); ret = true; break; }
                     break;
@@ -1772,11 +1789,19 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,ui_FieldId_underline); ret = true; break; }
                     break;
                 }
+                case LE_STR8('v','i','e','w','_','s','o','r'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,ui_FieldId_view_sort); ret = true; break; }
+                    break;
+                }
             }
             break;
         }
         case 10: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('b','a','s','e','_','c','t','y'): {
+                    if (memcmp(rhs.elems+8,"pe",2)==0) { value_SetEnum(parent,ui_FieldId_base_ctype); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('l','a','y','o','u','t','_','c'): {
                     if (memcmp(rhs.elems+8,"fg",2)==0) { value_SetEnum(parent,ui_FieldId_layout_cfg); ret = true; break; }
                     break;
@@ -1797,6 +1822,10 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"ot",2)==0) { value_SetEnum(parent,ui_FieldId_style_slot); ret = true; break; }
                     break;
                 }
+                case LE_STR8('v','i','e','w','_','f','i','e'): {
+                    if (memcmp(rhs.elems+8,"ld",2)==0) { value_SetEnum(parent,ui_FieldId_view_field); ret = true; break; }
+                    break;
+                }
             }
             break;
         }
@@ -1814,6 +1843,10 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"eld",3)==0) { value_SetEnum(parent,ui_FieldId_child_field); ret = true; break; }
                     break;
                 }
+                case LE_STR8('c','o','n','t','e','x','t','_'): {
+                    if (memcmp(rhs.elems+8,"var",3)==0) { value_SetEnum(parent,ui_FieldId_context_var); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('l','a','b','e','l','_','f','i'): {
                     if (memcmp(rhs.elems+8,"eld",3)==0) { value_SetEnum(parent,ui_FieldId_label_field); ret = true; break; }
                     break;
@@ -1824,6 +1857,14 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('p','_','d','a','t','a','_','p'): {
                     if (memcmp(rhs.elems+8,"ath",3)==0) { value_SetEnum(parent,ui_FieldId_p_data_path); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('v','i','e','w','_','f','i','l'): {
+                    if (memcmp(rhs.elems+8,"ter",3)==0) { value_SetEnum(parent,ui_FieldId_view_filter); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('v','i','e','w','_','s','o','u'): {
+                    if (memcmp(rhs.elems+8,"rce",3)==0) { value_SetEnum(parent,ui_FieldId_view_source); ret = true; break; }
                     break;
                 }
                 case LE_STR8('w','i','d','g','e','t','_','t'): {
@@ -1843,6 +1884,10 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"tyle",4)==0) { value_SetEnum(parent,ui_FieldId_border_style); ret = true; break; }
                     break;
                 }
+                case LE_STR8('d','e','f','a','u','l','t','_'): {
+                    if (memcmp(rhs.elems+8,"expr",4)==0) { value_SetEnum(parent,ui_FieldId_default_expr); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','t','a','i','l','_','f'): {
                     if (memcmp(rhs.elems+8,"ield",4)==0) { value_SetEnum(parent,ui_FieldId_detail_field); ret = true; break; }
                     break;
@@ -1857,6 +1902,15 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('w','i','d','g','e','t','_','s'): {
                     if (memcmp(rhs.elems+8,"tate",4)==0) { value_SetEnum(parent,ui_FieldId_widget_state); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 13: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('f','i','l','t','e','r','_','s'): {
+                    if (memcmp(rhs.elems+8,"ource",5)==0) { value_SetEnum(parent,ui_FieldId_filter_source); ret = true; break; }
                     break;
                 }
             }
@@ -1916,6 +1970,120 @@ bool ui::FieldId_ReadStrptrMaybe(ui::FieldId &parent, algo::strptr in_str) {
 // cfmt:ui.FieldId.String  printfmt:Raw
 void ui::FieldId_Print(ui::FieldId& row, algo::cstring& str) {
     ui::value_Print(row, str);
+}
+
+// --- ui.FilterSource..ReadFieldMaybe
+bool ui::FilterSource_ReadFieldMaybe(ui::FilterSource& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_filter_source: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.filter_source, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.FilterSource..ReadStrptrMaybe
+// Read fields of ui::FilterSource from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::FilterSource_ReadStrptrMaybe(ui::FilterSource &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.filter_source") || algo::StripTypeTag(in_str, "ui.FilterSource");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && FilterSource_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.FilterSource..Print
+// print string representation of ROW to string STR
+// cfmt:ui.FilterSource.String  printfmt:Tuple
+void ui::FilterSource_Print(ui::FilterSource& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.filter_source";
+
+    algo::Smallstr50_Print(row.filter_source, temp);
+    PrintAttrSpaceReset(str,"filter_source", temp);
+}
+
+// --- ui.FilterSourceCase.filter_source.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* ui::filter_source_ToCstr(const ui::FilterSourceCase& parent) {
+    const char *ret = NULL;
+    switch(filter_source_GetEnum(parent)) {
+        case ui_FilterSourceCase_fixed     : ret = "fixed";  break;
+        case ui_FilterSourceCase_context   : ret = "context";  break;
+        case ui_FilterSourceCase_widget    : ret = "widget";  break;
+        case ui_FilterSourceCase_runtime   : ret = "runtime";  break;
+    }
+    return ret;
+}
+
+// --- ui.FilterSourceCase.filter_source.Print
+// Convert filter_source to a string. First, attempt conversion to a known string.
+// If no string matches, print filter_source as a numeric value.
+void ui::filter_source_Print(const ui::FilterSourceCase& parent, algo::cstring &lhs) {
+    const char *strval = filter_source_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.filter_source;
+    }
+}
+
+// --- ui.FilterSourceCase.filter_source.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool ui::filter_source_SetStrptrMaybe(ui::FilterSourceCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('f','i','x','e','d'): {
+                    filter_source_SetEnum(parent,ui_FilterSourceCase_fixed); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('w','i','d','g','e','t'): {
+                    filter_source_SetEnum(parent,ui_FilterSourceCase_widget); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('c','o','n','t','e','x','t'): {
+                    filter_source_SetEnum(parent,ui_FilterSourceCase_context); ret = true; break;
+                }
+                case LE_STR7('r','u','n','t','i','m','e'): {
+                    filter_source_SetEnum(parent,ui_FilterSourceCase_runtime); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- ui.FilterSourceCase.filter_source.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void ui::filter_source_SetStrptr(ui::FilterSourceCase& parent, algo::strptr rhs, ui_FilterSourceCaseEnum dflt) {
+    if (!filter_source_SetStrptrMaybe(parent,rhs)) filter_source_SetEnum(parent,dflt);
 }
 
 // --- ui.HAlign..ReadFieldMaybe
@@ -2087,6 +2255,123 @@ void ui::InputCfg_Print(ui::InputCfg& row, algo::cstring& str) {
 
     i32_Print(row.maxlen, temp);
     PrintAttrSpaceReset(str,"maxlen", temp);
+}
+
+// --- ui.JoinKind..ReadFieldMaybe
+bool ui::JoinKind_ReadFieldMaybe(ui::JoinKind& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_join_kind: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.join_kind, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.JoinKind..ReadStrptrMaybe
+// Read fields of ui::JoinKind from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::JoinKind_ReadStrptrMaybe(ui::JoinKind &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.join_kind") || algo::StripTypeTag(in_str, "ui.JoinKind");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && JoinKind_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.JoinKind..Print
+// print string representation of ROW to string STR
+// cfmt:ui.JoinKind.String  printfmt:Tuple
+void ui::JoinKind_Print(ui::JoinKind& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.join_kind";
+
+    algo::Smallstr50_Print(row.join_kind, temp);
+    PrintAttrSpaceReset(str,"join_kind", temp);
+}
+
+// --- ui.JoinKindCase.join_kind.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* ui::join_kind_ToCstr(const ui::JoinKindCase& parent) {
+    const char *ret = NULL;
+    switch(join_kind_GetEnum(parent)) {
+        case ui_JoinKindCase_base          : ret = "base";  break;
+        case ui_JoinKindCase_inner         : ret = "inner";  break;
+        case ui_JoinKindCase_left          : ret = "left";  break;
+        case ui_JoinKindCase_right         : ret = "right";  break;
+        case ui_JoinKindCase_full          : ret = "full";  break;
+        case ui_JoinKindCase_cross         : ret = "cross";  break;
+    }
+    return ret;
+}
+
+// --- ui.JoinKindCase.join_kind.Print
+// Convert join_kind to a string. First, attempt conversion to a known string.
+// If no string matches, print join_kind as a numeric value.
+void ui::join_kind_Print(const ui::JoinKindCase& parent, algo::cstring &lhs) {
+    const char *strval = join_kind_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.join_kind;
+    }
+}
+
+// --- ui.JoinKindCase.join_kind.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool ui::join_kind_SetStrptrMaybe(ui::JoinKindCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('b','a','s','e'): {
+                    join_kind_SetEnum(parent,ui_JoinKindCase_base); ret = true; break;
+                }
+                case LE_STR4('f','u','l','l'): {
+                    join_kind_SetEnum(parent,ui_JoinKindCase_full); ret = true; break;
+                }
+                case LE_STR4('l','e','f','t'): {
+                    join_kind_SetEnum(parent,ui_JoinKindCase_left); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('c','r','o','s','s'): {
+                    join_kind_SetEnum(parent,ui_JoinKindCase_cross); ret = true; break;
+                }
+                case LE_STR5('i','n','n','e','r'): {
+                    join_kind_SetEnum(parent,ui_JoinKindCase_inner); ret = true; break;
+                }
+                case LE_STR5('r','i','g','h','t'): {
+                    join_kind_SetEnum(parent,ui_JoinKindCase_right); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- ui.JoinKindCase.join_kind.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void ui::join_kind_SetStrptr(ui::JoinKindCase& parent, algo::strptr rhs, ui_JoinKindCaseEnum dflt) {
+    if (!join_kind_SetStrptrMaybe(parent,rhs)) join_kind_SetEnum(parent,dflt);
 }
 
 // --- ui.KeyMap..ReadFieldMaybe
@@ -2523,6 +2808,107 @@ void ui::selection_mode_SetStrptr(ui::SelectionModeCase& parent, algo::strptr rh
     if (!selection_mode_SetStrptrMaybe(parent,rhs)) selection_mode_SetEnum(parent,dflt);
 }
 
+// --- ui.SortDir..ReadFieldMaybe
+bool ui::SortDir_ReadFieldMaybe(ui::SortDir& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_sort_dir: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.sort_dir, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.SortDir..ReadStrptrMaybe
+// Read fields of ui::SortDir from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::SortDir_ReadStrptrMaybe(ui::SortDir &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.sort_dir") || algo::StripTypeTag(in_str, "ui.SortDir");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SortDir_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.SortDir..Print
+// print string representation of ROW to string STR
+// cfmt:ui.SortDir.String  printfmt:Tuple
+void ui::SortDir_Print(ui::SortDir& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.sort_dir";
+
+    algo::Smallstr50_Print(row.sort_dir, temp);
+    PrintAttrSpaceReset(str,"sort_dir", temp);
+}
+
+// --- ui.SortDirCase.sort_dir.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* ui::sort_dir_ToCstr(const ui::SortDirCase& parent) {
+    const char *ret = NULL;
+    switch(sort_dir_GetEnum(parent)) {
+        case ui_SortDirCase_asc            : ret = "asc";  break;
+        case ui_SortDirCase_desc           : ret = "desc";  break;
+    }
+    return ret;
+}
+
+// --- ui.SortDirCase.sort_dir.Print
+// Convert sort_dir to a string. First, attempt conversion to a known string.
+// If no string matches, print sort_dir as a numeric value.
+void ui::sort_dir_Print(const ui::SortDirCase& parent, algo::cstring &lhs) {
+    const char *strval = sort_dir_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.sort_dir;
+    }
+}
+
+// --- ui.SortDirCase.sort_dir.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool ui::sort_dir_SetStrptrMaybe(ui::SortDirCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('a','s','c'): {
+                    sort_dir_SetEnum(parent,ui_SortDirCase_asc); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('d','e','s','c'): {
+                    sort_dir_SetEnum(parent,ui_SortDirCase_desc); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- ui.SortDirCase.sort_dir.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void ui::sort_dir_SetStrptr(ui::SortDirCase& parent, algo::strptr rhs, ui_SortDirCaseEnum dflt) {
+    if (!sort_dir_SetStrptrMaybe(parent,rhs)) sort_dir_SetEnum(parent,dflt);
+}
+
 // --- ui.Style..ReadFieldMaybe
 bool ui::Style_ReadFieldMaybe(ui::Style& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -2745,6 +3131,9 @@ bool ui::TreeCfg_ReadFieldMaybe(ui::TreeCfg& parent, algo::strptr field, algo::s
         case ui_FieldId_expanded_default: {
             retval = bool_ReadStrptrMaybe(parent.expanded_default, strval);
         } break;
+        case ui_FieldId_p_data_path: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_data_path, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -2795,6 +3184,9 @@ void ui::TreeCfg_Print(ui::TreeCfg& row, algo::cstring& str) {
 
     bool_Print(row.expanded_default, temp);
     PrintAttrSpaceReset(str,"expanded_default", temp);
+
+    algo::Smallstr50_Print(row.p_data_path, temp);
+    PrintAttrSpaceReset(str,"p_data_path", temp);
 }
 
 // --- ui.VAlign..ReadFieldMaybe
@@ -2900,6 +3292,353 @@ bool ui::align_SetStrptrMaybe(ui::VAlignCase& parent, algo::strptr rhs) {
 // If the string is invalid, set numeric value to DFLT
 void ui::align_SetStrptr(ui::VAlignCase& parent, algo::strptr rhs, ui_VAlignCaseEnum dflt) {
     if (!align_SetStrptrMaybe(parent,rhs)) align_SetEnum(parent,dflt);
+}
+
+// --- ui.View..ReadFieldMaybe
+bool ui::View_ReadFieldMaybe(ui::View& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_view: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.view, strval);
+        } break;
+        case ui_FieldId_p_window: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_window, strval);
+        } break;
+        case ui_FieldId_base_ctype: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.base_ctype, strval);
+        } break;
+        case ui_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.View..ReadStrptrMaybe
+// Read fields of ui::View from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::View_ReadStrptrMaybe(ui::View &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.view") || algo::StripTypeTag(in_str, "ui.View");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && View_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.View..Print
+// print string representation of ROW to string STR
+// cfmt:ui.View.String  printfmt:Tuple
+void ui::View_Print(ui::View& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.view";
+
+    algo::Smallstr50_Print(row.view, temp);
+    PrintAttrSpaceReset(str,"view", temp);
+
+    algo::Smallstr50_Print(row.p_window, temp);
+    PrintAttrSpaceReset(str,"p_window", temp);
+
+    algo::Smallstr100_Print(row.base_ctype, temp);
+    PrintAttrSpaceReset(str,"base_ctype", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- ui.ViewField..ReadFieldMaybe
+bool ui::ViewField_ReadFieldMaybe(ui::ViewField& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_view_field: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.view_field, strval);
+        } break;
+        case ui_FieldId_p_view: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_view, strval);
+        } break;
+        case ui_FieldId_field: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.field, strval);
+        } break;
+        case ui_FieldId_expr: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.expr, strval);
+        } break;
+        case ui_FieldId_title: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.title, strval);
+        } break;
+        case ui_FieldId_datatype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.datatype, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.ViewField..ReadStrptrMaybe
+// Read fields of ui::ViewField from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::ViewField_ReadStrptrMaybe(ui::ViewField &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.view_field") || algo::StripTypeTag(in_str, "ui.ViewField");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && ViewField_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.ViewField..Print
+// print string representation of ROW to string STR
+// cfmt:ui.ViewField.String  printfmt:Tuple
+void ui::ViewField_Print(ui::ViewField& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.view_field";
+
+    algo::Smallstr50_Print(row.view_field, temp);
+    PrintAttrSpaceReset(str,"view_field", temp);
+
+    algo::Smallstr50_Print(row.p_view, temp);
+    PrintAttrSpaceReset(str,"p_view", temp);
+
+    algo::Smallstr50_Print(row.field, temp);
+    PrintAttrSpaceReset(str,"field", temp);
+
+    algo::Smallstr200_Print(row.expr, temp);
+    PrintAttrSpaceReset(str,"expr", temp);
+
+    algo::Smallstr50_Print(row.title, temp);
+    PrintAttrSpaceReset(str,"title", temp);
+
+    algo::Smallstr50_Print(row.datatype, temp);
+    PrintAttrSpaceReset(str,"datatype", temp);
+}
+
+// --- ui.ViewFilter..ReadFieldMaybe
+bool ui::ViewFilter_ReadFieldMaybe(ui::ViewFilter& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_view_filter: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.view_filter, strval);
+        } break;
+        case ui_FieldId_p_view: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_view, strval);
+        } break;
+        case ui_FieldId_expr: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.expr, strval);
+        } break;
+        case ui_FieldId_source: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.source, strval);
+        } break;
+        case ui_FieldId_enabled: {
+            retval = bool_ReadStrptrMaybe(parent.enabled, strval);
+        } break;
+        case ui_FieldId_priority: {
+            retval = i32_ReadStrptrMaybe(parent.priority, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.ViewFilter..ReadStrptrMaybe
+// Read fields of ui::ViewFilter from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::ViewFilter_ReadStrptrMaybe(ui::ViewFilter &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.view_filter") || algo::StripTypeTag(in_str, "ui.ViewFilter");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && ViewFilter_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.ViewFilter..Print
+// print string representation of ROW to string STR
+// cfmt:ui.ViewFilter.String  printfmt:Tuple
+void ui::ViewFilter_Print(ui::ViewFilter& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.view_filter";
+
+    algo::Smallstr50_Print(row.view_filter, temp);
+    PrintAttrSpaceReset(str,"view_filter", temp);
+
+    algo::Smallstr50_Print(row.p_view, temp);
+    PrintAttrSpaceReset(str,"p_view", temp);
+
+    algo::Smallstr200_Print(row.expr, temp);
+    PrintAttrSpaceReset(str,"expr", temp);
+
+    algo::Smallstr50_Print(row.source, temp);
+    PrintAttrSpaceReset(str,"source", temp);
+
+    bool_Print(row.enabled, temp);
+    PrintAttrSpaceReset(str,"enabled", temp);
+
+    i32_Print(row.priority, temp);
+    PrintAttrSpaceReset(str,"priority", temp);
+}
+
+// --- ui.ViewSort..ReadFieldMaybe
+bool ui::ViewSort_ReadFieldMaybe(ui::ViewSort& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_view_sort: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.view_sort, strval);
+        } break;
+        case ui_FieldId_p_view: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_view, strval);
+        } break;
+        case ui_FieldId_expr: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.expr, strval);
+        } break;
+        case ui_FieldId_dir: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.dir, strval);
+        } break;
+        case ui_FieldId_priority: {
+            retval = i32_ReadStrptrMaybe(parent.priority, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.ViewSort..ReadStrptrMaybe
+// Read fields of ui::ViewSort from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::ViewSort_ReadStrptrMaybe(ui::ViewSort &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.view_sort") || algo::StripTypeTag(in_str, "ui.ViewSort");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && ViewSort_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.ViewSort..Print
+// print string representation of ROW to string STR
+// cfmt:ui.ViewSort.String  printfmt:Tuple
+void ui::ViewSort_Print(ui::ViewSort& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.view_sort";
+
+    algo::Smallstr50_Print(row.view_sort, temp);
+    PrintAttrSpaceReset(str,"view_sort", temp);
+
+    algo::Smallstr50_Print(row.p_view, temp);
+    PrintAttrSpaceReset(str,"p_view", temp);
+
+    algo::Smallstr200_Print(row.expr, temp);
+    PrintAttrSpaceReset(str,"expr", temp);
+
+    algo::Smallstr50_Print(row.dir, temp);
+    PrintAttrSpaceReset(str,"dir", temp);
+
+    i32_Print(row.priority, temp);
+    PrintAttrSpaceReset(str,"priority", temp);
+}
+
+// --- ui.ViewSource..ReadFieldMaybe
+bool ui::ViewSource_ReadFieldMaybe(ui::ViewSource& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_view_source: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.view_source, strval);
+        } break;
+        case ui_FieldId_p_view: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_view, strval);
+        } break;
+        case ui_FieldId_source_ctype: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.source_ctype, strval);
+        } break;
+        case ui_FieldId_alias: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.alias, strval);
+        } break;
+        case ui_FieldId_join_kind: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.join_kind, strval);
+        } break;
+        case ui_FieldId_join_expr: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.join_expr, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.ViewSource..ReadStrptrMaybe
+// Read fields of ui::ViewSource from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::ViewSource_ReadStrptrMaybe(ui::ViewSource &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.view_source") || algo::StripTypeTag(in_str, "ui.ViewSource");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && ViewSource_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.ViewSource..Print
+// print string representation of ROW to string STR
+// cfmt:ui.ViewSource.String  printfmt:Tuple
+void ui::ViewSource_Print(ui::ViewSource& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.view_source";
+
+    algo::Smallstr50_Print(row.view_source, temp);
+    PrintAttrSpaceReset(str,"view_source", temp);
+
+    algo::Smallstr50_Print(row.p_view, temp);
+    PrintAttrSpaceReset(str,"p_view", temp);
+
+    algo::Smallstr100_Print(row.source_ctype, temp);
+    PrintAttrSpaceReset(str,"source_ctype", temp);
+
+    algo::Smallstr50_Print(row.alias, temp);
+    PrintAttrSpaceReset(str,"alias", temp);
+
+    algo::Smallstr50_Print(row.join_kind, temp);
+    PrintAttrSpaceReset(str,"join_kind", temp);
+
+    algo::Smallstr200_Print(row.join_expr, temp);
+    PrintAttrSpaceReset(str,"join_expr", temp);
 }
 
 // --- ui.Widget..ReadFieldMaybe

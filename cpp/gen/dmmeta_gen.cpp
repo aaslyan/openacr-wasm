@@ -500,30 +500,40 @@ const char *dmmeta_Ssimfile_ssimfile_sampdb_target     = "sampdb.target";
 const char *dmmeta_Ssimfile_ssimfile_sampdb_targrec    = "sampdb.targrec";
 const char *dmmeta_Ssimfile_ssimfile_sampdb_targsrc    = "sampdb.targsrc";
 const char *dmmeta_Ssimfile_ssimfile_ui_action_type    = "ui.action_type";
-const char *dmmeta_Ssimfile_ssimfile_ui_align          = "ui.align";
 const char *dmmeta_Ssimfile_ssimfile_ui_binding        = "ui.binding";
 const char *dmmeta_Ssimfile_ssimfile_ui_binding_dir    = "ui.binding_dir";
 const char *dmmeta_Ssimfile_ssimfile_ui_binding_kind   = "ui.binding_kind";
 const char *dmmeta_Ssimfile_ssimfile_ui_border_style   = "ui.border_style";
 
-const char *dmmeta_Ssimfile_ssimfile_ui_color       = "ui.color";
-const char *dmmeta_Ssimfile_ssimfile_ui_column      = "ui.column";
-const char *dmmeta_Ssimfile_ssimfile_ui_command     = "ui.command";
-const char *dmmeta_Ssimfile_ssimfile_ui_data_path   = "ui.data_path";
-const char *dmmeta_Ssimfile_ssimfile_ui_data_step   = "ui.data_step";
-const char *dmmeta_Ssimfile_ssimfile_ui_h_align     = "ui.h_align";
-const char *dmmeta_Ssimfile_ssimfile_ui_input_cfg   = "ui.input_cfg";
+const char *dmmeta_Ssimfile_ssimfile_ui_color           = "ui.color";
+const char *dmmeta_Ssimfile_ssimfile_ui_column          = "ui.column";
+const char *dmmeta_Ssimfile_ssimfile_ui_command         = "ui.command";
+const char *dmmeta_Ssimfile_ssimfile_ui_context_var     = "ui.context_var";
+const char *dmmeta_Ssimfile_ssimfile_ui_data_path       = "ui.data_path";
+const char *dmmeta_Ssimfile_ssimfile_ui_data_step       = "ui.data_step";
+const char *dmmeta_Ssimfile_ssimfile_ui_filter_source   = "ui.filter_source";
+const char *dmmeta_Ssimfile_ssimfile_ui_h_align         = "ui.h_align";
+const char *dmmeta_Ssimfile_ssimfile_ui_input_cfg       = "ui.input_cfg";
 
+const char *dmmeta_Ssimfile_ssimfile_ui_join_kind        = "ui.join_kind";
 const char *dmmeta_Ssimfile_ssimfile_ui_key_map          = "ui.key_map";
 const char *dmmeta_Ssimfile_ssimfile_ui_layout_cfg       = "ui.layout_cfg";
 const char *dmmeta_Ssimfile_ssimfile_ui_layout_type      = "ui.layout_type";
 const char *dmmeta_Ssimfile_ssimfile_ui_selection_mode   = "ui.selection_mode";
+const char *dmmeta_Ssimfile_ssimfile_ui_sort_dir         = "ui.sort_dir";
 const char *dmmeta_Ssimfile_ssimfile_ui_style            = "ui.style";
 const char *dmmeta_Ssimfile_ssimfile_ui_style_slot       = "ui.style_slot";
 const char *dmmeta_Ssimfile_ssimfile_ui_table_cfg        = "ui.table_cfg";
 const char *dmmeta_Ssimfile_ssimfile_ui_tree_cfg         = "ui.tree_cfg";
 
-const char *dmmeta_Ssimfile_ssimfile_ui_v_align        = "ui.v_align";
+const char *dmmeta_Ssimfile_ssimfile_ui_v_align      = "ui.v_align";
+const char *dmmeta_Ssimfile_ssimfile_ui_view         = "ui.view";
+const char *dmmeta_Ssimfile_ssimfile_ui_view_field   = "ui.view_field";
+
+const char *dmmeta_Ssimfile_ssimfile_ui_view_filter   = "ui.view_filter";
+const char *dmmeta_Ssimfile_ssimfile_ui_view_sort     = "ui.view_sort";
+const char *dmmeta_Ssimfile_ssimfile_ui_view_source   = "ui.view_source";
+
 const char *dmmeta_Ssimfile_ssimfile_ui_widget         = "ui.widget";
 const char *dmmeta_Ssimfile_ssimfile_ui_widget_state   = "ui.widget_state";
 const char *dmmeta_Ssimfile_ssimfile_ui_widget_type    = "ui.widget_type";

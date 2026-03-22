@@ -146,12 +146,14 @@ struct FBinding { // acr_tui.FBinding
     algo::Smallstr50     kind;                  //   "collection"  Binding type
     algo::Smallstr50     dir;                   //   "read"  Binding direction
     algo::Smallstr50     p_data_path;           // DataPath for traversal (empty for direct binding)
+    algo::Smallstr50     p_view;                // View for derived data binding (empty for direct binding)
+    algo::Smallstr200    expr;                  // Expression for computed value binding
     acr_tui::FBinding*   ind_binding_next;      // hash next
     u32                  ind_binding_hashval;   // hash value
     // func:acr_tui.FBinding..AssignOp
-    inline acr_tui::FBinding& operator =(const acr_tui::FBinding &rhs) = delete;
+    acr_tui::FBinding&   operator =(const acr_tui::FBinding &rhs) = delete;
     // func:acr_tui.FBinding..CopyCtor
-    inline               FBinding(const acr_tui::FBinding &rhs) = delete;
+    FBinding(const acr_tui::FBinding &rhs) = delete;
 private:
     // func:acr_tui.FBinding..Ctor
     inline               FBinding() __attribute__((nothrow));
@@ -1993,6 +1995,7 @@ struct FTreeCfg { // acr_tui.FTreeCfg
     algo::Smallstr100    child_field;            // Field that provides children (e.g. Project.zd_task)
     algo::Smallstr50     label_field;            // Field to display as node label
     bool                 expanded_default;       //   false  Nodes expanded by default
+    algo::Smallstr50     p_data_path;            // Generalized traversal mode (takes precedence over child_field)
     // func:acr_tui.FTreeCfg..AssignOp
     inline acr_tui::FTreeCfg& operator =(const acr_tui::FTreeCfg &rhs) = delete;
     // func:acr_tui.FTreeCfg..CopyCtor

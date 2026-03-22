@@ -116,6 +116,8 @@ void acr_tui::binding_CopyOut(acr_tui::FBinding &row, ui::Binding &out) {
     out.kind = row.kind;
     out.dir = row.dir;
     out.p_data_path = row.p_data_path;
+    out.p_view = row.p_view;
+    out.expr = row.expr;
 }
 
 // --- acr_tui.FBinding.base.CopyIn
@@ -128,6 +130,8 @@ void acr_tui::binding_CopyIn(acr_tui::FBinding &row, ui::Binding &in) {
     row.kind = in.kind;
     row.dir = in.dir;
     row.p_data_path = in.p_data_path;
+    row.p_view = in.p_view;
+    row.expr = in.expr;
 }
 
 // --- acr_tui.FBinding..Uninit
@@ -433,7 +437,7 @@ static void acr_tui::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_tui.Input'  signature:'d0914ec2409fd05f987b79658367fd74979ad1a3'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_tui.Input'  signature:'700c44e8e79c08000aea82aa94ce249013b9de3d'");
 }
 
 // --- acr_tui.FDb._db.InsertStrptrMaybe
@@ -555,11 +559,11 @@ bool acr_tui::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.window"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.style"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.widget"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.data_path"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.tree_cfg"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.table_cfg"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.key_map"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.input_cfg"),recursive);
-        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.data_path"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.data_step"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.column"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.binding"),recursive);
@@ -4716,6 +4720,7 @@ void acr_tui::tree_cfg_CopyOut(acr_tui::FTreeCfg &row, ui::TreeCfg &out) {
     out.child_field = row.child_field;
     out.label_field = row.label_field;
     out.expanded_default = row.expanded_default;
+    out.p_data_path = row.p_data_path;
 }
 
 // --- acr_tui.FTreeCfg.base.CopyIn
@@ -4728,6 +4733,7 @@ void acr_tui::tree_cfg_CopyIn(acr_tui::FTreeCfg &row, ui::TreeCfg &in) {
     row.child_field = in.child_field;
     row.label_field = in.label_field;
     row.expanded_default = in.expanded_default;
+    row.p_data_path = in.p_data_path;
 }
 
 // --- acr_tui.FTreeCfg..Uninit

@@ -69,49 +69,6 @@ inline  ui::ActionTypeCase::ActionTypeCase(ui_ActionTypeCaseEnum arg) {
     this->action_type = u8(arg);
 }
 
-// --- ui.Align..Ctor
-inline  ui::Align::Align() {
-}
-
-// --- ui.AlignCase.align.GetEnum
-// Get value of field as enum type
-inline ui_AlignCaseEnum ui::align_GetEnum(const ui::AlignCase& parent) {
-    return ui_AlignCaseEnum(parent.align);
-}
-
-// --- ui.AlignCase.align.SetEnum
-// Set value of field from enum type.
-inline void ui::align_SetEnum(ui::AlignCase& parent, ui_AlignCaseEnum rhs) {
-    parent.align = u8(rhs);
-}
-
-// --- ui.AlignCase.align.Cast
-inline  ui::AlignCase::operator ui_AlignCaseEnum() const {
-    return ui_AlignCaseEnum((*this).align);
-}
-
-// --- ui.AlignCase..Init
-// Set all fields to initial values.
-inline void ui::AlignCase_Init(ui::AlignCase& parent) {
-    parent.align = u8(0);
-}
-
-// --- ui.AlignCase..Ctor
-inline  ui::AlignCase::AlignCase() {
-    ui::AlignCase_Init(*this);
-}
-
-// --- ui.AlignCase..FieldwiseCtor
-inline  ui::AlignCase::AlignCase(u8 in_align)
-    : align(in_align)
- {
-}
-
-// --- ui.AlignCase..EnumCtor
-inline  ui::AlignCase::AlignCase(ui_AlignCaseEnum arg) {
-    this->align = u8(arg);
-}
-
 // --- ui.Binding..Init
 // Set all fields to initial values.
 inline void ui::Binding_Init(ui::Binding& parent) {
@@ -315,6 +272,10 @@ inline  ui::Column::Column() {
 inline  ui::Command::Command() {
 }
 
+// --- ui.ContextVar..Ctor
+inline  ui::ContextVar::ContextVar() {
+}
+
 // --- ui.DataPath..Ctor
 inline  ui::DataPath::DataPath() {
 }
@@ -367,6 +328,49 @@ inline  ui::FieldId::FieldId(i32 in_value)
 // --- ui.FieldId..EnumCtor
 inline  ui::FieldId::FieldId(ui_FieldIdEnum arg) {
     this->value = i32(arg);
+}
+
+// --- ui.FilterSource..Ctor
+inline  ui::FilterSource::FilterSource() {
+}
+
+// --- ui.FilterSourceCase.filter_source.GetEnum
+// Get value of field as enum type
+inline ui_FilterSourceCaseEnum ui::filter_source_GetEnum(const ui::FilterSourceCase& parent) {
+    return ui_FilterSourceCaseEnum(parent.filter_source);
+}
+
+// --- ui.FilterSourceCase.filter_source.SetEnum
+// Set value of field from enum type.
+inline void ui::filter_source_SetEnum(ui::FilterSourceCase& parent, ui_FilterSourceCaseEnum rhs) {
+    parent.filter_source = u8(rhs);
+}
+
+// --- ui.FilterSourceCase.filter_source.Cast
+inline  ui::FilterSourceCase::operator ui_FilterSourceCaseEnum() const {
+    return ui_FilterSourceCaseEnum((*this).filter_source);
+}
+
+// --- ui.FilterSourceCase..Init
+// Set all fields to initial values.
+inline void ui::FilterSourceCase_Init(ui::FilterSourceCase& parent) {
+    parent.filter_source = u8(0);
+}
+
+// --- ui.FilterSourceCase..Ctor
+inline  ui::FilterSourceCase::FilterSourceCase() {
+    ui::FilterSourceCase_Init(*this);
+}
+
+// --- ui.FilterSourceCase..FieldwiseCtor
+inline  ui::FilterSourceCase::FilterSourceCase(u8 in_filter_source)
+    : filter_source(in_filter_source)
+ {
+}
+
+// --- ui.FilterSourceCase..EnumCtor
+inline  ui::FilterSourceCase::FilterSourceCase(ui_FilterSourceCaseEnum arg) {
+    this->filter_source = u8(arg);
 }
 
 // --- ui.HAlign..Ctor
@@ -422,6 +426,49 @@ inline void ui::InputCfg_Init(ui::InputCfg& parent) {
 // --- ui.InputCfg..Ctor
 inline  ui::InputCfg::InputCfg() {
     ui::InputCfg_Init(*this);
+}
+
+// --- ui.JoinKind..Ctor
+inline  ui::JoinKind::JoinKind() {
+}
+
+// --- ui.JoinKindCase.join_kind.GetEnum
+// Get value of field as enum type
+inline ui_JoinKindCaseEnum ui::join_kind_GetEnum(const ui::JoinKindCase& parent) {
+    return ui_JoinKindCaseEnum(parent.join_kind);
+}
+
+// --- ui.JoinKindCase.join_kind.SetEnum
+// Set value of field from enum type.
+inline void ui::join_kind_SetEnum(ui::JoinKindCase& parent, ui_JoinKindCaseEnum rhs) {
+    parent.join_kind = u8(rhs);
+}
+
+// --- ui.JoinKindCase.join_kind.Cast
+inline  ui::JoinKindCase::operator ui_JoinKindCaseEnum() const {
+    return ui_JoinKindCaseEnum((*this).join_kind);
+}
+
+// --- ui.JoinKindCase..Init
+// Set all fields to initial values.
+inline void ui::JoinKindCase_Init(ui::JoinKindCase& parent) {
+    parent.join_kind = u8(0);
+}
+
+// --- ui.JoinKindCase..Ctor
+inline  ui::JoinKindCase::JoinKindCase() {
+    ui::JoinKindCase_Init(*this);
+}
+
+// --- ui.JoinKindCase..FieldwiseCtor
+inline  ui::JoinKindCase::JoinKindCase(u8 in_join_kind)
+    : join_kind(in_join_kind)
+ {
+}
+
+// --- ui.JoinKindCase..EnumCtor
+inline  ui::JoinKindCase::JoinKindCase(ui_JoinKindCaseEnum arg) {
+    this->join_kind = u8(arg);
 }
 
 // --- ui.KeyMap..Ctor
@@ -519,6 +566,49 @@ inline  ui::SelectionModeCase::SelectionModeCase(ui_SelectionModeCaseEnum arg) {
     this->selection_mode = u8(arg);
 }
 
+// --- ui.SortDir..Ctor
+inline  ui::SortDir::SortDir() {
+}
+
+// --- ui.SortDirCase.sort_dir.GetEnum
+// Get value of field as enum type
+inline ui_SortDirCaseEnum ui::sort_dir_GetEnum(const ui::SortDirCase& parent) {
+    return ui_SortDirCaseEnum(parent.sort_dir);
+}
+
+// --- ui.SortDirCase.sort_dir.SetEnum
+// Set value of field from enum type.
+inline void ui::sort_dir_SetEnum(ui::SortDirCase& parent, ui_SortDirCaseEnum rhs) {
+    parent.sort_dir = u8(rhs);
+}
+
+// --- ui.SortDirCase.sort_dir.Cast
+inline  ui::SortDirCase::operator ui_SortDirCaseEnum() const {
+    return ui_SortDirCaseEnum((*this).sort_dir);
+}
+
+// --- ui.SortDirCase..Init
+// Set all fields to initial values.
+inline void ui::SortDirCase_Init(ui::SortDirCase& parent) {
+    parent.sort_dir = u8(0);
+}
+
+// --- ui.SortDirCase..Ctor
+inline  ui::SortDirCase::SortDirCase() {
+    ui::SortDirCase_Init(*this);
+}
+
+// --- ui.SortDirCase..FieldwiseCtor
+inline  ui::SortDirCase::SortDirCase(u8 in_sort_dir)
+    : sort_dir(in_sort_dir)
+ {
+}
+
+// --- ui.SortDirCase..EnumCtor
+inline  ui::SortDirCase::SortDirCase(ui_SortDirCaseEnum arg) {
+    this->sort_dir = u8(arg);
+}
+
 // --- ui.Style..Init
 // Set all fields to initial values.
 inline void ui::Style_Init(ui::Style& parent) {
@@ -604,6 +694,50 @@ inline  ui::VAlignCase::VAlignCase(u8 in_align)
 // --- ui.VAlignCase..EnumCtor
 inline  ui::VAlignCase::VAlignCase(ui_VAlignCaseEnum arg) {
     this->align = u8(arg);
+}
+
+// --- ui.View..Ctor
+inline  ui::View::View() {
+}
+
+// --- ui.ViewField..Ctor
+inline  ui::ViewField::ViewField() {
+}
+
+// --- ui.ViewFilter..Init
+// Set all fields to initial values.
+inline void ui::ViewFilter_Init(ui::ViewFilter& parent) {
+    parent.source = algo::strptr("fixed");
+    parent.enabled = bool(true);
+    parent.priority = i32(0);
+}
+
+// --- ui.ViewFilter..Ctor
+inline  ui::ViewFilter::ViewFilter() {
+    ui::ViewFilter_Init(*this);
+}
+
+// --- ui.ViewSort..Init
+// Set all fields to initial values.
+inline void ui::ViewSort_Init(ui::ViewSort& parent) {
+    parent.dir = algo::strptr("asc");
+    parent.priority = i32(0);
+}
+
+// --- ui.ViewSort..Ctor
+inline  ui::ViewSort::ViewSort() {
+    ui::ViewSort_Init(*this);
+}
+
+// --- ui.ViewSource..Init
+// Set all fields to initial values.
+inline void ui::ViewSource_Init(ui::ViewSource& parent) {
+    parent.join_kind = algo::strptr("base");
+}
+
+// --- ui.ViewSource..Ctor
+inline  ui::ViewSource::ViewSource() {
+    ui::ViewSource_Init(*this);
 }
 
 // --- ui.Widget..Ctor
@@ -714,11 +848,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::ActionType
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::Align &row) {// cfmt:ui.Align.String
-    ui::Align_Print(const_cast<ui::Align&>(row), str);
-    return str;
-}
-
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::Binding &row) {// cfmt:ui.Binding.String
     ui::Binding_Print(const_cast<ui::Binding&>(row), str);
     return str;
@@ -754,6 +883,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::Command &r
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::ContextVar &row) {// cfmt:ui.ContextVar.String
+    ui::ContextVar_Print(const_cast<ui::ContextVar&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::DataPath &row) {// cfmt:ui.DataPath.String
     ui::DataPath_Print(const_cast<ui::DataPath&>(row), str);
     return str;
@@ -769,6 +903,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::FieldId &r
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::FilterSource &row) {// cfmt:ui.FilterSource.String
+    ui::FilterSource_Print(const_cast<ui::FilterSource&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::HAlign &row) {// cfmt:ui.HAlign.String
     ui::HAlign_Print(const_cast<ui::HAlign&>(row), str);
     return str;
@@ -776,6 +915,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::HAlign &ro
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::InputCfg &row) {// cfmt:ui.InputCfg.String
     ui::InputCfg_Print(const_cast<ui::InputCfg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::JoinKind &row) {// cfmt:ui.JoinKind.String
+    ui::JoinKind_Print(const_cast<ui::JoinKind&>(row), str);
     return str;
 }
 
@@ -796,6 +940,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::LayoutType
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::SelectionMode &row) {// cfmt:ui.SelectionMode.String
     ui::SelectionMode_Print(const_cast<ui::SelectionMode&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::SortDir &row) {// cfmt:ui.SortDir.String
+    ui::SortDir_Print(const_cast<ui::SortDir&>(row), str);
     return str;
 }
 
@@ -821,6 +970,31 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::TreeCfg &r
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::VAlign &row) {// cfmt:ui.VAlign.String
     ui::VAlign_Print(const_cast<ui::VAlign&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::View &row) {// cfmt:ui.View.String
+    ui::View_Print(const_cast<ui::View&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::ViewField &row) {// cfmt:ui.ViewField.String
+    ui::ViewField_Print(const_cast<ui::ViewField&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::ViewFilter &row) {// cfmt:ui.ViewFilter.String
+    ui::ViewFilter_Print(const_cast<ui::ViewFilter&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::ViewSort &row) {// cfmt:ui.ViewSort.String
+    ui::ViewSort_Print(const_cast<ui::ViewSort&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::ViewSource &row) {// cfmt:ui.ViewSource.String
+    ui::ViewSource_Print(const_cast<ui::ViewSource&>(row), str);
     return str;
 }
 
