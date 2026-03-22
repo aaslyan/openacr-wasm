@@ -390,6 +390,68 @@ static algo::cstring GetBreadcrumb() {
     return crumb;
 }
 
+// Parse ssim message line and dispatch
+static bool DispatchSsimMsg(algo::strptr line, int visible = 19) {
+    line = algo::Trimmed(line);
+    if (!ch_N(line) || line.elems[0] == '#') return true;  // skip comments
+
+    algo::Tuple tuple;
+    if (!algo::Tuple_ReadStrptrMaybe(tuple, line)) return true;
+
+    algo::strptr tag = tuple.head.value;
+    UiMsg msg;
+
+    if (tag == "uimsg.NavigateMsg") {
+        msg.type = MSG_NAVIGATE;
+        algo::strptr dir_str = TupleGetAttr(tuple, "direction");
+        if (ch_N(dir_str)) {
+            if (dir_str.elems[0] == '-') msg.direction = -1;
+            else msg.direction = 1;
+        }
+    } else if (tag == "uimsg.ActivateMsg" || tag == "uimsg.activate") {
+        msg.type = MSG_ACTIVATE;
+    } else if (tag == "uimsg.CancelMsg" || tag == "uimsg.cancel") {
+        msg.type = MSG_CANCEL;
+    } else if (tag == "uimsg.QuitMsg" || tag == "uimsg.quit") {
+        msg.type = MSG_QUIT;
+    } else if (tag == "uimsg.SwitchPathMsg" || tag == "uimsg.switch_path") {
+        msg.type = MSG_SWITCH_PATH;
+        algo::strptr idx_str = TupleGetAttr(tuple, "path_idx");
+        if (ch_N(idx_str)) msg.path_idx = idx_str.elems[0] - '0';
+    } else if (tag == "uimsg.ToggleViewMsg" || tag == "uimsg.toggle_view") {
+        msg.type = MSG_TOGGLE_VIEW;
+    } else {
+        return true;  // unknown message, skip
+    }
+
+    if (msg.type != 0) DispatchMsg(msg, visible);
+    return running;
+}
+
+// Dump current state as ssim
+static algo::cstring DumpState() {
+    algo::cstring out;
+    out << "acr_browse.state"
+        << "  path:" << current_path
+        << "  level:" << current_level
+        << "  selected:" << selected_row
+        << "  items:" << g_nitems
+        << "  records:" << g_nrecs
+        << "  choosing_branch:" << (choosing_branch ? "Y" : "N")
+        << "  breadcrumb:\"" << GetBreadcrumb() << "\""
+        << "\n";
+    for (int i = 0; i < g_nitems && i < 50; i++) {
+        out << "acr_browse.item"
+            << "  idx:" << i
+            << "  label:\"" << g_items[i].label << "\""
+            << "  detail:\"" << g_items[i].detail << "\""
+            << "  key:\"" << g_items[i].key << "\""
+            << "  has_children:" << (g_items[i].has_children ? "Y" : "N")
+            << "\n";
+    }
+    return out;
+}
+
 // Initialize paths from loaded DataPath records
 static void InitPaths() {
     ind_beg(acr_tui::_db_data_path_curs, dp, acr_tui::_db) {

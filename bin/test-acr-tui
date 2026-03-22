@@ -1,0 +1,126 @@
+#!/bin/bash
+#
+# test-acr-tui -- Replay ssim messages through acr_tui and check state
+# Usage: bin/test-acr-tui
+#
+
+set -e
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export PATH="$SCRIPT_DIR/bin:$PATH"
+
+PASS=0
+FAIL=0
+TOTAL=0
+
+check() {
+    local name="$1"
+    local expected="$2"
+    local actual="$3"
+    TOTAL=$((TOTAL+1))
+    if echo "$actual" | grep -qF "$expected"; then
+        PASS=$((PASS+1))
+        echo "  OK   $name"
+    else
+        FAIL=$((FAIL+1))
+        echo "  FAIL $name"
+        echo "    expected: $expected"
+        echo "    got:      $(echo "$actual" | head -1)"
+    fi
+}
+
+run() {
+    echo "$1" | acr_tui 2>/dev/null
+}
+
+echo "=== acr_tui ssim message tests ==="
+echo ""
+
+# ---------------------------------------------------------------
+echo "--- Initial state ---"
+OUT=$(run "")
+check "starts at level 0" "level:0" "$OUT"
+check "starts on schema path" "path:schema" "$OUT"
+check "has items" "items:86" "$OUT"
+check "not choosing branch" "choosing_branch:N" "$OUT"
+check "first item is abt" 'label:"abt"' "$OUT"
+
+# ---------------------------------------------------------------
+echo "--- Navigation ---"
+OUT=$(run "uimsg.NavigateMsg  direction:1
+uimsg.NavigateMsg  direction:1")
+check "navigate down 2" "selected:2" "$OUT"
+
+OUT=$(run "uimsg.NavigateMsg  direction:1
+uimsg.NavigateMsg  direction:1
+uimsg.NavigateMsg  direction:-1")
+check "navigate down 2 up 1" "selected:1" "$OUT"
+
+OUT=$(run "uimsg.NavigateMsg  direction:-1")
+check "navigate up from 0 stays 0" "selected:0" "$OUT"
+
+# ---------------------------------------------------------------
+echo "--- Activate / Cancel ---"
+OUT=$(run "uimsg.ActivateMsg")
+check "activate drills into level 1" "level:1" "$OUT"
+check "breadcrumb shows parent" "abt" "$OUT"
+
+OUT=$(run "uimsg.ActivateMsg
+uimsg.CancelMsg")
+check "cancel returns to level 0" "level:0" "$OUT"
+
+# ---------------------------------------------------------------
+echo "--- Deep navigation ---"
+# Drill into a namespace, then into a ctype → should reach field level
+OUT=$(run "uimsg.ActivateMsg
+uimsg.ActivateMsg")
+check "2 levels deep (fields)" "level:2" "$OUT"
+check "breadcrumb has ctype" "dmmeta.ctype" "$OUT"
+
+# Cancel all the way back
+OUT=$(run "uimsg.ActivateMsg
+uimsg.ActivateMsg
+uimsg.CancelMsg
+uimsg.CancelMsg
+uimsg.CancelMsg")
+check "cancel back to root" "level:0" "$OUT"
+
+# ---------------------------------------------------------------
+echo "--- Path switching ---"
+OUT=$(run "uimsg.SwitchPathMsg  path_idx:1")
+check "switch to build path" "path:build" "$OUT"
+check "build has 66 targets" "items:66" "$OUT"
+
+OUT=$(run "uimsg.SwitchPathMsg  path_idx:2")
+check "switch to ui path" "path:ui" "$OUT"
+
+OUT=$(run "uimsg.SwitchPathMsg  path_idx:0")
+check "switch back to schema" "path:schema" "$OUT"
+
+# ---------------------------------------------------------------
+echo "--- Branching ---"
+# Build path: drill into a target → should show branch choices
+OUT=$(run "uimsg.SwitchPathMsg  path_idx:1
+uimsg.ActivateMsg")
+check "build branching" "choosing_branch:Y" "$OUT"
+check "has branch items" "dev.targsrc" "$OUT"
+
+# Select a branch
+OUT=$(run "uimsg.SwitchPathMsg  path_idx:1
+uimsg.ActivateMsg
+uimsg.ActivateMsg")
+check "branch selected, no longer choosing" "choosing_branch:N" "$OUT"
+check "at level 1 after branch" "level:1" "$OUT"
+
+# ---------------------------------------------------------------
+echo "--- Quit ---"
+OUT=$(run "uimsg.NavigateMsg  direction:1
+uimsg.QuitMsg
+uimsg.NavigateMsg  direction:1")
+check "quit stops processing" "selected:1" "$OUT"
+
+# ---------------------------------------------------------------
+echo ""
+echo "=== $PASS passed, $FAIL failed, $TOTAL total ==="
+if [ $FAIL -gt 0 ]; then
+    exit 1
+fi

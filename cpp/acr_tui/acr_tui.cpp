@@ -287,6 +287,28 @@ void acr_tui::Main() {
     LoadAllData("data");
     InitPaths();
     RefreshItems();
+
+    // Check for -replay mode: read ssim messages from stdin, dump state, no terminal
+    bool replay_mode = false;
+    // If stdin is not a terminal, assume replay mode
+    if (!isatty(STDIN_FILENO)) {
+        replay_mode = true;
+    }
+
+    if (replay_mode) {
+        // Read ssim messages from stdin, dispatch each, print final state
+        char buf[4096];
+        while (fgets(buf, sizeof(buf), stdin)) {
+            algo::strptr line(buf, strlen(buf));
+            if (!DispatchSsimMsg(line, 30)) break;
+            RefreshItems();
+        }
+        // Dump final state as ssim to stdout
+        algo::cstring state = DumpState();
+        (void)!write(1, state.ch_elems, state.ch_n);
+        return;
+    }
+
     EnableRawMode();
 
     while (running) {
