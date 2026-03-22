@@ -1,3 +1,0 @@
-ui.column  column:fields.field    p_widget:fields  field:field    title:Field    w:20  sortable:Y
-ui.column  column:fields.arg      p_widget:fields  field:arg      title:Arg      w:10  sortable:N
-ui.column  column:fields.reftype  p_widget:fields  field:reftype  title:Ref      w:6   sortable:N

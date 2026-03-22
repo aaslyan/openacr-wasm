@@ -96,6 +96,24 @@ namespace acr_tui { // gen:ns_print_proto
     static bool          data_step_InputMaybe(ui::DataStep &elem) __attribute__((nothrow));
     // func:acr_tui.FDb.fconst.InputMaybe
     static bool          fconst_InputMaybe(dmmeta::Fconst &elem) __attribute__((nothrow));
+    // func:acr_tui.FDb.view.InputMaybe
+    static bool          view_InputMaybe(ui::View &elem) __attribute__((nothrow));
+    // func:acr_tui.FDb.view_source.InputMaybe
+    static bool          view_source_InputMaybe(ui::ViewSource &elem) __attribute__((nothrow));
+    // func:acr_tui.FDb.view_field.InputMaybe
+    static bool          view_field_InputMaybe(ui::ViewField &elem) __attribute__((nothrow));
+    // func:acr_tui.FDb.view_filter.InputMaybe
+    static bool          view_filter_InputMaybe(ui::ViewFilter &elem) __attribute__((nothrow));
+    // func:acr_tui.FDb.view_sort.InputMaybe
+    static bool          view_sort_InputMaybe(ui::ViewSort &elem) __attribute__((nothrow));
+    // func:acr_tui.FDb.context_var.InputMaybe
+    static bool          context_var_InputMaybe(ui::ContextVar &elem) __attribute__((nothrow));
+    // func:acr_tui.FDb.command.InputMaybe
+    static bool          command_InputMaybe(ui::Command &elem) __attribute__((nothrow));
+    // func:acr_tui.FDb.layout_cfg.InputMaybe
+    static bool          layout_cfg_InputMaybe(ui::LayoutCfg &elem) __attribute__((nothrow));
+    // func:acr_tui.FDb.style_slot.InputMaybe
+    static bool          style_slot_InputMaybe(ui::StyleSlot &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:acr_tui.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -172,6 +190,58 @@ void acr_tui::column_CopyIn(acr_tui::FColumn &row, ui::Column &in) {
 void acr_tui::FColumn_Uninit(acr_tui::FColumn& column) {
     acr_tui::FColumn &row = column; (void)row;
     ind_column_Remove(row); // remove column from index ind_column
+}
+
+// --- acr_tui.FCommand.base.CopyOut
+// Copy fields out of row
+void acr_tui::command_CopyOut(acr_tui::FCommand &row, ui::Command &out) {
+    out.command = row.command;
+    out.action = row.action;
+    out.p_widget = row.p_widget;
+    out.arg = row.arg;
+}
+
+// --- acr_tui.FCommand.base.CopyIn
+// Copy fields in to row
+void acr_tui::command_CopyIn(acr_tui::FCommand &row, ui::Command &in) {
+    row.command = in.command;
+    row.action = in.action;
+    row.p_widget = in.p_widget;
+    row.arg = in.arg;
+}
+
+// --- acr_tui.FCommand..Uninit
+void acr_tui::FCommand_Uninit(acr_tui::FCommand& command) {
+    acr_tui::FCommand &row = command; (void)row;
+    ind_command_Remove(row); // remove command from index ind_command
+}
+
+// --- acr_tui.FContextVar.base.CopyOut
+// Copy fields out of row
+void acr_tui::context_var_CopyOut(acr_tui::FContextVar &row, ui::ContextVar &out) {
+    out.context_var = row.context_var;
+    out.p_window = row.p_window;
+    out.name = row.name;
+    out.datatype = row.datatype;
+    out.default_expr = row.default_expr;
+    out.comment = row.comment;
+}
+
+// --- acr_tui.FContextVar.base.CopyIn
+// Copy fields in to row
+void acr_tui::context_var_CopyIn(acr_tui::FContextVar &row, ui::ContextVar &in) {
+    row.context_var = in.context_var;
+    row.p_window = in.p_window;
+    row.name = in.name;
+    row.datatype = in.datatype;
+    row.default_expr = in.default_expr;
+    row.comment = in.comment;
+}
+
+// --- acr_tui.FContextVar..Uninit
+void acr_tui::FContextVar_Uninit(acr_tui::FContextVar& context_var) {
+    acr_tui::FContextVar &row = context_var; (void)row;
+    ind_context_var_Remove(row); // remove context_var from index ind_context_var
 }
 
 // --- acr_tui.FCtype.base.CopyOut
@@ -437,7 +507,7 @@ static void acr_tui::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_tui.Input'  signature:'700c44e8e79c08000aea82aa94ce249013b9de3d'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_tui.Input'  signature:'20652faa9c64d4344f89d572cbfdf7b8e8b94108'");
 }
 
 // --- acr_tui.FDb._db.InsertStrptrMaybe
@@ -538,6 +608,60 @@ bool acr_tui::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && fconst_InputMaybe(elem);
             break;
         }
+        case acr_tui_TableId_ui_View: { // finput:acr_tui.FDb.view
+            ui::View elem;
+            retval = ui::View_ReadStrptrMaybe(elem, str);
+            retval = retval && view_InputMaybe(elem);
+            break;
+        }
+        case acr_tui_TableId_ui_ViewSource: { // finput:acr_tui.FDb.view_source
+            ui::ViewSource elem;
+            retval = ui::ViewSource_ReadStrptrMaybe(elem, str);
+            retval = retval && view_source_InputMaybe(elem);
+            break;
+        }
+        case acr_tui_TableId_ui_ViewField: { // finput:acr_tui.FDb.view_field
+            ui::ViewField elem;
+            retval = ui::ViewField_ReadStrptrMaybe(elem, str);
+            retval = retval && view_field_InputMaybe(elem);
+            break;
+        }
+        case acr_tui_TableId_ui_ViewFilter: { // finput:acr_tui.FDb.view_filter
+            ui::ViewFilter elem;
+            retval = ui::ViewFilter_ReadStrptrMaybe(elem, str);
+            retval = retval && view_filter_InputMaybe(elem);
+            break;
+        }
+        case acr_tui_TableId_ui_ViewSort: { // finput:acr_tui.FDb.view_sort
+            ui::ViewSort elem;
+            retval = ui::ViewSort_ReadStrptrMaybe(elem, str);
+            retval = retval && view_sort_InputMaybe(elem);
+            break;
+        }
+        case acr_tui_TableId_ui_ContextVar: { // finput:acr_tui.FDb.context_var
+            ui::ContextVar elem;
+            retval = ui::ContextVar_ReadStrptrMaybe(elem, str);
+            retval = retval && context_var_InputMaybe(elem);
+            break;
+        }
+        case acr_tui_TableId_ui_Command: { // finput:acr_tui.FDb.command
+            ui::Command elem;
+            retval = ui::Command_ReadStrptrMaybe(elem, str);
+            retval = retval && command_InputMaybe(elem);
+            break;
+        }
+        case acr_tui_TableId_ui_LayoutCfg: { // finput:acr_tui.FDb.layout_cfg
+            ui::LayoutCfg elem;
+            retval = ui::LayoutCfg_ReadStrptrMaybe(elem, str);
+            retval = retval && layout_cfg_InputMaybe(elem);
+            break;
+        }
+        case acr_tui_TableId_ui_StyleSlot: { // finput:acr_tui.FDb.style_slot
+            ui::StyleSlot elem;
+            retval = ui::StyleSlot_ReadStrptrMaybe(elem, str);
+            retval = retval && style_slot_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -559,12 +683,21 @@ bool acr_tui::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.window"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.style"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.widget"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.view"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.view_source"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.view_sort"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.view_filter"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.view_field"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.data_path"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.tree_cfg"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.table_cfg"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.style_slot"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.layout_cfg"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.command"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.key_map"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.input_cfg"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.data_step"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.context_var"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.column"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.binding"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
@@ -4107,6 +4240,2085 @@ void acr_tui::ind_fconst_AbsReserve(int n) {
     }
 }
 
+// --- acr_tui.FDb.view.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_tui::FView& acr_tui::view_Alloc() {
+    acr_tui::FView* row = view_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_tui.out_of_mem  field:acr_tui.FDb.view  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_tui.FDb.view.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_tui::FView* acr_tui::view_AllocMaybe() {
+    acr_tui::FView *row = (acr_tui::FView*)view_AllocMem();
+    if (row) {
+        new (row) acr_tui::FView; // call constructor
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.view.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_tui::FView* acr_tui::view_InsertMaybe(const ui::View &value) {
+    acr_tui::FView *row = &view_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    view_CopyIn(*row,const_cast<ui::View&>(value));
+    bool ok = view_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        view_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.view.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_tui::view_AllocMem() {
+    u64 new_nelems     = _db.view_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_tui::FView*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.view_lary[bsr];
+        if (!lev) {
+            lev=(acr_tui::FView*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FView) * (u64(1)<<bsr));
+            _db.view_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.view_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.view.RemoveAll
+// Remove all elements from Lary
+void acr_tui::view_RemoveAll() {
+    for (u64 n = _db.view_n; n>0; ) {
+        n--;
+        view_qFind(u64(n)).~FView(); // destroy last element
+        _db.view_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.view.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_tui::view_RemoveLast() {
+    u64 n = _db.view_n;
+    if (n > 0) {
+        n -= 1;
+        view_qFind(u64(n)).~FView();
+        _db.view_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.view.InputMaybe
+static bool acr_tui::view_InputMaybe(ui::View &elem) {
+    bool retval = true;
+    retval = view_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_tui.FDb.view.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_tui::view_XrefMaybe(acr_tui::FView &row) {
+    bool retval = true;
+    (void)row;
+    // insert view into index ind_view
+    if (true) { // user-defined insert condition
+        bool success = ind_view_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_tui.duplicate_key  xref:acr_tui.FDb.ind_view"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_view.Find
+// Find row by key. Return NULL if not found.
+acr_tui::FView* acr_tui::ind_view_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_view_buckets_n - 1);
+    acr_tui::FView *ret = _db.ind_view_buckets_elems[index];
+    for (; ret && !((*ret).view == key); ret = ret->ind_view_next) {
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.ind_view.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_tui::FView& acr_tui::ind_view_FindX(const algo::strptr& key) {
+    acr_tui::FView* ret = ind_view_Find(key);
+    vrfy(ret, tempstr() << "acr_tui.key_error  table:ind_view  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_view.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_tui::FView& acr_tui::ind_view_GetOrCreate(const algo::strptr& key) {
+    acr_tui::FView* ret = ind_view_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &view_Alloc();
+        (*ret).view = key;
+        bool good = view_XrefMaybe(*ret);
+        if (!good) {
+            view_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_tui.create_error  table:ind_view  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_view.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_tui::ind_view_InsertMaybe(acr_tui::FView& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_view_next == (acr_tui::FView*)-1)) {// check if in hash already
+        row.ind_view_hashval = algo::Smallstr50_Hash(0, row.view);
+        ind_view_Reserve(1);
+        u32 index = row.ind_view_hashval & (_db.ind_view_buckets_n - 1);
+        acr_tui::FView* *prev = &_db.ind_view_buckets_elems[index];
+        do {
+            acr_tui::FView* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).view == row.view) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_view_next;
+        } while (true);
+        if (retval) {
+            row.ind_view_next = *prev;
+            _db.ind_view_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_view.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_tui::ind_view_Remove(acr_tui::FView& row) {
+    if (LIKELY(row.ind_view_next != (acr_tui::FView*)-1)) {// check if in hash already
+        u32 index = row.ind_view_hashval & (_db.ind_view_buckets_n - 1);
+        acr_tui::FView* *prev = &_db.ind_view_buckets_elems[index]; // addr of pointer to current element
+        while (acr_tui::FView *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_view_next; // unlink (singly linked list)
+                _db.ind_view_n--;
+                row.ind_view_next = (acr_tui::FView*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_view_next;
+        }
+    }
+}
+
+// --- acr_tui.FDb.ind_view.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_tui::ind_view_Reserve(int n) {
+    ind_view_AbsReserve(_db.ind_view_n + n);
+}
+
+// --- acr_tui.FDb.ind_view.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_tui::ind_view_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_view_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_tui::FView*);
+        u32 new_size = new_nbuckets * sizeof(acr_tui::FView*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_tui::FView* *new_buckets = (acr_tui::FView**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_tui.out_of_memory  field:acr_tui.FDb.ind_view");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_view_buckets_n; i++) {
+            acr_tui::FView* elem = _db.ind_view_buckets_elems[i];
+            while (elem) {
+                acr_tui::FView &row        = *elem;
+                acr_tui::FView* next       = row.ind_view_next;
+                u32 index          = row.ind_view_hashval & (new_nbuckets-1);
+                row.ind_view_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_view_buckets_elems, old_size);
+        _db.ind_view_buckets_elems = new_buckets;
+        _db.ind_view_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_tui.FDb.view_source.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_tui::FViewSource& acr_tui::view_source_Alloc() {
+    acr_tui::FViewSource* row = view_source_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_tui.out_of_mem  field:acr_tui.FDb.view_source  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_tui.FDb.view_source.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_tui::FViewSource* acr_tui::view_source_AllocMaybe() {
+    acr_tui::FViewSource *row = (acr_tui::FViewSource*)view_source_AllocMem();
+    if (row) {
+        new (row) acr_tui::FViewSource; // call constructor
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.view_source.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_tui::FViewSource* acr_tui::view_source_InsertMaybe(const ui::ViewSource &value) {
+    acr_tui::FViewSource *row = &view_source_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    view_source_CopyIn(*row,const_cast<ui::ViewSource&>(value));
+    bool ok = view_source_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        view_source_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.view_source.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_tui::view_source_AllocMem() {
+    u64 new_nelems     = _db.view_source_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_tui::FViewSource*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.view_source_lary[bsr];
+        if (!lev) {
+            lev=(acr_tui::FViewSource*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FViewSource) * (u64(1)<<bsr));
+            _db.view_source_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.view_source_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.view_source.RemoveAll
+// Remove all elements from Lary
+void acr_tui::view_source_RemoveAll() {
+    for (u64 n = _db.view_source_n; n>0; ) {
+        n--;
+        view_source_qFind(u64(n)).~FViewSource(); // destroy last element
+        _db.view_source_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.view_source.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_tui::view_source_RemoveLast() {
+    u64 n = _db.view_source_n;
+    if (n > 0) {
+        n -= 1;
+        view_source_qFind(u64(n)).~FViewSource();
+        _db.view_source_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.view_source.InputMaybe
+static bool acr_tui::view_source_InputMaybe(ui::ViewSource &elem) {
+    bool retval = true;
+    retval = view_source_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_tui.FDb.view_source.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_tui::view_source_XrefMaybe(acr_tui::FViewSource &row) {
+    bool retval = true;
+    (void)row;
+    // insert view_source into index ind_view_source
+    if (true) { // user-defined insert condition
+        bool success = ind_view_source_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_tui.duplicate_key  xref:acr_tui.FDb.ind_view_source"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_view_source.Find
+// Find row by key. Return NULL if not found.
+acr_tui::FViewSource* acr_tui::ind_view_source_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_view_source_buckets_n - 1);
+    acr_tui::FViewSource *ret = _db.ind_view_source_buckets_elems[index];
+    for (; ret && !((*ret).view_source == key); ret = ret->ind_view_source_next) {
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.ind_view_source.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_tui::FViewSource& acr_tui::ind_view_source_FindX(const algo::strptr& key) {
+    acr_tui::FViewSource* ret = ind_view_source_Find(key);
+    vrfy(ret, tempstr() << "acr_tui.key_error  table:ind_view_source  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_view_source.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_tui::FViewSource& acr_tui::ind_view_source_GetOrCreate(const algo::strptr& key) {
+    acr_tui::FViewSource* ret = ind_view_source_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &view_source_Alloc();
+        (*ret).view_source = key;
+        bool good = view_source_XrefMaybe(*ret);
+        if (!good) {
+            view_source_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_tui.create_error  table:ind_view_source  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_view_source.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_tui::ind_view_source_InsertMaybe(acr_tui::FViewSource& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_view_source_next == (acr_tui::FViewSource*)-1)) {// check if in hash already
+        row.ind_view_source_hashval = algo::Smallstr50_Hash(0, row.view_source);
+        ind_view_source_Reserve(1);
+        u32 index = row.ind_view_source_hashval & (_db.ind_view_source_buckets_n - 1);
+        acr_tui::FViewSource* *prev = &_db.ind_view_source_buckets_elems[index];
+        do {
+            acr_tui::FViewSource* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).view_source == row.view_source) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_view_source_next;
+        } while (true);
+        if (retval) {
+            row.ind_view_source_next = *prev;
+            _db.ind_view_source_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_view_source.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_tui::ind_view_source_Remove(acr_tui::FViewSource& row) {
+    if (LIKELY(row.ind_view_source_next != (acr_tui::FViewSource*)-1)) {// check if in hash already
+        u32 index = row.ind_view_source_hashval & (_db.ind_view_source_buckets_n - 1);
+        acr_tui::FViewSource* *prev = &_db.ind_view_source_buckets_elems[index]; // addr of pointer to current element
+        while (acr_tui::FViewSource *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_view_source_next; // unlink (singly linked list)
+                _db.ind_view_source_n--;
+                row.ind_view_source_next = (acr_tui::FViewSource*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_view_source_next;
+        }
+    }
+}
+
+// --- acr_tui.FDb.ind_view_source.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_tui::ind_view_source_Reserve(int n) {
+    ind_view_source_AbsReserve(_db.ind_view_source_n + n);
+}
+
+// --- acr_tui.FDb.ind_view_source.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_tui::ind_view_source_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_view_source_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_tui::FViewSource*);
+        u32 new_size = new_nbuckets * sizeof(acr_tui::FViewSource*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_tui::FViewSource* *new_buckets = (acr_tui::FViewSource**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_tui.out_of_memory  field:acr_tui.FDb.ind_view_source");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_view_source_buckets_n; i++) {
+            acr_tui::FViewSource* elem = _db.ind_view_source_buckets_elems[i];
+            while (elem) {
+                acr_tui::FViewSource &row        = *elem;
+                acr_tui::FViewSource* next       = row.ind_view_source_next;
+                u32 index          = row.ind_view_source_hashval & (new_nbuckets-1);
+                row.ind_view_source_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_view_source_buckets_elems, old_size);
+        _db.ind_view_source_buckets_elems = new_buckets;
+        _db.ind_view_source_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_tui.FDb.view_field.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_tui::FViewField& acr_tui::view_field_Alloc() {
+    acr_tui::FViewField* row = view_field_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_tui.out_of_mem  field:acr_tui.FDb.view_field  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_tui.FDb.view_field.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_tui::FViewField* acr_tui::view_field_AllocMaybe() {
+    acr_tui::FViewField *row = (acr_tui::FViewField*)view_field_AllocMem();
+    if (row) {
+        new (row) acr_tui::FViewField; // call constructor
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.view_field.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_tui::FViewField* acr_tui::view_field_InsertMaybe(const ui::ViewField &value) {
+    acr_tui::FViewField *row = &view_field_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    view_field_CopyIn(*row,const_cast<ui::ViewField&>(value));
+    bool ok = view_field_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        view_field_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.view_field.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_tui::view_field_AllocMem() {
+    u64 new_nelems     = _db.view_field_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_tui::FViewField*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.view_field_lary[bsr];
+        if (!lev) {
+            lev=(acr_tui::FViewField*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FViewField) * (u64(1)<<bsr));
+            _db.view_field_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.view_field_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.view_field.RemoveAll
+// Remove all elements from Lary
+void acr_tui::view_field_RemoveAll() {
+    for (u64 n = _db.view_field_n; n>0; ) {
+        n--;
+        view_field_qFind(u64(n)).~FViewField(); // destroy last element
+        _db.view_field_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.view_field.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_tui::view_field_RemoveLast() {
+    u64 n = _db.view_field_n;
+    if (n > 0) {
+        n -= 1;
+        view_field_qFind(u64(n)).~FViewField();
+        _db.view_field_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.view_field.InputMaybe
+static bool acr_tui::view_field_InputMaybe(ui::ViewField &elem) {
+    bool retval = true;
+    retval = view_field_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_tui.FDb.view_field.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_tui::view_field_XrefMaybe(acr_tui::FViewField &row) {
+    bool retval = true;
+    (void)row;
+    // insert view_field into index ind_view_field
+    if (true) { // user-defined insert condition
+        bool success = ind_view_field_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_tui.duplicate_key  xref:acr_tui.FDb.ind_view_field"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_view_field.Find
+// Find row by key. Return NULL if not found.
+acr_tui::FViewField* acr_tui::ind_view_field_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_view_field_buckets_n - 1);
+    acr_tui::FViewField *ret = _db.ind_view_field_buckets_elems[index];
+    for (; ret && !((*ret).view_field == key); ret = ret->ind_view_field_next) {
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.ind_view_field.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_tui::FViewField& acr_tui::ind_view_field_FindX(const algo::strptr& key) {
+    acr_tui::FViewField* ret = ind_view_field_Find(key);
+    vrfy(ret, tempstr() << "acr_tui.key_error  table:ind_view_field  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_view_field.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_tui::FViewField& acr_tui::ind_view_field_GetOrCreate(const algo::strptr& key) {
+    acr_tui::FViewField* ret = ind_view_field_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &view_field_Alloc();
+        (*ret).view_field = key;
+        bool good = view_field_XrefMaybe(*ret);
+        if (!good) {
+            view_field_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_tui.create_error  table:ind_view_field  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_view_field.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_tui::ind_view_field_InsertMaybe(acr_tui::FViewField& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_view_field_next == (acr_tui::FViewField*)-1)) {// check if in hash already
+        row.ind_view_field_hashval = algo::Smallstr50_Hash(0, row.view_field);
+        ind_view_field_Reserve(1);
+        u32 index = row.ind_view_field_hashval & (_db.ind_view_field_buckets_n - 1);
+        acr_tui::FViewField* *prev = &_db.ind_view_field_buckets_elems[index];
+        do {
+            acr_tui::FViewField* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).view_field == row.view_field) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_view_field_next;
+        } while (true);
+        if (retval) {
+            row.ind_view_field_next = *prev;
+            _db.ind_view_field_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_view_field.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_tui::ind_view_field_Remove(acr_tui::FViewField& row) {
+    if (LIKELY(row.ind_view_field_next != (acr_tui::FViewField*)-1)) {// check if in hash already
+        u32 index = row.ind_view_field_hashval & (_db.ind_view_field_buckets_n - 1);
+        acr_tui::FViewField* *prev = &_db.ind_view_field_buckets_elems[index]; // addr of pointer to current element
+        while (acr_tui::FViewField *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_view_field_next; // unlink (singly linked list)
+                _db.ind_view_field_n--;
+                row.ind_view_field_next = (acr_tui::FViewField*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_view_field_next;
+        }
+    }
+}
+
+// --- acr_tui.FDb.ind_view_field.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_tui::ind_view_field_Reserve(int n) {
+    ind_view_field_AbsReserve(_db.ind_view_field_n + n);
+}
+
+// --- acr_tui.FDb.ind_view_field.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_tui::ind_view_field_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_view_field_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_tui::FViewField*);
+        u32 new_size = new_nbuckets * sizeof(acr_tui::FViewField*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_tui::FViewField* *new_buckets = (acr_tui::FViewField**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_tui.out_of_memory  field:acr_tui.FDb.ind_view_field");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_view_field_buckets_n; i++) {
+            acr_tui::FViewField* elem = _db.ind_view_field_buckets_elems[i];
+            while (elem) {
+                acr_tui::FViewField &row        = *elem;
+                acr_tui::FViewField* next       = row.ind_view_field_next;
+                u32 index          = row.ind_view_field_hashval & (new_nbuckets-1);
+                row.ind_view_field_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_view_field_buckets_elems, old_size);
+        _db.ind_view_field_buckets_elems = new_buckets;
+        _db.ind_view_field_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_tui.FDb.view_filter.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_tui::FViewFilter& acr_tui::view_filter_Alloc() {
+    acr_tui::FViewFilter* row = view_filter_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_tui.out_of_mem  field:acr_tui.FDb.view_filter  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_tui.FDb.view_filter.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_tui::FViewFilter* acr_tui::view_filter_AllocMaybe() {
+    acr_tui::FViewFilter *row = (acr_tui::FViewFilter*)view_filter_AllocMem();
+    if (row) {
+        new (row) acr_tui::FViewFilter; // call constructor
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.view_filter.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_tui::FViewFilter* acr_tui::view_filter_InsertMaybe(const ui::ViewFilter &value) {
+    acr_tui::FViewFilter *row = &view_filter_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    view_filter_CopyIn(*row,const_cast<ui::ViewFilter&>(value));
+    bool ok = view_filter_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        view_filter_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.view_filter.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_tui::view_filter_AllocMem() {
+    u64 new_nelems     = _db.view_filter_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_tui::FViewFilter*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.view_filter_lary[bsr];
+        if (!lev) {
+            lev=(acr_tui::FViewFilter*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FViewFilter) * (u64(1)<<bsr));
+            _db.view_filter_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.view_filter_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.view_filter.RemoveAll
+// Remove all elements from Lary
+void acr_tui::view_filter_RemoveAll() {
+    for (u64 n = _db.view_filter_n; n>0; ) {
+        n--;
+        view_filter_qFind(u64(n)).~FViewFilter(); // destroy last element
+        _db.view_filter_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.view_filter.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_tui::view_filter_RemoveLast() {
+    u64 n = _db.view_filter_n;
+    if (n > 0) {
+        n -= 1;
+        view_filter_qFind(u64(n)).~FViewFilter();
+        _db.view_filter_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.view_filter.InputMaybe
+static bool acr_tui::view_filter_InputMaybe(ui::ViewFilter &elem) {
+    bool retval = true;
+    retval = view_filter_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_tui.FDb.view_filter.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_tui::view_filter_XrefMaybe(acr_tui::FViewFilter &row) {
+    bool retval = true;
+    (void)row;
+    // insert view_filter into index ind_view_filter
+    if (true) { // user-defined insert condition
+        bool success = ind_view_filter_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_tui.duplicate_key  xref:acr_tui.FDb.ind_view_filter"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_view_filter.Find
+// Find row by key. Return NULL if not found.
+acr_tui::FViewFilter* acr_tui::ind_view_filter_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_view_filter_buckets_n - 1);
+    acr_tui::FViewFilter *ret = _db.ind_view_filter_buckets_elems[index];
+    for (; ret && !((*ret).view_filter == key); ret = ret->ind_view_filter_next) {
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.ind_view_filter.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_tui::FViewFilter& acr_tui::ind_view_filter_FindX(const algo::strptr& key) {
+    acr_tui::FViewFilter* ret = ind_view_filter_Find(key);
+    vrfy(ret, tempstr() << "acr_tui.key_error  table:ind_view_filter  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_view_filter.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_tui::FViewFilter& acr_tui::ind_view_filter_GetOrCreate(const algo::strptr& key) {
+    acr_tui::FViewFilter* ret = ind_view_filter_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &view_filter_Alloc();
+        (*ret).view_filter = key;
+        bool good = view_filter_XrefMaybe(*ret);
+        if (!good) {
+            view_filter_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_tui.create_error  table:ind_view_filter  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_view_filter.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_tui::ind_view_filter_InsertMaybe(acr_tui::FViewFilter& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_view_filter_next == (acr_tui::FViewFilter*)-1)) {// check if in hash already
+        row.ind_view_filter_hashval = algo::Smallstr50_Hash(0, row.view_filter);
+        ind_view_filter_Reserve(1);
+        u32 index = row.ind_view_filter_hashval & (_db.ind_view_filter_buckets_n - 1);
+        acr_tui::FViewFilter* *prev = &_db.ind_view_filter_buckets_elems[index];
+        do {
+            acr_tui::FViewFilter* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).view_filter == row.view_filter) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_view_filter_next;
+        } while (true);
+        if (retval) {
+            row.ind_view_filter_next = *prev;
+            _db.ind_view_filter_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_view_filter.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_tui::ind_view_filter_Remove(acr_tui::FViewFilter& row) {
+    if (LIKELY(row.ind_view_filter_next != (acr_tui::FViewFilter*)-1)) {// check if in hash already
+        u32 index = row.ind_view_filter_hashval & (_db.ind_view_filter_buckets_n - 1);
+        acr_tui::FViewFilter* *prev = &_db.ind_view_filter_buckets_elems[index]; // addr of pointer to current element
+        while (acr_tui::FViewFilter *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_view_filter_next; // unlink (singly linked list)
+                _db.ind_view_filter_n--;
+                row.ind_view_filter_next = (acr_tui::FViewFilter*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_view_filter_next;
+        }
+    }
+}
+
+// --- acr_tui.FDb.ind_view_filter.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_tui::ind_view_filter_Reserve(int n) {
+    ind_view_filter_AbsReserve(_db.ind_view_filter_n + n);
+}
+
+// --- acr_tui.FDb.ind_view_filter.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_tui::ind_view_filter_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_view_filter_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_tui::FViewFilter*);
+        u32 new_size = new_nbuckets * sizeof(acr_tui::FViewFilter*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_tui::FViewFilter* *new_buckets = (acr_tui::FViewFilter**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_tui.out_of_memory  field:acr_tui.FDb.ind_view_filter");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_view_filter_buckets_n; i++) {
+            acr_tui::FViewFilter* elem = _db.ind_view_filter_buckets_elems[i];
+            while (elem) {
+                acr_tui::FViewFilter &row        = *elem;
+                acr_tui::FViewFilter* next       = row.ind_view_filter_next;
+                u32 index          = row.ind_view_filter_hashval & (new_nbuckets-1);
+                row.ind_view_filter_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_view_filter_buckets_elems, old_size);
+        _db.ind_view_filter_buckets_elems = new_buckets;
+        _db.ind_view_filter_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_tui.FDb.view_sort.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_tui::FViewSort& acr_tui::view_sort_Alloc() {
+    acr_tui::FViewSort* row = view_sort_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_tui.out_of_mem  field:acr_tui.FDb.view_sort  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_tui.FDb.view_sort.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_tui::FViewSort* acr_tui::view_sort_AllocMaybe() {
+    acr_tui::FViewSort *row = (acr_tui::FViewSort*)view_sort_AllocMem();
+    if (row) {
+        new (row) acr_tui::FViewSort; // call constructor
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.view_sort.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_tui::FViewSort* acr_tui::view_sort_InsertMaybe(const ui::ViewSort &value) {
+    acr_tui::FViewSort *row = &view_sort_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    view_sort_CopyIn(*row,const_cast<ui::ViewSort&>(value));
+    bool ok = view_sort_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        view_sort_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.view_sort.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_tui::view_sort_AllocMem() {
+    u64 new_nelems     = _db.view_sort_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_tui::FViewSort*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.view_sort_lary[bsr];
+        if (!lev) {
+            lev=(acr_tui::FViewSort*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FViewSort) * (u64(1)<<bsr));
+            _db.view_sort_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.view_sort_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.view_sort.RemoveAll
+// Remove all elements from Lary
+void acr_tui::view_sort_RemoveAll() {
+    for (u64 n = _db.view_sort_n; n>0; ) {
+        n--;
+        view_sort_qFind(u64(n)).~FViewSort(); // destroy last element
+        _db.view_sort_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.view_sort.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_tui::view_sort_RemoveLast() {
+    u64 n = _db.view_sort_n;
+    if (n > 0) {
+        n -= 1;
+        view_sort_qFind(u64(n)).~FViewSort();
+        _db.view_sort_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.view_sort.InputMaybe
+static bool acr_tui::view_sort_InputMaybe(ui::ViewSort &elem) {
+    bool retval = true;
+    retval = view_sort_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_tui.FDb.view_sort.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_tui::view_sort_XrefMaybe(acr_tui::FViewSort &row) {
+    bool retval = true;
+    (void)row;
+    // insert view_sort into index ind_view_sort
+    if (true) { // user-defined insert condition
+        bool success = ind_view_sort_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_tui.duplicate_key  xref:acr_tui.FDb.ind_view_sort"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_view_sort.Find
+// Find row by key. Return NULL if not found.
+acr_tui::FViewSort* acr_tui::ind_view_sort_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_view_sort_buckets_n - 1);
+    acr_tui::FViewSort *ret = _db.ind_view_sort_buckets_elems[index];
+    for (; ret && !((*ret).view_sort == key); ret = ret->ind_view_sort_next) {
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.ind_view_sort.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_tui::FViewSort& acr_tui::ind_view_sort_FindX(const algo::strptr& key) {
+    acr_tui::FViewSort* ret = ind_view_sort_Find(key);
+    vrfy(ret, tempstr() << "acr_tui.key_error  table:ind_view_sort  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_view_sort.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_tui::FViewSort& acr_tui::ind_view_sort_GetOrCreate(const algo::strptr& key) {
+    acr_tui::FViewSort* ret = ind_view_sort_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &view_sort_Alloc();
+        (*ret).view_sort = key;
+        bool good = view_sort_XrefMaybe(*ret);
+        if (!good) {
+            view_sort_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_tui.create_error  table:ind_view_sort  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_view_sort.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_tui::ind_view_sort_InsertMaybe(acr_tui::FViewSort& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_view_sort_next == (acr_tui::FViewSort*)-1)) {// check if in hash already
+        row.ind_view_sort_hashval = algo::Smallstr50_Hash(0, row.view_sort);
+        ind_view_sort_Reserve(1);
+        u32 index = row.ind_view_sort_hashval & (_db.ind_view_sort_buckets_n - 1);
+        acr_tui::FViewSort* *prev = &_db.ind_view_sort_buckets_elems[index];
+        do {
+            acr_tui::FViewSort* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).view_sort == row.view_sort) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_view_sort_next;
+        } while (true);
+        if (retval) {
+            row.ind_view_sort_next = *prev;
+            _db.ind_view_sort_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_view_sort.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_tui::ind_view_sort_Remove(acr_tui::FViewSort& row) {
+    if (LIKELY(row.ind_view_sort_next != (acr_tui::FViewSort*)-1)) {// check if in hash already
+        u32 index = row.ind_view_sort_hashval & (_db.ind_view_sort_buckets_n - 1);
+        acr_tui::FViewSort* *prev = &_db.ind_view_sort_buckets_elems[index]; // addr of pointer to current element
+        while (acr_tui::FViewSort *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_view_sort_next; // unlink (singly linked list)
+                _db.ind_view_sort_n--;
+                row.ind_view_sort_next = (acr_tui::FViewSort*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_view_sort_next;
+        }
+    }
+}
+
+// --- acr_tui.FDb.ind_view_sort.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_tui::ind_view_sort_Reserve(int n) {
+    ind_view_sort_AbsReserve(_db.ind_view_sort_n + n);
+}
+
+// --- acr_tui.FDb.ind_view_sort.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_tui::ind_view_sort_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_view_sort_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_tui::FViewSort*);
+        u32 new_size = new_nbuckets * sizeof(acr_tui::FViewSort*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_tui::FViewSort* *new_buckets = (acr_tui::FViewSort**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_tui.out_of_memory  field:acr_tui.FDb.ind_view_sort");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_view_sort_buckets_n; i++) {
+            acr_tui::FViewSort* elem = _db.ind_view_sort_buckets_elems[i];
+            while (elem) {
+                acr_tui::FViewSort &row        = *elem;
+                acr_tui::FViewSort* next       = row.ind_view_sort_next;
+                u32 index          = row.ind_view_sort_hashval & (new_nbuckets-1);
+                row.ind_view_sort_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_view_sort_buckets_elems, old_size);
+        _db.ind_view_sort_buckets_elems = new_buckets;
+        _db.ind_view_sort_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_tui.FDb.context_var.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_tui::FContextVar& acr_tui::context_var_Alloc() {
+    acr_tui::FContextVar* row = context_var_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_tui.out_of_mem  field:acr_tui.FDb.context_var  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_tui.FDb.context_var.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_tui::FContextVar* acr_tui::context_var_AllocMaybe() {
+    acr_tui::FContextVar *row = (acr_tui::FContextVar*)context_var_AllocMem();
+    if (row) {
+        new (row) acr_tui::FContextVar; // call constructor
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.context_var.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_tui::FContextVar* acr_tui::context_var_InsertMaybe(const ui::ContextVar &value) {
+    acr_tui::FContextVar *row = &context_var_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    context_var_CopyIn(*row,const_cast<ui::ContextVar&>(value));
+    bool ok = context_var_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        context_var_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.context_var.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_tui::context_var_AllocMem() {
+    u64 new_nelems     = _db.context_var_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_tui::FContextVar*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.context_var_lary[bsr];
+        if (!lev) {
+            lev=(acr_tui::FContextVar*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FContextVar) * (u64(1)<<bsr));
+            _db.context_var_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.context_var_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.context_var.RemoveAll
+// Remove all elements from Lary
+void acr_tui::context_var_RemoveAll() {
+    for (u64 n = _db.context_var_n; n>0; ) {
+        n--;
+        context_var_qFind(u64(n)).~FContextVar(); // destroy last element
+        _db.context_var_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.context_var.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_tui::context_var_RemoveLast() {
+    u64 n = _db.context_var_n;
+    if (n > 0) {
+        n -= 1;
+        context_var_qFind(u64(n)).~FContextVar();
+        _db.context_var_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.context_var.InputMaybe
+static bool acr_tui::context_var_InputMaybe(ui::ContextVar &elem) {
+    bool retval = true;
+    retval = context_var_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_tui.FDb.context_var.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_tui::context_var_XrefMaybe(acr_tui::FContextVar &row) {
+    bool retval = true;
+    (void)row;
+    // insert context_var into index ind_context_var
+    if (true) { // user-defined insert condition
+        bool success = ind_context_var_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_tui.duplicate_key  xref:acr_tui.FDb.ind_context_var"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_context_var.Find
+// Find row by key. Return NULL if not found.
+acr_tui::FContextVar* acr_tui::ind_context_var_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_context_var_buckets_n - 1);
+    acr_tui::FContextVar *ret = _db.ind_context_var_buckets_elems[index];
+    for (; ret && !((*ret).context_var == key); ret = ret->ind_context_var_next) {
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.ind_context_var.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_tui::FContextVar& acr_tui::ind_context_var_FindX(const algo::strptr& key) {
+    acr_tui::FContextVar* ret = ind_context_var_Find(key);
+    vrfy(ret, tempstr() << "acr_tui.key_error  table:ind_context_var  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_context_var.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_tui::FContextVar& acr_tui::ind_context_var_GetOrCreate(const algo::strptr& key) {
+    acr_tui::FContextVar* ret = ind_context_var_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &context_var_Alloc();
+        (*ret).context_var = key;
+        bool good = context_var_XrefMaybe(*ret);
+        if (!good) {
+            context_var_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_tui.create_error  table:ind_context_var  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_context_var.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_tui::ind_context_var_InsertMaybe(acr_tui::FContextVar& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_context_var_next == (acr_tui::FContextVar*)-1)) {// check if in hash already
+        row.ind_context_var_hashval = algo::Smallstr50_Hash(0, row.context_var);
+        ind_context_var_Reserve(1);
+        u32 index = row.ind_context_var_hashval & (_db.ind_context_var_buckets_n - 1);
+        acr_tui::FContextVar* *prev = &_db.ind_context_var_buckets_elems[index];
+        do {
+            acr_tui::FContextVar* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).context_var == row.context_var) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_context_var_next;
+        } while (true);
+        if (retval) {
+            row.ind_context_var_next = *prev;
+            _db.ind_context_var_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_context_var.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_tui::ind_context_var_Remove(acr_tui::FContextVar& row) {
+    if (LIKELY(row.ind_context_var_next != (acr_tui::FContextVar*)-1)) {// check if in hash already
+        u32 index = row.ind_context_var_hashval & (_db.ind_context_var_buckets_n - 1);
+        acr_tui::FContextVar* *prev = &_db.ind_context_var_buckets_elems[index]; // addr of pointer to current element
+        while (acr_tui::FContextVar *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_context_var_next; // unlink (singly linked list)
+                _db.ind_context_var_n--;
+                row.ind_context_var_next = (acr_tui::FContextVar*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_context_var_next;
+        }
+    }
+}
+
+// --- acr_tui.FDb.ind_context_var.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_tui::ind_context_var_Reserve(int n) {
+    ind_context_var_AbsReserve(_db.ind_context_var_n + n);
+}
+
+// --- acr_tui.FDb.ind_context_var.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_tui::ind_context_var_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_context_var_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_tui::FContextVar*);
+        u32 new_size = new_nbuckets * sizeof(acr_tui::FContextVar*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_tui::FContextVar* *new_buckets = (acr_tui::FContextVar**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_tui.out_of_memory  field:acr_tui.FDb.ind_context_var");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_context_var_buckets_n; i++) {
+            acr_tui::FContextVar* elem = _db.ind_context_var_buckets_elems[i];
+            while (elem) {
+                acr_tui::FContextVar &row        = *elem;
+                acr_tui::FContextVar* next       = row.ind_context_var_next;
+                u32 index          = row.ind_context_var_hashval & (new_nbuckets-1);
+                row.ind_context_var_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_context_var_buckets_elems, old_size);
+        _db.ind_context_var_buckets_elems = new_buckets;
+        _db.ind_context_var_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_tui.FDb.command.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_tui::FCommand& acr_tui::command_Alloc() {
+    acr_tui::FCommand* row = command_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_tui.out_of_mem  field:acr_tui.FDb.command  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_tui.FDb.command.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_tui::FCommand* acr_tui::command_AllocMaybe() {
+    acr_tui::FCommand *row = (acr_tui::FCommand*)command_AllocMem();
+    if (row) {
+        new (row) acr_tui::FCommand; // call constructor
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.command.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_tui::FCommand* acr_tui::command_InsertMaybe(const ui::Command &value) {
+    acr_tui::FCommand *row = &command_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    command_CopyIn(*row,const_cast<ui::Command&>(value));
+    bool ok = command_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        command_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.command.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_tui::command_AllocMem() {
+    u64 new_nelems     = _db.command_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_tui::FCommand*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.command_lary[bsr];
+        if (!lev) {
+            lev=(acr_tui::FCommand*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FCommand) * (u64(1)<<bsr));
+            _db.command_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.command_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.command.RemoveAll
+// Remove all elements from Lary
+void acr_tui::command_RemoveAll() {
+    for (u64 n = _db.command_n; n>0; ) {
+        n--;
+        command_qFind(u64(n)).~FCommand(); // destroy last element
+        _db.command_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.command.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_tui::command_RemoveLast() {
+    u64 n = _db.command_n;
+    if (n > 0) {
+        n -= 1;
+        command_qFind(u64(n)).~FCommand();
+        _db.command_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.command.InputMaybe
+static bool acr_tui::command_InputMaybe(ui::Command &elem) {
+    bool retval = true;
+    retval = command_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_tui.FDb.command.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_tui::command_XrefMaybe(acr_tui::FCommand &row) {
+    bool retval = true;
+    (void)row;
+    // insert command into index ind_command
+    if (true) { // user-defined insert condition
+        bool success = ind_command_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_tui.duplicate_key  xref:acr_tui.FDb.ind_command"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_command.Find
+// Find row by key. Return NULL if not found.
+acr_tui::FCommand* acr_tui::ind_command_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_command_buckets_n - 1);
+    acr_tui::FCommand *ret = _db.ind_command_buckets_elems[index];
+    for (; ret && !((*ret).command == key); ret = ret->ind_command_next) {
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.ind_command.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_tui::FCommand& acr_tui::ind_command_FindX(const algo::strptr& key) {
+    acr_tui::FCommand* ret = ind_command_Find(key);
+    vrfy(ret, tempstr() << "acr_tui.key_error  table:ind_command  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_command.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_tui::FCommand& acr_tui::ind_command_GetOrCreate(const algo::strptr& key) {
+    acr_tui::FCommand* ret = ind_command_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &command_Alloc();
+        (*ret).command = key;
+        bool good = command_XrefMaybe(*ret);
+        if (!good) {
+            command_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_tui.create_error  table:ind_command  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_command.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_tui::ind_command_InsertMaybe(acr_tui::FCommand& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_command_next == (acr_tui::FCommand*)-1)) {// check if in hash already
+        row.ind_command_hashval = algo::Smallstr50_Hash(0, row.command);
+        ind_command_Reserve(1);
+        u32 index = row.ind_command_hashval & (_db.ind_command_buckets_n - 1);
+        acr_tui::FCommand* *prev = &_db.ind_command_buckets_elems[index];
+        do {
+            acr_tui::FCommand* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).command == row.command) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_command_next;
+        } while (true);
+        if (retval) {
+            row.ind_command_next = *prev;
+            _db.ind_command_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_command.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_tui::ind_command_Remove(acr_tui::FCommand& row) {
+    if (LIKELY(row.ind_command_next != (acr_tui::FCommand*)-1)) {// check if in hash already
+        u32 index = row.ind_command_hashval & (_db.ind_command_buckets_n - 1);
+        acr_tui::FCommand* *prev = &_db.ind_command_buckets_elems[index]; // addr of pointer to current element
+        while (acr_tui::FCommand *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_command_next; // unlink (singly linked list)
+                _db.ind_command_n--;
+                row.ind_command_next = (acr_tui::FCommand*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_command_next;
+        }
+    }
+}
+
+// --- acr_tui.FDb.ind_command.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_tui::ind_command_Reserve(int n) {
+    ind_command_AbsReserve(_db.ind_command_n + n);
+}
+
+// --- acr_tui.FDb.ind_command.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_tui::ind_command_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_command_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_tui::FCommand*);
+        u32 new_size = new_nbuckets * sizeof(acr_tui::FCommand*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_tui::FCommand* *new_buckets = (acr_tui::FCommand**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_tui.out_of_memory  field:acr_tui.FDb.ind_command");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_command_buckets_n; i++) {
+            acr_tui::FCommand* elem = _db.ind_command_buckets_elems[i];
+            while (elem) {
+                acr_tui::FCommand &row        = *elem;
+                acr_tui::FCommand* next       = row.ind_command_next;
+                u32 index          = row.ind_command_hashval & (new_nbuckets-1);
+                row.ind_command_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_command_buckets_elems, old_size);
+        _db.ind_command_buckets_elems = new_buckets;
+        _db.ind_command_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_tui.FDb.layout_cfg.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_tui::FLayoutCfg& acr_tui::layout_cfg_Alloc() {
+    acr_tui::FLayoutCfg* row = layout_cfg_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_tui.out_of_mem  field:acr_tui.FDb.layout_cfg  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_tui.FDb.layout_cfg.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_tui::FLayoutCfg* acr_tui::layout_cfg_AllocMaybe() {
+    acr_tui::FLayoutCfg *row = (acr_tui::FLayoutCfg*)layout_cfg_AllocMem();
+    if (row) {
+        new (row) acr_tui::FLayoutCfg; // call constructor
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.layout_cfg.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_tui::FLayoutCfg* acr_tui::layout_cfg_InsertMaybe(const ui::LayoutCfg &value) {
+    acr_tui::FLayoutCfg *row = &layout_cfg_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    layout_cfg_CopyIn(*row,const_cast<ui::LayoutCfg&>(value));
+    bool ok = layout_cfg_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        layout_cfg_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.layout_cfg.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_tui::layout_cfg_AllocMem() {
+    u64 new_nelems     = _db.layout_cfg_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_tui::FLayoutCfg*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.layout_cfg_lary[bsr];
+        if (!lev) {
+            lev=(acr_tui::FLayoutCfg*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FLayoutCfg) * (u64(1)<<bsr));
+            _db.layout_cfg_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.layout_cfg_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.layout_cfg.RemoveAll
+// Remove all elements from Lary
+void acr_tui::layout_cfg_RemoveAll() {
+    for (u64 n = _db.layout_cfg_n; n>0; ) {
+        n--;
+        layout_cfg_qFind(u64(n)).~FLayoutCfg(); // destroy last element
+        _db.layout_cfg_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.layout_cfg.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_tui::layout_cfg_RemoveLast() {
+    u64 n = _db.layout_cfg_n;
+    if (n > 0) {
+        n -= 1;
+        layout_cfg_qFind(u64(n)).~FLayoutCfg();
+        _db.layout_cfg_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.layout_cfg.InputMaybe
+static bool acr_tui::layout_cfg_InputMaybe(ui::LayoutCfg &elem) {
+    bool retval = true;
+    retval = layout_cfg_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_tui.FDb.layout_cfg.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_tui::layout_cfg_XrefMaybe(acr_tui::FLayoutCfg &row) {
+    bool retval = true;
+    (void)row;
+    // insert layout_cfg into index ind_layout_cfg
+    if (true) { // user-defined insert condition
+        bool success = ind_layout_cfg_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_tui.duplicate_key  xref:acr_tui.FDb.ind_layout_cfg"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_layout_cfg.Find
+// Find row by key. Return NULL if not found.
+acr_tui::FLayoutCfg* acr_tui::ind_layout_cfg_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_layout_cfg_buckets_n - 1);
+    acr_tui::FLayoutCfg *ret = _db.ind_layout_cfg_buckets_elems[index];
+    for (; ret && !((*ret).layout_cfg == key); ret = ret->ind_layout_cfg_next) {
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.ind_layout_cfg.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_tui::FLayoutCfg& acr_tui::ind_layout_cfg_FindX(const algo::strptr& key) {
+    acr_tui::FLayoutCfg* ret = ind_layout_cfg_Find(key);
+    vrfy(ret, tempstr() << "acr_tui.key_error  table:ind_layout_cfg  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_layout_cfg.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_tui::FLayoutCfg& acr_tui::ind_layout_cfg_GetOrCreate(const algo::strptr& key) {
+    acr_tui::FLayoutCfg* ret = ind_layout_cfg_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &layout_cfg_Alloc();
+        (*ret).layout_cfg = key;
+        bool good = layout_cfg_XrefMaybe(*ret);
+        if (!good) {
+            layout_cfg_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_tui.create_error  table:ind_layout_cfg  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_layout_cfg.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_tui::ind_layout_cfg_InsertMaybe(acr_tui::FLayoutCfg& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_layout_cfg_next == (acr_tui::FLayoutCfg*)-1)) {// check if in hash already
+        row.ind_layout_cfg_hashval = algo::Smallstr50_Hash(0, row.layout_cfg);
+        ind_layout_cfg_Reserve(1);
+        u32 index = row.ind_layout_cfg_hashval & (_db.ind_layout_cfg_buckets_n - 1);
+        acr_tui::FLayoutCfg* *prev = &_db.ind_layout_cfg_buckets_elems[index];
+        do {
+            acr_tui::FLayoutCfg* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).layout_cfg == row.layout_cfg) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_layout_cfg_next;
+        } while (true);
+        if (retval) {
+            row.ind_layout_cfg_next = *prev;
+            _db.ind_layout_cfg_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_layout_cfg.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_tui::ind_layout_cfg_Remove(acr_tui::FLayoutCfg& row) {
+    if (LIKELY(row.ind_layout_cfg_next != (acr_tui::FLayoutCfg*)-1)) {// check if in hash already
+        u32 index = row.ind_layout_cfg_hashval & (_db.ind_layout_cfg_buckets_n - 1);
+        acr_tui::FLayoutCfg* *prev = &_db.ind_layout_cfg_buckets_elems[index]; // addr of pointer to current element
+        while (acr_tui::FLayoutCfg *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_layout_cfg_next; // unlink (singly linked list)
+                _db.ind_layout_cfg_n--;
+                row.ind_layout_cfg_next = (acr_tui::FLayoutCfg*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_layout_cfg_next;
+        }
+    }
+}
+
+// --- acr_tui.FDb.ind_layout_cfg.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_tui::ind_layout_cfg_Reserve(int n) {
+    ind_layout_cfg_AbsReserve(_db.ind_layout_cfg_n + n);
+}
+
+// --- acr_tui.FDb.ind_layout_cfg.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_tui::ind_layout_cfg_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_layout_cfg_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_tui::FLayoutCfg*);
+        u32 new_size = new_nbuckets * sizeof(acr_tui::FLayoutCfg*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_tui::FLayoutCfg* *new_buckets = (acr_tui::FLayoutCfg**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_tui.out_of_memory  field:acr_tui.FDb.ind_layout_cfg");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_layout_cfg_buckets_n; i++) {
+            acr_tui::FLayoutCfg* elem = _db.ind_layout_cfg_buckets_elems[i];
+            while (elem) {
+                acr_tui::FLayoutCfg &row        = *elem;
+                acr_tui::FLayoutCfg* next       = row.ind_layout_cfg_next;
+                u32 index          = row.ind_layout_cfg_hashval & (new_nbuckets-1);
+                row.ind_layout_cfg_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_layout_cfg_buckets_elems, old_size);
+        _db.ind_layout_cfg_buckets_elems = new_buckets;
+        _db.ind_layout_cfg_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_tui.FDb.style_slot.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_tui::FStyleSlot& acr_tui::style_slot_Alloc() {
+    acr_tui::FStyleSlot* row = style_slot_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_tui.out_of_mem  field:acr_tui.FDb.style_slot  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_tui.FDb.style_slot.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_tui::FStyleSlot* acr_tui::style_slot_AllocMaybe() {
+    acr_tui::FStyleSlot *row = (acr_tui::FStyleSlot*)style_slot_AllocMem();
+    if (row) {
+        new (row) acr_tui::FStyleSlot; // call constructor
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.style_slot.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_tui::FStyleSlot* acr_tui::style_slot_InsertMaybe(const ui::StyleSlot &value) {
+    acr_tui::FStyleSlot *row = &style_slot_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    style_slot_CopyIn(*row,const_cast<ui::StyleSlot&>(value));
+    bool ok = style_slot_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        style_slot_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.style_slot.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_tui::style_slot_AllocMem() {
+    u64 new_nelems     = _db.style_slot_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_tui::FStyleSlot*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.style_slot_lary[bsr];
+        if (!lev) {
+            lev=(acr_tui::FStyleSlot*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FStyleSlot) * (u64(1)<<bsr));
+            _db.style_slot_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.style_slot_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.style_slot.RemoveAll
+// Remove all elements from Lary
+void acr_tui::style_slot_RemoveAll() {
+    for (u64 n = _db.style_slot_n; n>0; ) {
+        n--;
+        style_slot_qFind(u64(n)).~FStyleSlot(); // destroy last element
+        _db.style_slot_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.style_slot.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_tui::style_slot_RemoveLast() {
+    u64 n = _db.style_slot_n;
+    if (n > 0) {
+        n -= 1;
+        style_slot_qFind(u64(n)).~FStyleSlot();
+        _db.style_slot_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.style_slot.InputMaybe
+static bool acr_tui::style_slot_InputMaybe(ui::StyleSlot &elem) {
+    bool retval = true;
+    retval = style_slot_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_tui.FDb.style_slot.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_tui::style_slot_XrefMaybe(acr_tui::FStyleSlot &row) {
+    bool retval = true;
+    (void)row;
+    // insert style_slot into index ind_style_slot
+    if (true) { // user-defined insert condition
+        bool success = ind_style_slot_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_tui.duplicate_key  xref:acr_tui.FDb.ind_style_slot"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_style_slot.Find
+// Find row by key. Return NULL if not found.
+acr_tui::FStyleSlot* acr_tui::ind_style_slot_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_style_slot_buckets_n - 1);
+    acr_tui::FStyleSlot *ret = _db.ind_style_slot_buckets_elems[index];
+    for (; ret && !((*ret).style_slot == key); ret = ret->ind_style_slot_next) {
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.ind_style_slot.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_tui::FStyleSlot& acr_tui::ind_style_slot_FindX(const algo::strptr& key) {
+    acr_tui::FStyleSlot* ret = ind_style_slot_Find(key);
+    vrfy(ret, tempstr() << "acr_tui.key_error  table:ind_style_slot  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_style_slot.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_tui::FStyleSlot& acr_tui::ind_style_slot_GetOrCreate(const algo::strptr& key) {
+    acr_tui::FStyleSlot* ret = ind_style_slot_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &style_slot_Alloc();
+        (*ret).style_slot = key;
+        bool good = style_slot_XrefMaybe(*ret);
+        if (!good) {
+            style_slot_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_tui.create_error  table:ind_style_slot  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_style_slot.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_tui::ind_style_slot_InsertMaybe(acr_tui::FStyleSlot& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_style_slot_next == (acr_tui::FStyleSlot*)-1)) {// check if in hash already
+        row.ind_style_slot_hashval = algo::Smallstr50_Hash(0, row.style_slot);
+        ind_style_slot_Reserve(1);
+        u32 index = row.ind_style_slot_hashval & (_db.ind_style_slot_buckets_n - 1);
+        acr_tui::FStyleSlot* *prev = &_db.ind_style_slot_buckets_elems[index];
+        do {
+            acr_tui::FStyleSlot* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).style_slot == row.style_slot) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_style_slot_next;
+        } while (true);
+        if (retval) {
+            row.ind_style_slot_next = *prev;
+            _db.ind_style_slot_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_style_slot.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_tui::ind_style_slot_Remove(acr_tui::FStyleSlot& row) {
+    if (LIKELY(row.ind_style_slot_next != (acr_tui::FStyleSlot*)-1)) {// check if in hash already
+        u32 index = row.ind_style_slot_hashval & (_db.ind_style_slot_buckets_n - 1);
+        acr_tui::FStyleSlot* *prev = &_db.ind_style_slot_buckets_elems[index]; // addr of pointer to current element
+        while (acr_tui::FStyleSlot *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_style_slot_next; // unlink (singly linked list)
+                _db.ind_style_slot_n--;
+                row.ind_style_slot_next = (acr_tui::FStyleSlot*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_style_slot_next;
+        }
+    }
+}
+
+// --- acr_tui.FDb.ind_style_slot.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_tui::ind_style_slot_Reserve(int n) {
+    ind_style_slot_AbsReserve(_db.ind_style_slot_n + n);
+}
+
+// --- acr_tui.FDb.ind_style_slot.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_tui::ind_style_slot_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_style_slot_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_tui::FStyleSlot*);
+        u32 new_size = new_nbuckets * sizeof(acr_tui::FStyleSlot*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_tui::FStyleSlot* *new_buckets = (acr_tui::FStyleSlot**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_tui.out_of_memory  field:acr_tui.FDb.ind_style_slot");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_style_slot_buckets_n; i++) {
+            acr_tui::FStyleSlot* elem = _db.ind_style_slot_buckets_elems[i];
+            while (elem) {
+                acr_tui::FStyleSlot &row        = *elem;
+                acr_tui::FStyleSlot* next       = row.ind_style_slot_next;
+                u32 index          = row.ind_style_slot_hashval & (new_nbuckets-1);
+                row.ind_style_slot_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_style_slot_buckets_elems, old_size);
+        _db.ind_style_slot_buckets_elems = new_buckets;
+        _db.ind_style_slot_buckets_n = new_nbuckets;
+    }
+}
+
 // --- acr_tui.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr_tui::trace_RowidFind(int t) {
@@ -4407,6 +6619,177 @@ void acr_tui::FDb_Init() {
         FatalErrorExit("out of memory"); // (acr_tui.FDb.ind_fconst)
     }
     memset(_db.ind_fconst_buckets_elems, 0, sizeof(acr_tui::FFconst*)*_db.ind_fconst_buckets_n); // (acr_tui.FDb.ind_fconst)
+    // initialize LAry view (acr_tui.FDb.view)
+    _db.view_n = 0;
+    memset(_db.view_lary, 0, sizeof(_db.view_lary)); // zero out all level pointers
+    acr_tui::FView* view_first = (acr_tui::FView*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FView) * (u64(1)<<4));
+    if (!view_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.view_lary[i]  = view_first;
+        view_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_tui::FView;
+    _db.ind_view_n             	= 0; // (acr_tui.FDb.ind_view)
+    _db.ind_view_buckets_n     	= 4; // (acr_tui.FDb.ind_view)
+    _db.ind_view_buckets_elems 	= (acr_tui::FView**)algo_lib::malloc_AllocMem(sizeof(acr_tui::FView*)*_db.ind_view_buckets_n); // initial buckets (acr_tui.FDb.ind_view)
+    if (!_db.ind_view_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_tui.FDb.ind_view)
+    }
+    memset(_db.ind_view_buckets_elems, 0, sizeof(acr_tui::FView*)*_db.ind_view_buckets_n); // (acr_tui.FDb.ind_view)
+    // initialize LAry view_source (acr_tui.FDb.view_source)
+    _db.view_source_n = 0;
+    memset(_db.view_source_lary, 0, sizeof(_db.view_source_lary)); // zero out all level pointers
+    acr_tui::FViewSource* view_source_first = (acr_tui::FViewSource*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FViewSource) * (u64(1)<<4));
+    if (!view_source_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.view_source_lary[i]  = view_source_first;
+        view_source_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_tui::FViewSource;
+    _db.ind_view_source_n             	= 0; // (acr_tui.FDb.ind_view_source)
+    _db.ind_view_source_buckets_n     	= 4; // (acr_tui.FDb.ind_view_source)
+    _db.ind_view_source_buckets_elems 	= (acr_tui::FViewSource**)algo_lib::malloc_AllocMem(sizeof(acr_tui::FViewSource*)*_db.ind_view_source_buckets_n); // initial buckets (acr_tui.FDb.ind_view_source)
+    if (!_db.ind_view_source_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_tui.FDb.ind_view_source)
+    }
+    memset(_db.ind_view_source_buckets_elems, 0, sizeof(acr_tui::FViewSource*)*_db.ind_view_source_buckets_n); // (acr_tui.FDb.ind_view_source)
+    // initialize LAry view_field (acr_tui.FDb.view_field)
+    _db.view_field_n = 0;
+    memset(_db.view_field_lary, 0, sizeof(_db.view_field_lary)); // zero out all level pointers
+    acr_tui::FViewField* view_field_first = (acr_tui::FViewField*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FViewField) * (u64(1)<<4));
+    if (!view_field_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.view_field_lary[i]  = view_field_first;
+        view_field_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_tui::FViewField;
+    _db.ind_view_field_n             	= 0; // (acr_tui.FDb.ind_view_field)
+    _db.ind_view_field_buckets_n     	= 4; // (acr_tui.FDb.ind_view_field)
+    _db.ind_view_field_buckets_elems 	= (acr_tui::FViewField**)algo_lib::malloc_AllocMem(sizeof(acr_tui::FViewField*)*_db.ind_view_field_buckets_n); // initial buckets (acr_tui.FDb.ind_view_field)
+    if (!_db.ind_view_field_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_tui.FDb.ind_view_field)
+    }
+    memset(_db.ind_view_field_buckets_elems, 0, sizeof(acr_tui::FViewField*)*_db.ind_view_field_buckets_n); // (acr_tui.FDb.ind_view_field)
+    // initialize LAry view_filter (acr_tui.FDb.view_filter)
+    _db.view_filter_n = 0;
+    memset(_db.view_filter_lary, 0, sizeof(_db.view_filter_lary)); // zero out all level pointers
+    acr_tui::FViewFilter* view_filter_first = (acr_tui::FViewFilter*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FViewFilter) * (u64(1)<<4));
+    if (!view_filter_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.view_filter_lary[i]  = view_filter_first;
+        view_filter_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_tui::FViewFilter;
+    _db.ind_view_filter_n             	= 0; // (acr_tui.FDb.ind_view_filter)
+    _db.ind_view_filter_buckets_n     	= 4; // (acr_tui.FDb.ind_view_filter)
+    _db.ind_view_filter_buckets_elems 	= (acr_tui::FViewFilter**)algo_lib::malloc_AllocMem(sizeof(acr_tui::FViewFilter*)*_db.ind_view_filter_buckets_n); // initial buckets (acr_tui.FDb.ind_view_filter)
+    if (!_db.ind_view_filter_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_tui.FDb.ind_view_filter)
+    }
+    memset(_db.ind_view_filter_buckets_elems, 0, sizeof(acr_tui::FViewFilter*)*_db.ind_view_filter_buckets_n); // (acr_tui.FDb.ind_view_filter)
+    // initialize LAry view_sort (acr_tui.FDb.view_sort)
+    _db.view_sort_n = 0;
+    memset(_db.view_sort_lary, 0, sizeof(_db.view_sort_lary)); // zero out all level pointers
+    acr_tui::FViewSort* view_sort_first = (acr_tui::FViewSort*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FViewSort) * (u64(1)<<4));
+    if (!view_sort_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.view_sort_lary[i]  = view_sort_first;
+        view_sort_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_tui::FViewSort;
+    _db.ind_view_sort_n             	= 0; // (acr_tui.FDb.ind_view_sort)
+    _db.ind_view_sort_buckets_n     	= 4; // (acr_tui.FDb.ind_view_sort)
+    _db.ind_view_sort_buckets_elems 	= (acr_tui::FViewSort**)algo_lib::malloc_AllocMem(sizeof(acr_tui::FViewSort*)*_db.ind_view_sort_buckets_n); // initial buckets (acr_tui.FDb.ind_view_sort)
+    if (!_db.ind_view_sort_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_tui.FDb.ind_view_sort)
+    }
+    memset(_db.ind_view_sort_buckets_elems, 0, sizeof(acr_tui::FViewSort*)*_db.ind_view_sort_buckets_n); // (acr_tui.FDb.ind_view_sort)
+    // initialize LAry context_var (acr_tui.FDb.context_var)
+    _db.context_var_n = 0;
+    memset(_db.context_var_lary, 0, sizeof(_db.context_var_lary)); // zero out all level pointers
+    acr_tui::FContextVar* context_var_first = (acr_tui::FContextVar*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FContextVar) * (u64(1)<<4));
+    if (!context_var_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.context_var_lary[i]  = context_var_first;
+        context_var_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_tui::FContextVar;
+    _db.ind_context_var_n             	= 0; // (acr_tui.FDb.ind_context_var)
+    _db.ind_context_var_buckets_n     	= 4; // (acr_tui.FDb.ind_context_var)
+    _db.ind_context_var_buckets_elems 	= (acr_tui::FContextVar**)algo_lib::malloc_AllocMem(sizeof(acr_tui::FContextVar*)*_db.ind_context_var_buckets_n); // initial buckets (acr_tui.FDb.ind_context_var)
+    if (!_db.ind_context_var_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_tui.FDb.ind_context_var)
+    }
+    memset(_db.ind_context_var_buckets_elems, 0, sizeof(acr_tui::FContextVar*)*_db.ind_context_var_buckets_n); // (acr_tui.FDb.ind_context_var)
+    // initialize LAry command (acr_tui.FDb.command)
+    _db.command_n = 0;
+    memset(_db.command_lary, 0, sizeof(_db.command_lary)); // zero out all level pointers
+    acr_tui::FCommand* command_first = (acr_tui::FCommand*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FCommand) * (u64(1)<<4));
+    if (!command_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.command_lary[i]  = command_first;
+        command_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_tui::FCommand;
+    _db.ind_command_n             	= 0; // (acr_tui.FDb.ind_command)
+    _db.ind_command_buckets_n     	= 4; // (acr_tui.FDb.ind_command)
+    _db.ind_command_buckets_elems 	= (acr_tui::FCommand**)algo_lib::malloc_AllocMem(sizeof(acr_tui::FCommand*)*_db.ind_command_buckets_n); // initial buckets (acr_tui.FDb.ind_command)
+    if (!_db.ind_command_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_tui.FDb.ind_command)
+    }
+    memset(_db.ind_command_buckets_elems, 0, sizeof(acr_tui::FCommand*)*_db.ind_command_buckets_n); // (acr_tui.FDb.ind_command)
+    // initialize LAry layout_cfg (acr_tui.FDb.layout_cfg)
+    _db.layout_cfg_n = 0;
+    memset(_db.layout_cfg_lary, 0, sizeof(_db.layout_cfg_lary)); // zero out all level pointers
+    acr_tui::FLayoutCfg* layout_cfg_first = (acr_tui::FLayoutCfg*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FLayoutCfg) * (u64(1)<<4));
+    if (!layout_cfg_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.layout_cfg_lary[i]  = layout_cfg_first;
+        layout_cfg_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_tui::FLayoutCfg;
+    _db.ind_layout_cfg_n             	= 0; // (acr_tui.FDb.ind_layout_cfg)
+    _db.ind_layout_cfg_buckets_n     	= 4; // (acr_tui.FDb.ind_layout_cfg)
+    _db.ind_layout_cfg_buckets_elems 	= (acr_tui::FLayoutCfg**)algo_lib::malloc_AllocMem(sizeof(acr_tui::FLayoutCfg*)*_db.ind_layout_cfg_buckets_n); // initial buckets (acr_tui.FDb.ind_layout_cfg)
+    if (!_db.ind_layout_cfg_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_tui.FDb.ind_layout_cfg)
+    }
+    memset(_db.ind_layout_cfg_buckets_elems, 0, sizeof(acr_tui::FLayoutCfg*)*_db.ind_layout_cfg_buckets_n); // (acr_tui.FDb.ind_layout_cfg)
+    // initialize LAry style_slot (acr_tui.FDb.style_slot)
+    _db.style_slot_n = 0;
+    memset(_db.style_slot_lary, 0, sizeof(_db.style_slot_lary)); // zero out all level pointers
+    acr_tui::FStyleSlot* style_slot_first = (acr_tui::FStyleSlot*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FStyleSlot) * (u64(1)<<4));
+    if (!style_slot_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.style_slot_lary[i]  = style_slot_first;
+        style_slot_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_tui::FStyleSlot;
+    _db.ind_style_slot_n             	= 0; // (acr_tui.FDb.ind_style_slot)
+    _db.ind_style_slot_buckets_n     	= 4; // (acr_tui.FDb.ind_style_slot)
+    _db.ind_style_slot_buckets_elems 	= (acr_tui::FStyleSlot**)algo_lib::malloc_AllocMem(sizeof(acr_tui::FStyleSlot*)*_db.ind_style_slot_buckets_n); // initial buckets (acr_tui.FDb.ind_style_slot)
+    if (!_db.ind_style_slot_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_tui.FDb.ind_style_slot)
+    }
+    memset(_db.ind_style_slot_buckets_elems, 0, sizeof(acr_tui::FStyleSlot*)*_db.ind_style_slot_buckets_n); // (acr_tui.FDb.ind_style_slot)
 
     acr_tui::InitReflection();
 }
@@ -4414,6 +6797,60 @@ void acr_tui::FDb_Init() {
 // --- acr_tui.FDb..Uninit
 void acr_tui::FDb_Uninit() {
     acr_tui::FDb &row = _db; (void)row;
+
+    // acr_tui.FDb.ind_style_slot.Uninit (Thash)  //
+    // skip destruction of ind_style_slot in global scope
+
+    // acr_tui.FDb.style_slot.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_tui.FDb.ind_layout_cfg.Uninit (Thash)  //
+    // skip destruction of ind_layout_cfg in global scope
+
+    // acr_tui.FDb.layout_cfg.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_tui.FDb.ind_command.Uninit (Thash)  //
+    // skip destruction of ind_command in global scope
+
+    // acr_tui.FDb.command.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_tui.FDb.ind_context_var.Uninit (Thash)  //
+    // skip destruction of ind_context_var in global scope
+
+    // acr_tui.FDb.context_var.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_tui.FDb.ind_view_sort.Uninit (Thash)  //
+    // skip destruction of ind_view_sort in global scope
+
+    // acr_tui.FDb.view_sort.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_tui.FDb.ind_view_filter.Uninit (Thash)  //
+    // skip destruction of ind_view_filter in global scope
+
+    // acr_tui.FDb.view_filter.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_tui.FDb.ind_view_field.Uninit (Thash)  //
+    // skip destruction of ind_view_field in global scope
+
+    // acr_tui.FDb.view_field.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_tui.FDb.ind_view_source.Uninit (Thash)  //
+    // skip destruction of ind_view_source in global scope
+
+    // acr_tui.FDb.view_source.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_tui.FDb.ind_view.Uninit (Thash)  //
+    // skip destruction of ind_view in global scope
+
+    // acr_tui.FDb.view.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr_tui.FDb.ind_fconst.Uninit (Thash)  //
     // skip destruction of ind_fconst in global scope
@@ -4634,6 +7071,60 @@ void acr_tui::FKeyMap_Uninit(acr_tui::FKeyMap& key_map) {
     ind_key_map_Remove(row); // remove key_map from index ind_key_map
 }
 
+// --- acr_tui.FLayoutCfg.base.CopyOut
+// Copy fields out of row
+void acr_tui::layout_cfg_CopyOut(acr_tui::FLayoutCfg &row, ui::LayoutCfg &out) {
+    out.layout_cfg = row.layout_cfg;
+    out.p_widget = row.p_widget;
+    out.min_w = row.min_w;
+    out.min_h = row.min_h;
+    out.max_w = row.max_w;
+    out.max_h = row.max_h;
+    out.flex = row.flex;
+    out.padding = row.padding;
+    out.gap = row.gap;
+    out.halign = row.halign;
+    out.valign = row.valign;
+}
+
+// --- acr_tui.FLayoutCfg.base.CopyIn
+// Copy fields in to row
+void acr_tui::layout_cfg_CopyIn(acr_tui::FLayoutCfg &row, ui::LayoutCfg &in) {
+    row.layout_cfg = in.layout_cfg;
+    row.p_widget = in.p_widget;
+    row.min_w = in.min_w;
+    row.min_h = in.min_h;
+    row.max_w = in.max_w;
+    row.max_h = in.max_h;
+    row.flex = in.flex;
+    row.padding = in.padding;
+    row.gap = in.gap;
+    row.halign = in.halign;
+    row.valign = in.valign;
+}
+
+// --- acr_tui.FLayoutCfg..Init
+// Set all fields to initial values.
+void acr_tui::FLayoutCfg_Init(acr_tui::FLayoutCfg& layout_cfg) {
+    layout_cfg.min_w = i32(0);
+    layout_cfg.min_h = i32(0);
+    layout_cfg.max_w = i32(0);
+    layout_cfg.max_h = i32(0);
+    layout_cfg.flex = i32(0);
+    layout_cfg.padding = i32(0);
+    layout_cfg.gap = i32(0);
+    layout_cfg.halign = algo::strptr("left");
+    layout_cfg.valign = algo::strptr("top");
+    layout_cfg.ind_layout_cfg_next = (acr_tui::FLayoutCfg*)-1; // (acr_tui.FDb.ind_layout_cfg) not-in-hash
+    layout_cfg.ind_layout_cfg_hashval = 0; // stored hash value
+}
+
+// --- acr_tui.FLayoutCfg..Uninit
+void acr_tui::FLayoutCfg_Uninit(acr_tui::FLayoutCfg& layout_cfg) {
+    acr_tui::FLayoutCfg &row = layout_cfg; (void)row;
+    ind_layout_cfg_Remove(row); // remove layout_cfg from index ind_layout_cfg
+}
+
 // --- acr_tui.FNs.base.CopyOut
 // Copy fields out of row
 void acr_tui::ns_CopyOut(acr_tui::FNs &row, dmmeta::Ns &out) {
@@ -4684,6 +7175,30 @@ void acr_tui::style_CopyIn(acr_tui::FStyle &row, ui::Style &in) {
 void acr_tui::FStyle_Uninit(acr_tui::FStyle& style) {
     acr_tui::FStyle &row = style; (void)row;
     ind_style_Remove(row); // remove style from index ind_style
+}
+
+// --- acr_tui.FStyleSlot.base.CopyOut
+// Copy fields out of row
+void acr_tui::style_slot_CopyOut(acr_tui::FStyleSlot &row, ui::StyleSlot &out) {
+    out.style_slot = row.style_slot;
+    out.p_widget = row.p_widget;
+    out.state = row.state;
+    out.p_style = row.p_style;
+}
+
+// --- acr_tui.FStyleSlot.base.CopyIn
+// Copy fields in to row
+void acr_tui::style_slot_CopyIn(acr_tui::FStyleSlot &row, ui::StyleSlot &in) {
+    row.style_slot = in.style_slot;
+    row.p_widget = in.p_widget;
+    row.state = in.state;
+    row.p_style = in.p_style;
+}
+
+// --- acr_tui.FStyleSlot..Uninit
+void acr_tui::FStyleSlot_Uninit(acr_tui::FStyleSlot& style_slot) {
+    acr_tui::FStyleSlot &row = style_slot; (void)row;
+    ind_style_slot_Remove(row); // remove style_slot from index ind_style_slot
 }
 
 // --- acr_tui.FTableCfg.base.CopyOut
@@ -4740,6 +7255,140 @@ void acr_tui::tree_cfg_CopyIn(acr_tui::FTreeCfg &row, ui::TreeCfg &in) {
 void acr_tui::FTreeCfg_Uninit(acr_tui::FTreeCfg& tree_cfg) {
     acr_tui::FTreeCfg &row = tree_cfg; (void)row;
     ind_tree_cfg_Remove(row); // remove tree_cfg from index ind_tree_cfg
+}
+
+// --- acr_tui.FView.base.CopyOut
+// Copy fields out of row
+void acr_tui::view_CopyOut(acr_tui::FView &row, ui::View &out) {
+    out.view = row.view;
+    out.p_window = row.p_window;
+    out.base_ctype = row.base_ctype;
+    out.comment = row.comment;
+}
+
+// --- acr_tui.FView.base.CopyIn
+// Copy fields in to row
+void acr_tui::view_CopyIn(acr_tui::FView &row, ui::View &in) {
+    row.view = in.view;
+    row.p_window = in.p_window;
+    row.base_ctype = in.base_ctype;
+    row.comment = in.comment;
+}
+
+// --- acr_tui.FView..Uninit
+void acr_tui::FView_Uninit(acr_tui::FView& view) {
+    acr_tui::FView &row = view; (void)row;
+    ind_view_Remove(row); // remove view from index ind_view
+}
+
+// --- acr_tui.FViewField.base.CopyOut
+// Copy fields out of row
+void acr_tui::view_field_CopyOut(acr_tui::FViewField &row, ui::ViewField &out) {
+    out.view_field = row.view_field;
+    out.p_view = row.p_view;
+    out.field = row.field;
+    out.expr = row.expr;
+    out.title = row.title;
+    out.datatype = row.datatype;
+}
+
+// --- acr_tui.FViewField.base.CopyIn
+// Copy fields in to row
+void acr_tui::view_field_CopyIn(acr_tui::FViewField &row, ui::ViewField &in) {
+    row.view_field = in.view_field;
+    row.p_view = in.p_view;
+    row.field = in.field;
+    row.expr = in.expr;
+    row.title = in.title;
+    row.datatype = in.datatype;
+}
+
+// --- acr_tui.FViewField..Uninit
+void acr_tui::FViewField_Uninit(acr_tui::FViewField& view_field) {
+    acr_tui::FViewField &row = view_field; (void)row;
+    ind_view_field_Remove(row); // remove view_field from index ind_view_field
+}
+
+// --- acr_tui.FViewFilter.base.CopyOut
+// Copy fields out of row
+void acr_tui::view_filter_CopyOut(acr_tui::FViewFilter &row, ui::ViewFilter &out) {
+    out.view_filter = row.view_filter;
+    out.p_view = row.p_view;
+    out.expr = row.expr;
+    out.source = row.source;
+    out.enabled = row.enabled;
+    out.priority = row.priority;
+}
+
+// --- acr_tui.FViewFilter.base.CopyIn
+// Copy fields in to row
+void acr_tui::view_filter_CopyIn(acr_tui::FViewFilter &row, ui::ViewFilter &in) {
+    row.view_filter = in.view_filter;
+    row.p_view = in.p_view;
+    row.expr = in.expr;
+    row.source = in.source;
+    row.enabled = in.enabled;
+    row.priority = in.priority;
+}
+
+// --- acr_tui.FViewFilter..Uninit
+void acr_tui::FViewFilter_Uninit(acr_tui::FViewFilter& view_filter) {
+    acr_tui::FViewFilter &row = view_filter; (void)row;
+    ind_view_filter_Remove(row); // remove view_filter from index ind_view_filter
+}
+
+// --- acr_tui.FViewSort.base.CopyOut
+// Copy fields out of row
+void acr_tui::view_sort_CopyOut(acr_tui::FViewSort &row, ui::ViewSort &out) {
+    out.view_sort = row.view_sort;
+    out.p_view = row.p_view;
+    out.expr = row.expr;
+    out.dir = row.dir;
+    out.priority = row.priority;
+}
+
+// --- acr_tui.FViewSort.base.CopyIn
+// Copy fields in to row
+void acr_tui::view_sort_CopyIn(acr_tui::FViewSort &row, ui::ViewSort &in) {
+    row.view_sort = in.view_sort;
+    row.p_view = in.p_view;
+    row.expr = in.expr;
+    row.dir = in.dir;
+    row.priority = in.priority;
+}
+
+// --- acr_tui.FViewSort..Uninit
+void acr_tui::FViewSort_Uninit(acr_tui::FViewSort& view_sort) {
+    acr_tui::FViewSort &row = view_sort; (void)row;
+    ind_view_sort_Remove(row); // remove view_sort from index ind_view_sort
+}
+
+// --- acr_tui.FViewSource.base.CopyOut
+// Copy fields out of row
+void acr_tui::view_source_CopyOut(acr_tui::FViewSource &row, ui::ViewSource &out) {
+    out.view_source = row.view_source;
+    out.p_view = row.p_view;
+    out.source_ctype = row.source_ctype;
+    out.alias = row.alias;
+    out.join_kind = row.join_kind;
+    out.join_expr = row.join_expr;
+}
+
+// --- acr_tui.FViewSource.base.CopyIn
+// Copy fields in to row
+void acr_tui::view_source_CopyIn(acr_tui::FViewSource &row, ui::ViewSource &in) {
+    row.view_source = in.view_source;
+    row.p_view = in.p_view;
+    row.source_ctype = in.source_ctype;
+    row.alias = in.alias;
+    row.join_kind = in.join_kind;
+    row.join_expr = in.join_expr;
+}
+
+// --- acr_tui.FViewSource..Uninit
+void acr_tui::FViewSource_Uninit(acr_tui::FViewSource& view_source) {
+    acr_tui::FViewSource &row = view_source; (void)row;
+    ind_view_source_Remove(row); // remove view_source from index ind_view_source
 }
 
 // --- acr_tui.FWidget.base.CopyOut
@@ -4917,6 +7566,8 @@ const char* acr_tui::value_ToCstr(const acr_tui::TableId& parent) {
     switch(value_GetEnum(parent)) {
         case acr_tui_TableId_ui_Binding    : ret = "ui.Binding";  break;
         case acr_tui_TableId_ui_Column     : ret = "ui.Column";  break;
+        case acr_tui_TableId_ui_Command    : ret = "ui.Command";  break;
+        case acr_tui_TableId_ui_ContextVar : ret = "ui.ContextVar";  break;
         case acr_tui_TableId_dmmeta_Ctype  : ret = "dmmeta.Ctype";  break;
         case acr_tui_TableId_ui_DataPath   : ret = "ui.DataPath";  break;
         case acr_tui_TableId_ui_DataStep   : ret = "ui.DataStep";  break;
@@ -4924,10 +7575,17 @@ const char* acr_tui::value_ToCstr(const acr_tui::TableId& parent) {
         case acr_tui_TableId_dmmeta_Field  : ret = "dmmeta.Field";  break;
         case acr_tui_TableId_ui_InputCfg   : ret = "ui.InputCfg";  break;
         case acr_tui_TableId_ui_KeyMap     : ret = "ui.KeyMap";  break;
+        case acr_tui_TableId_ui_LayoutCfg  : ret = "ui.LayoutCfg";  break;
         case acr_tui_TableId_dmmeta_Ns     : ret = "dmmeta.Ns";  break;
         case acr_tui_TableId_ui_Style      : ret = "ui.Style";  break;
+        case acr_tui_TableId_ui_StyleSlot  : ret = "ui.StyleSlot";  break;
         case acr_tui_TableId_ui_TableCfg   : ret = "ui.TableCfg";  break;
         case acr_tui_TableId_ui_TreeCfg    : ret = "ui.TreeCfg";  break;
+        case acr_tui_TableId_ui_View       : ret = "ui.View";  break;
+        case acr_tui_TableId_ui_ViewField  : ret = "ui.ViewField";  break;
+        case acr_tui_TableId_ui_ViewFilter : ret = "ui.ViewFilter";  break;
+        case acr_tui_TableId_ui_ViewSort   : ret = "ui.ViewSort";  break;
+        case acr_tui_TableId_ui_ViewSource : ret = "ui.ViewSource";  break;
         case acr_tui_TableId_ui_Widget     : ret = "ui.Widget";  break;
         case acr_tui_TableId_ui_Window     : ret = "ui.Window";  break;
     }
@@ -4953,6 +7611,17 @@ void acr_tui::value_Print(const acr_tui::TableId& parent, algo::cstring &lhs) {
 bool acr_tui::value_SetStrptrMaybe(acr_tui::TableId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('u','i','.','V','i','e','w'): {
+                    value_SetEnum(parent,acr_tui_TableId_ui_View); ret = true; break;
+                }
+                case LE_STR7('u','i','.','v','i','e','w'): {
+                    value_SetEnum(parent,acr_tui_TableId_ui_view); ret = true; break;
+                }
+            }
+            break;
+        }
         case 8: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('u','i','.','S','t','y','l','e'): {
@@ -5011,12 +7680,20 @@ bool acr_tui::value_SetStrptrMaybe(acr_tui::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"ng",2)==0) { value_SetEnum(parent,acr_tui_TableId_ui_Binding); ret = true; break; }
                     break;
                 }
+                case LE_STR8('u','i','.','C','o','m','m','a'): {
+                    if (memcmp(rhs.elems+8,"nd",2)==0) { value_SetEnum(parent,acr_tui_TableId_ui_Command); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('u','i','.','T','r','e','e','C'): {
                     if (memcmp(rhs.elems+8,"fg",2)==0) { value_SetEnum(parent,acr_tui_TableId_ui_TreeCfg); ret = true; break; }
                     break;
                 }
                 case LE_STR8('u','i','.','b','i','n','d','i'): {
                     if (memcmp(rhs.elems+8,"ng",2)==0) { value_SetEnum(parent,acr_tui_TableId_ui_binding); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('u','i','.','c','o','m','m','a'): {
+                    if (memcmp(rhs.elems+8,"nd",2)==0) { value_SetEnum(parent,acr_tui_TableId_ui_command); ret = true; break; }
                     break;
                 }
                 case LE_STR8('u','i','.','k','e','y','_','m'): {
@@ -5044,6 +7721,10 @@ bool acr_tui::value_SetStrptrMaybe(acr_tui::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"Cfg",3)==0) { value_SetEnum(parent,acr_tui_TableId_ui_TableCfg); ret = true; break; }
                     break;
                 }
+                case LE_STR8('u','i','.','V','i','e','w','S'): {
+                    if (memcmp(rhs.elems+8,"ort",3)==0) { value_SetEnum(parent,acr_tui_TableId_ui_ViewSort); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('u','i','.','t','r','e','e','_'): {
                     if (memcmp(rhs.elems+8,"cfg",3)==0) { value_SetEnum(parent,acr_tui_TableId_ui_tree_cfg); ret = true; break; }
                     break;
@@ -5069,6 +7750,18 @@ bool acr_tui::value_SetStrptrMaybe(acr_tui::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"ield",4)==0) { value_SetEnum(parent,acr_tui_TableId_dmmeta_field); ret = true; break; }
                     break;
                 }
+                case LE_STR8('u','i','.','L','a','y','o','u'): {
+                    if (memcmp(rhs.elems+8,"tCfg",4)==0) { value_SetEnum(parent,acr_tui_TableId_ui_LayoutCfg); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('u','i','.','S','t','y','l','e'): {
+                    if (memcmp(rhs.elems+8,"Slot",4)==0) { value_SetEnum(parent,acr_tui_TableId_ui_StyleSlot); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('u','i','.','V','i','e','w','F'): {
+                    if (memcmp(rhs.elems+8,"ield",4)==0) { value_SetEnum(parent,acr_tui_TableId_ui_ViewField); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('u','i','.','d','a','t','a','_'): {
                     if (memcmp(rhs.elems+8,"path",4)==0) { value_SetEnum(parent,acr_tui_TableId_ui_data_path); ret = true; break; }
                     if (memcmp(rhs.elems+8,"step",4)==0) { value_SetEnum(parent,acr_tui_TableId_ui_data_step); ret = true; break; }
@@ -5082,6 +7775,10 @@ bool acr_tui::value_SetStrptrMaybe(acr_tui::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"_cfg",4)==0) { value_SetEnum(parent,acr_tui_TableId_ui_table_cfg); ret = true; break; }
                     break;
                 }
+                case LE_STR8('u','i','.','v','i','e','w','_'): {
+                    if (memcmp(rhs.elems+8,"sort",4)==0) { value_SetEnum(parent,acr_tui_TableId_ui_view_sort); ret = true; break; }
+                    break;
+                }
             }
             break;
         }
@@ -5093,6 +7790,44 @@ bool acr_tui::value_SetStrptrMaybe(acr_tui::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','m','m','e','t','a','.','f'): {
                     if (memcmp(rhs.elems+8,"const",5)==0) { value_SetEnum(parent,acr_tui_TableId_dmmeta_fconst); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('u','i','.','C','o','n','t','e'): {
+                    if (memcmp(rhs.elems+8,"xtVar",5)==0) { value_SetEnum(parent,acr_tui_TableId_ui_ContextVar); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('u','i','.','V','i','e','w','F'): {
+                    if (memcmp(rhs.elems+8,"ilter",5)==0) { value_SetEnum(parent,acr_tui_TableId_ui_ViewFilter); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('u','i','.','V','i','e','w','S'): {
+                    if (memcmp(rhs.elems+8,"ource",5)==0) { value_SetEnum(parent,acr_tui_TableId_ui_ViewSource); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('u','i','.','l','a','y','o','u'): {
+                    if (memcmp(rhs.elems+8,"t_cfg",5)==0) { value_SetEnum(parent,acr_tui_TableId_ui_layout_cfg); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('u','i','.','s','t','y','l','e'): {
+                    if (memcmp(rhs.elems+8,"_slot",5)==0) { value_SetEnum(parent,acr_tui_TableId_ui_style_slot); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('u','i','.','v','i','e','w','_'): {
+                    if (memcmp(rhs.elems+8,"field",5)==0) { value_SetEnum(parent,acr_tui_TableId_ui_view_field); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 14: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('u','i','.','c','o','n','t','e'): {
+                    if (memcmp(rhs.elems+8,"xt_var",6)==0) { value_SetEnum(parent,acr_tui_TableId_ui_context_var); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('u','i','.','v','i','e','w','_'): {
+                    if (memcmp(rhs.elems+8,"filter",6)==0) { value_SetEnum(parent,acr_tui_TableId_ui_view_filter); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"source",6)==0) { value_SetEnum(parent,acr_tui_TableId_ui_view_source); ret = true; break; }
                     break;
                 }
             }

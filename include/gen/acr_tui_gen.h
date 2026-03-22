@@ -41,40 +41,58 @@ enum { acr_tui_FieldIdEnum_N = 1 };
 
 // --- acr_tui_TableIdEnum
 
-enum acr_tui_TableIdEnum {                  // acr_tui.TableId.value
-     acr_tui_TableId_ui_Binding      = 0    // ui.Binding -> acr_tui.FBinding
-    ,acr_tui_TableId_ui_binding      = 0    // ui.binding -> acr_tui.FBinding
-    ,acr_tui_TableId_ui_Column       = 1    // ui.Column -> acr_tui.FColumn
-    ,acr_tui_TableId_ui_column       = 1    // ui.column -> acr_tui.FColumn
-    ,acr_tui_TableId_dmmeta_Ctype    = 2    // dmmeta.Ctype -> acr_tui.FCtype
-    ,acr_tui_TableId_dmmeta_ctype    = 2    // dmmeta.ctype -> acr_tui.FCtype
-    ,acr_tui_TableId_ui_DataPath     = 3    // ui.DataPath -> acr_tui.FDataPath
-    ,acr_tui_TableId_ui_data_path    = 3    // ui.data_path -> acr_tui.FDataPath
-    ,acr_tui_TableId_ui_DataStep     = 4    // ui.DataStep -> acr_tui.FDataStep
-    ,acr_tui_TableId_ui_data_step    = 4    // ui.data_step -> acr_tui.FDataStep
-    ,acr_tui_TableId_dmmeta_Fconst   = 5    // dmmeta.Fconst -> acr_tui.FFconst
-    ,acr_tui_TableId_dmmeta_fconst   = 5    // dmmeta.fconst -> acr_tui.FFconst
-    ,acr_tui_TableId_dmmeta_Field    = 6    // dmmeta.Field -> acr_tui.FField
-    ,acr_tui_TableId_dmmeta_field    = 6    // dmmeta.field -> acr_tui.FField
-    ,acr_tui_TableId_ui_InputCfg     = 7    // ui.InputCfg -> acr_tui.FInputCfg
-    ,acr_tui_TableId_ui_input_cfg    = 7    // ui.input_cfg -> acr_tui.FInputCfg
-    ,acr_tui_TableId_ui_KeyMap       = 8    // ui.KeyMap -> acr_tui.FKeyMap
-    ,acr_tui_TableId_ui_key_map      = 8    // ui.key_map -> acr_tui.FKeyMap
-    ,acr_tui_TableId_dmmeta_Ns       = 9    // dmmeta.Ns -> acr_tui.FNs
-    ,acr_tui_TableId_dmmeta_ns       = 9    // dmmeta.ns -> acr_tui.FNs
-    ,acr_tui_TableId_ui_Style        = 10   // ui.Style -> acr_tui.FStyle
-    ,acr_tui_TableId_ui_style        = 10   // ui.style -> acr_tui.FStyle
-    ,acr_tui_TableId_ui_TableCfg     = 11   // ui.TableCfg -> acr_tui.FTableCfg
-    ,acr_tui_TableId_ui_table_cfg    = 11   // ui.table_cfg -> acr_tui.FTableCfg
-    ,acr_tui_TableId_ui_TreeCfg      = 12   // ui.TreeCfg -> acr_tui.FTreeCfg
-    ,acr_tui_TableId_ui_tree_cfg     = 12   // ui.tree_cfg -> acr_tui.FTreeCfg
-    ,acr_tui_TableId_ui_Widget       = 13   // ui.Widget -> acr_tui.FWidget
-    ,acr_tui_TableId_ui_widget       = 13   // ui.widget -> acr_tui.FWidget
-    ,acr_tui_TableId_ui_Window       = 14   // ui.Window -> acr_tui.FWindow
-    ,acr_tui_TableId_ui_window       = 14   // ui.window -> acr_tui.FWindow
+enum acr_tui_TableIdEnum {                   // acr_tui.TableId.value
+     acr_tui_TableId_ui_Binding       = 0    // ui.Binding -> acr_tui.FBinding
+    ,acr_tui_TableId_ui_binding       = 0    // ui.binding -> acr_tui.FBinding
+    ,acr_tui_TableId_ui_Column        = 1    // ui.Column -> acr_tui.FColumn
+    ,acr_tui_TableId_ui_column        = 1    // ui.column -> acr_tui.FColumn
+    ,acr_tui_TableId_ui_Command       = 2    // ui.Command -> acr_tui.FCommand
+    ,acr_tui_TableId_ui_command       = 2    // ui.command -> acr_tui.FCommand
+    ,acr_tui_TableId_ui_ContextVar    = 3    // ui.ContextVar -> acr_tui.FContextVar
+    ,acr_tui_TableId_ui_context_var   = 3    // ui.context_var -> acr_tui.FContextVar
+    ,acr_tui_TableId_dmmeta_Ctype     = 4    // dmmeta.Ctype -> acr_tui.FCtype
+    ,acr_tui_TableId_dmmeta_ctype     = 4    // dmmeta.ctype -> acr_tui.FCtype
+    ,acr_tui_TableId_ui_DataPath      = 5    // ui.DataPath -> acr_tui.FDataPath
+    ,acr_tui_TableId_ui_data_path     = 5    // ui.data_path -> acr_tui.FDataPath
+    ,acr_tui_TableId_ui_DataStep      = 6    // ui.DataStep -> acr_tui.FDataStep
+    ,acr_tui_TableId_ui_data_step     = 6    // ui.data_step -> acr_tui.FDataStep
+    ,acr_tui_TableId_dmmeta_Fconst    = 7    // dmmeta.Fconst -> acr_tui.FFconst
+    ,acr_tui_TableId_dmmeta_fconst    = 7    // dmmeta.fconst -> acr_tui.FFconst
+    ,acr_tui_TableId_dmmeta_Field     = 8    // dmmeta.Field -> acr_tui.FField
+    ,acr_tui_TableId_dmmeta_field     = 8    // dmmeta.field -> acr_tui.FField
+    ,acr_tui_TableId_ui_InputCfg      = 9    // ui.InputCfg -> acr_tui.FInputCfg
+    ,acr_tui_TableId_ui_input_cfg     = 9    // ui.input_cfg -> acr_tui.FInputCfg
+    ,acr_tui_TableId_ui_KeyMap        = 10   // ui.KeyMap -> acr_tui.FKeyMap
+    ,acr_tui_TableId_ui_key_map       = 10   // ui.key_map -> acr_tui.FKeyMap
+    ,acr_tui_TableId_ui_LayoutCfg     = 11   // ui.LayoutCfg -> acr_tui.FLayoutCfg
+    ,acr_tui_TableId_ui_layout_cfg    = 11   // ui.layout_cfg -> acr_tui.FLayoutCfg
+    ,acr_tui_TableId_dmmeta_Ns        = 12   // dmmeta.Ns -> acr_tui.FNs
+    ,acr_tui_TableId_dmmeta_ns        = 12   // dmmeta.ns -> acr_tui.FNs
+    ,acr_tui_TableId_ui_Style         = 13   // ui.Style -> acr_tui.FStyle
+    ,acr_tui_TableId_ui_style         = 13   // ui.style -> acr_tui.FStyle
+    ,acr_tui_TableId_ui_StyleSlot     = 14   // ui.StyleSlot -> acr_tui.FStyleSlot
+    ,acr_tui_TableId_ui_style_slot    = 14   // ui.style_slot -> acr_tui.FStyleSlot
+    ,acr_tui_TableId_ui_TableCfg      = 15   // ui.TableCfg -> acr_tui.FTableCfg
+    ,acr_tui_TableId_ui_table_cfg     = 15   // ui.table_cfg -> acr_tui.FTableCfg
+    ,acr_tui_TableId_ui_TreeCfg       = 16   // ui.TreeCfg -> acr_tui.FTreeCfg
+    ,acr_tui_TableId_ui_tree_cfg      = 16   // ui.tree_cfg -> acr_tui.FTreeCfg
+    ,acr_tui_TableId_ui_View          = 17   // ui.View -> acr_tui.FView
+    ,acr_tui_TableId_ui_view          = 17   // ui.view -> acr_tui.FView
+    ,acr_tui_TableId_ui_ViewField     = 18   // ui.ViewField -> acr_tui.FViewField
+    ,acr_tui_TableId_ui_view_field    = 18   // ui.view_field -> acr_tui.FViewField
+    ,acr_tui_TableId_ui_ViewFilter    = 19   // ui.ViewFilter -> acr_tui.FViewFilter
+    ,acr_tui_TableId_ui_view_filter   = 19   // ui.view_filter -> acr_tui.FViewFilter
+    ,acr_tui_TableId_ui_ViewSort      = 20   // ui.ViewSort -> acr_tui.FViewSort
+    ,acr_tui_TableId_ui_view_sort     = 20   // ui.view_sort -> acr_tui.FViewSort
+    ,acr_tui_TableId_ui_ViewSource    = 21   // ui.ViewSource -> acr_tui.FViewSource
+    ,acr_tui_TableId_ui_view_source   = 21   // ui.view_source -> acr_tui.FViewSource
+    ,acr_tui_TableId_ui_Widget        = 22   // ui.Widget -> acr_tui.FWidget
+    ,acr_tui_TableId_ui_widget        = 22   // ui.widget -> acr_tui.FWidget
+    ,acr_tui_TableId_ui_Window        = 23   // ui.Window -> acr_tui.FWindow
+    ,acr_tui_TableId_ui_window        = 23   // ui.window -> acr_tui.FWindow
 };
 
-enum { acr_tui_TableIdEnum_N = 30 };
+enum { acr_tui_TableIdEnum_N = 48 };
 
 namespace acr_tui { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -84,6 +102,8 @@ extern const char *acr_tui_help;
 // gen:ns_fwddecl2
 namespace ui { struct Binding; }
 namespace ui { struct Column; }
+namespace ui { struct Command; }
+namespace ui { struct ContextVar; }
 namespace dmmeta { struct Ctype; }
 namespace ui { struct DataPath; }
 namespace ui { struct DataStep; }
@@ -91,10 +111,17 @@ namespace dmmeta { struct Fconst; }
 namespace dmmeta { struct Field; }
 namespace ui { struct InputCfg; }
 namespace ui { struct KeyMap; }
+namespace ui { struct LayoutCfg; }
 namespace dmmeta { struct Ns; }
 namespace ui { struct Style; }
+namespace ui { struct StyleSlot; }
 namespace ui { struct TableCfg; }
 namespace ui { struct TreeCfg; }
+namespace ui { struct View; }
+namespace ui { struct ViewField; }
+namespace ui { struct ViewFilter; }
+namespace ui { struct ViewSort; }
+namespace ui { struct ViewSource; }
 namespace ui { struct Widget; }
 namespace ui { struct Window; }
 namespace acr_tui { struct _db_window_curs; }
@@ -112,8 +139,19 @@ namespace acr_tui { struct _db_field_curs; }
 namespace acr_tui { struct _db_data_path_curs; }
 namespace acr_tui { struct _db_data_step_curs; }
 namespace acr_tui { struct _db_fconst_curs; }
+namespace acr_tui { struct _db_view_curs; }
+namespace acr_tui { struct _db_view_source_curs; }
+namespace acr_tui { struct _db_view_field_curs; }
+namespace acr_tui { struct _db_view_filter_curs; }
+namespace acr_tui { struct _db_view_sort_curs; }
+namespace acr_tui { struct _db_context_var_curs; }
+namespace acr_tui { struct _db_command_curs; }
+namespace acr_tui { struct _db_layout_cfg_curs; }
+namespace acr_tui { struct _db_style_slot_curs; }
 namespace acr_tui { struct FBinding; }
 namespace acr_tui { struct FColumn; }
+namespace acr_tui { struct FCommand; }
+namespace acr_tui { struct FContextVar; }
 namespace acr_tui { struct FCtype; }
 namespace acr_tui { struct FDataPath; }
 namespace acr_tui { struct FDataStep; }
@@ -123,10 +161,17 @@ namespace acr_tui { struct FFconst; }
 namespace acr_tui { struct FField; }
 namespace acr_tui { struct FInputCfg; }
 namespace acr_tui { struct FKeyMap; }
+namespace acr_tui { struct FLayoutCfg; }
 namespace acr_tui { struct FNs; }
 namespace acr_tui { struct FStyle; }
+namespace acr_tui { struct FStyleSlot; }
 namespace acr_tui { struct FTableCfg; }
 namespace acr_tui { struct FTreeCfg; }
+namespace acr_tui { struct FView; }
+namespace acr_tui { struct FViewField; }
+namespace acr_tui { struct FViewFilter; }
+namespace acr_tui { struct FViewSort; }
+namespace acr_tui { struct FViewSource; }
 namespace acr_tui { struct FWidget; }
 namespace acr_tui { struct FWindow; }
 namespace acr_tui { struct FieldId; }
@@ -221,6 +266,86 @@ void                 column_CopyIn(acr_tui::FColumn &row, ui::Column &in) __attr
 inline void          FColumn_Init(acr_tui::FColumn& column);
 // func:acr_tui.FColumn..Uninit
 void                 FColumn_Uninit(acr_tui::FColumn& column) __attribute__((nothrow));
+
+// --- acr_tui.FCommand
+// create: acr_tui.FDb.command (Lary)
+// global access: command (Lary, by rowid)
+// global access: ind_command (Thash, hash field command)
+struct FCommand { // acr_tui.FCommand
+    algo::Smallstr50     command;               //
+    algo::Smallstr50     action;                // Action to perform
+    algo::Smallstr50     p_widget;              // Target widget
+    algo::Smallstr200    arg;                   // Command argument (column name, tab id, etc.)
+    acr_tui::FCommand*   ind_command_next;      // hash next
+    u32                  ind_command_hashval;   // hash value
+    // func:acr_tui.FCommand..AssignOp
+    inline acr_tui::FCommand& operator =(const acr_tui::FCommand &rhs) = delete;
+    // func:acr_tui.FCommand..CopyCtor
+    inline               FCommand(const acr_tui::FCommand &rhs) = delete;
+private:
+    // func:acr_tui.FCommand..Ctor
+    inline               FCommand() __attribute__((nothrow));
+    // func:acr_tui.FCommand..Dtor
+    inline               ~FCommand() __attribute__((nothrow));
+    friend acr_tui::FCommand&   command_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_tui::FCommand*   command_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 command_RemoveAll() __attribute__((nothrow));
+    friend void                 command_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_tui.FCommand.base.CopyOut
+void                 command_CopyOut(acr_tui::FCommand &row, ui::Command &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_tui.FCommand.base.CopyIn
+void                 command_CopyIn(acr_tui::FCommand &row, ui::Command &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_tui.FCommand..Init
+inline void          FCommand_Init(acr_tui::FCommand& command);
+// func:acr_tui.FCommand..Uninit
+void                 FCommand_Uninit(acr_tui::FCommand& command) __attribute__((nothrow));
+
+// --- acr_tui.FContextVar
+// create: acr_tui.FDb.context_var (Lary)
+// global access: context_var (Lary, by rowid)
+// global access: ind_context_var (Thash, hash field context_var)
+struct FContextVar { // acr_tui.FContextVar
+    algo::Smallstr50        context_var;               //
+    algo::Smallstr50        p_window;                  // Owning window
+    algo::Smallstr50        name;                      // Variable name (e.g. selected_account)
+    algo::Smallstr50        datatype;                  // Data type hint
+    algo::Smallstr200       default_expr;              // Default value expression
+    algo::Comment           comment;                   // Description
+    acr_tui::FContextVar*   ind_context_var_next;      // hash next
+    u32                     ind_context_var_hashval;   // hash value
+    // func:acr_tui.FContextVar..AssignOp
+    inline acr_tui::FContextVar& operator =(const acr_tui::FContextVar &rhs) = delete;
+    // func:acr_tui.FContextVar..CopyCtor
+    inline               FContextVar(const acr_tui::FContextVar &rhs) = delete;
+private:
+    // func:acr_tui.FContextVar..Ctor
+    inline               FContextVar() __attribute__((nothrow));
+    // func:acr_tui.FContextVar..Dtor
+    inline               ~FContextVar() __attribute__((nothrow));
+    friend acr_tui::FContextVar& context_var_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_tui::FContextVar* context_var_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 context_var_RemoveAll() __attribute__((nothrow));
+    friend void                 context_var_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_tui.FContextVar.base.CopyOut
+void                 context_var_CopyOut(acr_tui::FContextVar &row, ui::ContextVar &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_tui.FContextVar.base.CopyIn
+void                 context_var_CopyIn(acr_tui::FContextVar &row, ui::ContextVar &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_tui.FContextVar..Init
+inline void          FContextVar_Init(acr_tui::FContextVar& context_var);
+// func:acr_tui.FContextVar..Uninit
+void                 FContextVar_Uninit(acr_tui::FContextVar& context_var) __attribute__((nothrow));
 
 // --- acr_tui.FCtype
 // create: acr_tui.FDb.ctype (Lary)
@@ -360,83 +485,128 @@ void                 trace_Print(acr_tui::trace& row, algo::cstring& str) __attr
 // --- acr_tui.FDb
 // create: acr_tui.FDb._db (Global)
 struct FDb { // acr_tui.FDb
-    command::acr_tui       cmdline;                       //
-    acr_tui::FWindow*      window_lary[32];               // level array
-    i32                    window_n;                      // number of elements in array
-    acr_tui::FWindow**     ind_window_buckets_elems;      // pointer to bucket array
-    i32                    ind_window_buckets_n;          // number of elements in bucket array
-    i32                    ind_window_n;                  // number of elements in the hash table
-    acr_tui::FStyle*       style_lary[32];                // level array
-    i32                    style_n;                       // number of elements in array
-    acr_tui::FStyle**      ind_style_buckets_elems;       // pointer to bucket array
-    i32                    ind_style_buckets_n;           // number of elements in bucket array
-    i32                    ind_style_n;                   // number of elements in the hash table
-    acr_tui::FWidget*      widget_lary[32];               // level array
-    i32                    widget_n;                      // number of elements in array
-    acr_tui::FWidget**     ind_widget_buckets_elems;      // pointer to bucket array
-    i32                    ind_widget_buckets_n;          // number of elements in bucket array
-    i32                    ind_widget_n;                  // number of elements in the hash table
-    acr_tui::FBinding*     binding_lary[32];              // level array
-    i32                    binding_n;                     // number of elements in array
-    acr_tui::FBinding**    ind_binding_buckets_elems;     // pointer to bucket array
-    i32                    ind_binding_buckets_n;         // number of elements in bucket array
-    i32                    ind_binding_n;                 // number of elements in the hash table
-    acr_tui::FColumn*      column_lary[32];               // level array
-    i32                    column_n;                      // number of elements in array
-    acr_tui::FColumn**     ind_column_buckets_elems;      // pointer to bucket array
-    i32                    ind_column_buckets_n;          // number of elements in bucket array
-    i32                    ind_column_n;                  // number of elements in the hash table
-    acr_tui::FTableCfg*    table_cfg_lary[32];            // level array
-    i32                    table_cfg_n;                   // number of elements in array
-    acr_tui::FTableCfg**   ind_table_cfg_buckets_elems;   // pointer to bucket array
-    i32                    ind_table_cfg_buckets_n;       // number of elements in bucket array
-    i32                    ind_table_cfg_n;               // number of elements in the hash table
-    acr_tui::FTreeCfg*     tree_cfg_lary[32];             // level array
-    i32                    tree_cfg_n;                    // number of elements in array
-    acr_tui::FTreeCfg**    ind_tree_cfg_buckets_elems;    // pointer to bucket array
-    i32                    ind_tree_cfg_buckets_n;        // number of elements in bucket array
-    i32                    ind_tree_cfg_n;                // number of elements in the hash table
-    acr_tui::FKeyMap*      key_map_lary[32];              // level array
-    i32                    key_map_n;                     // number of elements in array
-    acr_tui::FKeyMap**     ind_key_map_buckets_elems;     // pointer to bucket array
-    i32                    ind_key_map_buckets_n;         // number of elements in bucket array
-    i32                    ind_key_map_n;                 // number of elements in the hash table
-    acr_tui::FInputCfg*    input_cfg_lary[32];            // level array
-    i32                    input_cfg_n;                   // number of elements in array
-    acr_tui::FInputCfg**   ind_input_cfg_buckets_elems;   // pointer to bucket array
-    i32                    ind_input_cfg_buckets_n;       // number of elements in bucket array
-    i32                    ind_input_cfg_n;               // number of elements in the hash table
-    acr_tui::FNs*          ns_lary[32];                   // level array
-    i32                    ns_n;                          // number of elements in array
-    acr_tui::FNs**         ind_ns_buckets_elems;          // pointer to bucket array
-    i32                    ind_ns_buckets_n;              // number of elements in bucket array
-    i32                    ind_ns_n;                      // number of elements in the hash table
-    acr_tui::FCtype*       ctype_lary[32];                // level array
-    i32                    ctype_n;                       // number of elements in array
-    acr_tui::FCtype**      ind_ctype_buckets_elems;       // pointer to bucket array
-    i32                    ind_ctype_buckets_n;           // number of elements in bucket array
-    i32                    ind_ctype_n;                   // number of elements in the hash table
-    acr_tui::FField*       field_lary[32];                // level array
-    i32                    field_n;                       // number of elements in array
-    acr_tui::FField**      ind_field_buckets_elems;       // pointer to bucket array
-    i32                    ind_field_buckets_n;           // number of elements in bucket array
-    i32                    ind_field_n;                   // number of elements in the hash table
-    acr_tui::FDataPath*    data_path_lary[32];            // level array
-    i32                    data_path_n;                   // number of elements in array
-    acr_tui::FDataPath**   ind_data_path_buckets_elems;   // pointer to bucket array
-    i32                    ind_data_path_buckets_n;       // number of elements in bucket array
-    i32                    ind_data_path_n;               // number of elements in the hash table
-    acr_tui::FDataStep*    data_step_lary[32];            // level array
-    i32                    data_step_n;                   // number of elements in array
-    acr_tui::FDataStep**   ind_data_step_buckets_elems;   // pointer to bucket array
-    i32                    ind_data_step_buckets_n;       // number of elements in bucket array
-    i32                    ind_data_step_n;               // number of elements in the hash table
-    acr_tui::FFconst*      fconst_lary[32];               // level array
-    i32                    fconst_n;                      // number of elements in array
-    acr_tui::FFconst**     ind_fconst_buckets_elems;      // pointer to bucket array
-    i32                    ind_fconst_buckets_n;          // number of elements in bucket array
-    i32                    ind_fconst_n;                  // number of elements in the hash table
-    acr_tui::trace         trace;                         //
+    command::acr_tui         cmdline;                         //
+    acr_tui::FWindow*        window_lary[32];                 // level array
+    i32                      window_n;                        // number of elements in array
+    acr_tui::FWindow**       ind_window_buckets_elems;        // pointer to bucket array
+    i32                      ind_window_buckets_n;            // number of elements in bucket array
+    i32                      ind_window_n;                    // number of elements in the hash table
+    acr_tui::FStyle*         style_lary[32];                  // level array
+    i32                      style_n;                         // number of elements in array
+    acr_tui::FStyle**        ind_style_buckets_elems;         // pointer to bucket array
+    i32                      ind_style_buckets_n;             // number of elements in bucket array
+    i32                      ind_style_n;                     // number of elements in the hash table
+    acr_tui::FWidget*        widget_lary[32];                 // level array
+    i32                      widget_n;                        // number of elements in array
+    acr_tui::FWidget**       ind_widget_buckets_elems;        // pointer to bucket array
+    i32                      ind_widget_buckets_n;            // number of elements in bucket array
+    i32                      ind_widget_n;                    // number of elements in the hash table
+    acr_tui::FBinding*       binding_lary[32];                // level array
+    i32                      binding_n;                       // number of elements in array
+    acr_tui::FBinding**      ind_binding_buckets_elems;       // pointer to bucket array
+    i32                      ind_binding_buckets_n;           // number of elements in bucket array
+    i32                      ind_binding_n;                   // number of elements in the hash table
+    acr_tui::FColumn*        column_lary[32];                 // level array
+    i32                      column_n;                        // number of elements in array
+    acr_tui::FColumn**       ind_column_buckets_elems;        // pointer to bucket array
+    i32                      ind_column_buckets_n;            // number of elements in bucket array
+    i32                      ind_column_n;                    // number of elements in the hash table
+    acr_tui::FTableCfg*      table_cfg_lary[32];              // level array
+    i32                      table_cfg_n;                     // number of elements in array
+    acr_tui::FTableCfg**     ind_table_cfg_buckets_elems;     // pointer to bucket array
+    i32                      ind_table_cfg_buckets_n;         // number of elements in bucket array
+    i32                      ind_table_cfg_n;                 // number of elements in the hash table
+    acr_tui::FTreeCfg*       tree_cfg_lary[32];               // level array
+    i32                      tree_cfg_n;                      // number of elements in array
+    acr_tui::FTreeCfg**      ind_tree_cfg_buckets_elems;      // pointer to bucket array
+    i32                      ind_tree_cfg_buckets_n;          // number of elements in bucket array
+    i32                      ind_tree_cfg_n;                  // number of elements in the hash table
+    acr_tui::FKeyMap*        key_map_lary[32];                // level array
+    i32                      key_map_n;                       // number of elements in array
+    acr_tui::FKeyMap**       ind_key_map_buckets_elems;       // pointer to bucket array
+    i32                      ind_key_map_buckets_n;           // number of elements in bucket array
+    i32                      ind_key_map_n;                   // number of elements in the hash table
+    acr_tui::FInputCfg*      input_cfg_lary[32];              // level array
+    i32                      input_cfg_n;                     // number of elements in array
+    acr_tui::FInputCfg**     ind_input_cfg_buckets_elems;     // pointer to bucket array
+    i32                      ind_input_cfg_buckets_n;         // number of elements in bucket array
+    i32                      ind_input_cfg_n;                 // number of elements in the hash table
+    acr_tui::FNs*            ns_lary[32];                     // level array
+    i32                      ns_n;                            // number of elements in array
+    acr_tui::FNs**           ind_ns_buckets_elems;            // pointer to bucket array
+    i32                      ind_ns_buckets_n;                // number of elements in bucket array
+    i32                      ind_ns_n;                        // number of elements in the hash table
+    acr_tui::FCtype*         ctype_lary[32];                  // level array
+    i32                      ctype_n;                         // number of elements in array
+    acr_tui::FCtype**        ind_ctype_buckets_elems;         // pointer to bucket array
+    i32                      ind_ctype_buckets_n;             // number of elements in bucket array
+    i32                      ind_ctype_n;                     // number of elements in the hash table
+    acr_tui::FField*         field_lary[32];                  // level array
+    i32                      field_n;                         // number of elements in array
+    acr_tui::FField**        ind_field_buckets_elems;         // pointer to bucket array
+    i32                      ind_field_buckets_n;             // number of elements in bucket array
+    i32                      ind_field_n;                     // number of elements in the hash table
+    acr_tui::FDataPath*      data_path_lary[32];              // level array
+    i32                      data_path_n;                     // number of elements in array
+    acr_tui::FDataPath**     ind_data_path_buckets_elems;     // pointer to bucket array
+    i32                      ind_data_path_buckets_n;         // number of elements in bucket array
+    i32                      ind_data_path_n;                 // number of elements in the hash table
+    acr_tui::FDataStep*      data_step_lary[32];              // level array
+    i32                      data_step_n;                     // number of elements in array
+    acr_tui::FDataStep**     ind_data_step_buckets_elems;     // pointer to bucket array
+    i32                      ind_data_step_buckets_n;         // number of elements in bucket array
+    i32                      ind_data_step_n;                 // number of elements in the hash table
+    acr_tui::FFconst*        fconst_lary[32];                 // level array
+    i32                      fconst_n;                        // number of elements in array
+    acr_tui::FFconst**       ind_fconst_buckets_elems;        // pointer to bucket array
+    i32                      ind_fconst_buckets_n;            // number of elements in bucket array
+    i32                      ind_fconst_n;                    // number of elements in the hash table
+    acr_tui::FView*          view_lary[32];                   // level array
+    i32                      view_n;                          // number of elements in array
+    acr_tui::FView**         ind_view_buckets_elems;          // pointer to bucket array
+    i32                      ind_view_buckets_n;              // number of elements in bucket array
+    i32                      ind_view_n;                      // number of elements in the hash table
+    acr_tui::FViewSource*    view_source_lary[32];            // level array
+    i32                      view_source_n;                   // number of elements in array
+    acr_tui::FViewSource**   ind_view_source_buckets_elems;   // pointer to bucket array
+    i32                      ind_view_source_buckets_n;       // number of elements in bucket array
+    i32                      ind_view_source_n;               // number of elements in the hash table
+    acr_tui::FViewField*     view_field_lary[32];             // level array
+    i32                      view_field_n;                    // number of elements in array
+    acr_tui::FViewField**    ind_view_field_buckets_elems;    // pointer to bucket array
+    i32                      ind_view_field_buckets_n;        // number of elements in bucket array
+    i32                      ind_view_field_n;                // number of elements in the hash table
+    acr_tui::FViewFilter*    view_filter_lary[32];            // level array
+    i32                      view_filter_n;                   // number of elements in array
+    acr_tui::FViewFilter**   ind_view_filter_buckets_elems;   // pointer to bucket array
+    i32                      ind_view_filter_buckets_n;       // number of elements in bucket array
+    i32                      ind_view_filter_n;               // number of elements in the hash table
+    acr_tui::FViewSort*      view_sort_lary[32];              // level array
+    i32                      view_sort_n;                     // number of elements in array
+    acr_tui::FViewSort**     ind_view_sort_buckets_elems;     // pointer to bucket array
+    i32                      ind_view_sort_buckets_n;         // number of elements in bucket array
+    i32                      ind_view_sort_n;                 // number of elements in the hash table
+    acr_tui::FContextVar*    context_var_lary[32];            // level array
+    i32                      context_var_n;                   // number of elements in array
+    acr_tui::FContextVar**   ind_context_var_buckets_elems;   // pointer to bucket array
+    i32                      ind_context_var_buckets_n;       // number of elements in bucket array
+    i32                      ind_context_var_n;               // number of elements in the hash table
+    acr_tui::FCommand*       command_lary[32];                // level array
+    i32                      command_n;                       // number of elements in array
+    acr_tui::FCommand**      ind_command_buckets_elems;       // pointer to bucket array
+    i32                      ind_command_buckets_n;           // number of elements in bucket array
+    i32                      ind_command_n;                   // number of elements in the hash table
+    acr_tui::FLayoutCfg*     layout_cfg_lary[32];             // level array
+    i32                      layout_cfg_n;                    // number of elements in array
+    acr_tui::FLayoutCfg**    ind_layout_cfg_buckets_elems;    // pointer to bucket array
+    i32                      ind_layout_cfg_buckets_n;        // number of elements in bucket array
+    i32                      ind_layout_cfg_n;                // number of elements in the hash table
+    acr_tui::FStyleSlot*     style_slot_lary[32];             // level array
+    i32                      style_slot_n;                    // number of elements in array
+    acr_tui::FStyleSlot**    ind_style_slot_buckets_elems;    // pointer to bucket array
+    i32                      ind_style_slot_buckets_n;        // number of elements in bucket array
+    i32                      ind_style_slot_n;                // number of elements in the hash table
+    acr_tui::trace           trace;                           //
 };
 
 // Read argc,argv directly into the fields of the command line(s)
@@ -1504,6 +1674,618 @@ void                 ind_fconst_Reserve(int n) __attribute__((nothrow));
 // func:acr_tui.FDb.ind_fconst.AbsReserve
 void                 ind_fconst_AbsReserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_tui.FDb.view.Alloc
+acr_tui::FView&      view_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_tui.FDb.view.AllocMaybe
+acr_tui::FView*      view_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_tui.FDb.view.InsertMaybe
+acr_tui::FView*      view_InsertMaybe(const ui::View &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_tui.FDb.view.AllocMem
+void*                view_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_tui.FDb.view.EmptyQ
+inline bool          view_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_tui.FDb.view.Find
+inline acr_tui::FView* view_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_tui.FDb.view.Last
+inline acr_tui::FView* view_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_tui.FDb.view.N
+inline i32           view_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_tui.FDb.view.RemoveAll
+void                 view_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_tui.FDb.view.RemoveLast
+void                 view_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_tui.FDb.view.qFind
+inline acr_tui::FView& view_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_tui.FDb.view.XrefMaybe
+bool                 view_XrefMaybe(acr_tui::FView &row);
+
+// Return true if hash is empty
+// func:acr_tui.FDb.ind_view.EmptyQ
+inline bool          ind_view_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_tui.FDb.ind_view.Find
+acr_tui::FView*      ind_view_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_tui.FDb.ind_view.FindX
+acr_tui::FView&      ind_view_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_tui.FDb.ind_view.GetOrCreate
+acr_tui::FView&      ind_view_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_tui.FDb.ind_view.N
+inline i32           ind_view_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_tui.FDb.ind_view.InsertMaybe
+bool                 ind_view_InsertMaybe(acr_tui::FView& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_tui.FDb.ind_view.Remove
+void                 ind_view_Remove(acr_tui::FView& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_tui.FDb.ind_view.Reserve
+void                 ind_view_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_tui.FDb.ind_view.AbsReserve
+void                 ind_view_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_tui.FDb.view_source.Alloc
+acr_tui::FViewSource& view_source_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_tui.FDb.view_source.AllocMaybe
+acr_tui::FViewSource* view_source_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_tui.FDb.view_source.InsertMaybe
+acr_tui::FViewSource* view_source_InsertMaybe(const ui::ViewSource &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_tui.FDb.view_source.AllocMem
+void*                view_source_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_tui.FDb.view_source.EmptyQ
+inline bool          view_source_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_tui.FDb.view_source.Find
+inline acr_tui::FViewSource* view_source_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_tui.FDb.view_source.Last
+inline acr_tui::FViewSource* view_source_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_tui.FDb.view_source.N
+inline i32           view_source_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_tui.FDb.view_source.RemoveAll
+void                 view_source_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_tui.FDb.view_source.RemoveLast
+void                 view_source_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_tui.FDb.view_source.qFind
+inline acr_tui::FViewSource& view_source_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_tui.FDb.view_source.XrefMaybe
+bool                 view_source_XrefMaybe(acr_tui::FViewSource &row);
+
+// Return true if hash is empty
+// func:acr_tui.FDb.ind_view_source.EmptyQ
+inline bool          ind_view_source_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_tui.FDb.ind_view_source.Find
+acr_tui::FViewSource* ind_view_source_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_tui.FDb.ind_view_source.FindX
+acr_tui::FViewSource& ind_view_source_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_tui.FDb.ind_view_source.GetOrCreate
+acr_tui::FViewSource& ind_view_source_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_tui.FDb.ind_view_source.N
+inline i32           ind_view_source_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_tui.FDb.ind_view_source.InsertMaybe
+bool                 ind_view_source_InsertMaybe(acr_tui::FViewSource& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_tui.FDb.ind_view_source.Remove
+void                 ind_view_source_Remove(acr_tui::FViewSource& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_tui.FDb.ind_view_source.Reserve
+void                 ind_view_source_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_tui.FDb.ind_view_source.AbsReserve
+void                 ind_view_source_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_tui.FDb.view_field.Alloc
+acr_tui::FViewField& view_field_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_tui.FDb.view_field.AllocMaybe
+acr_tui::FViewField* view_field_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_tui.FDb.view_field.InsertMaybe
+acr_tui::FViewField* view_field_InsertMaybe(const ui::ViewField &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_tui.FDb.view_field.AllocMem
+void*                view_field_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_tui.FDb.view_field.EmptyQ
+inline bool          view_field_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_tui.FDb.view_field.Find
+inline acr_tui::FViewField* view_field_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_tui.FDb.view_field.Last
+inline acr_tui::FViewField* view_field_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_tui.FDb.view_field.N
+inline i32           view_field_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_tui.FDb.view_field.RemoveAll
+void                 view_field_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_tui.FDb.view_field.RemoveLast
+void                 view_field_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_tui.FDb.view_field.qFind
+inline acr_tui::FViewField& view_field_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_tui.FDb.view_field.XrefMaybe
+bool                 view_field_XrefMaybe(acr_tui::FViewField &row);
+
+// Return true if hash is empty
+// func:acr_tui.FDb.ind_view_field.EmptyQ
+inline bool          ind_view_field_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_tui.FDb.ind_view_field.Find
+acr_tui::FViewField* ind_view_field_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_tui.FDb.ind_view_field.FindX
+acr_tui::FViewField& ind_view_field_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_tui.FDb.ind_view_field.GetOrCreate
+acr_tui::FViewField& ind_view_field_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_tui.FDb.ind_view_field.N
+inline i32           ind_view_field_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_tui.FDb.ind_view_field.InsertMaybe
+bool                 ind_view_field_InsertMaybe(acr_tui::FViewField& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_tui.FDb.ind_view_field.Remove
+void                 ind_view_field_Remove(acr_tui::FViewField& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_tui.FDb.ind_view_field.Reserve
+void                 ind_view_field_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_tui.FDb.ind_view_field.AbsReserve
+void                 ind_view_field_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_tui.FDb.view_filter.Alloc
+acr_tui::FViewFilter& view_filter_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_tui.FDb.view_filter.AllocMaybe
+acr_tui::FViewFilter* view_filter_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_tui.FDb.view_filter.InsertMaybe
+acr_tui::FViewFilter* view_filter_InsertMaybe(const ui::ViewFilter &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_tui.FDb.view_filter.AllocMem
+void*                view_filter_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_tui.FDb.view_filter.EmptyQ
+inline bool          view_filter_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_tui.FDb.view_filter.Find
+inline acr_tui::FViewFilter* view_filter_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_tui.FDb.view_filter.Last
+inline acr_tui::FViewFilter* view_filter_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_tui.FDb.view_filter.N
+inline i32           view_filter_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_tui.FDb.view_filter.RemoveAll
+void                 view_filter_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_tui.FDb.view_filter.RemoveLast
+void                 view_filter_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_tui.FDb.view_filter.qFind
+inline acr_tui::FViewFilter& view_filter_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_tui.FDb.view_filter.XrefMaybe
+bool                 view_filter_XrefMaybe(acr_tui::FViewFilter &row);
+
+// Return true if hash is empty
+// func:acr_tui.FDb.ind_view_filter.EmptyQ
+inline bool          ind_view_filter_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_tui.FDb.ind_view_filter.Find
+acr_tui::FViewFilter* ind_view_filter_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_tui.FDb.ind_view_filter.FindX
+acr_tui::FViewFilter& ind_view_filter_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_tui.FDb.ind_view_filter.GetOrCreate
+acr_tui::FViewFilter& ind_view_filter_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_tui.FDb.ind_view_filter.N
+inline i32           ind_view_filter_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_tui.FDb.ind_view_filter.InsertMaybe
+bool                 ind_view_filter_InsertMaybe(acr_tui::FViewFilter& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_tui.FDb.ind_view_filter.Remove
+void                 ind_view_filter_Remove(acr_tui::FViewFilter& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_tui.FDb.ind_view_filter.Reserve
+void                 ind_view_filter_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_tui.FDb.ind_view_filter.AbsReserve
+void                 ind_view_filter_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_tui.FDb.view_sort.Alloc
+acr_tui::FViewSort&  view_sort_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_tui.FDb.view_sort.AllocMaybe
+acr_tui::FViewSort*  view_sort_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_tui.FDb.view_sort.InsertMaybe
+acr_tui::FViewSort*  view_sort_InsertMaybe(const ui::ViewSort &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_tui.FDb.view_sort.AllocMem
+void*                view_sort_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_tui.FDb.view_sort.EmptyQ
+inline bool          view_sort_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_tui.FDb.view_sort.Find
+inline acr_tui::FViewSort* view_sort_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_tui.FDb.view_sort.Last
+inline acr_tui::FViewSort* view_sort_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_tui.FDb.view_sort.N
+inline i32           view_sort_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_tui.FDb.view_sort.RemoveAll
+void                 view_sort_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_tui.FDb.view_sort.RemoveLast
+void                 view_sort_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_tui.FDb.view_sort.qFind
+inline acr_tui::FViewSort& view_sort_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_tui.FDb.view_sort.XrefMaybe
+bool                 view_sort_XrefMaybe(acr_tui::FViewSort &row);
+
+// Return true if hash is empty
+// func:acr_tui.FDb.ind_view_sort.EmptyQ
+inline bool          ind_view_sort_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_tui.FDb.ind_view_sort.Find
+acr_tui::FViewSort*  ind_view_sort_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_tui.FDb.ind_view_sort.FindX
+acr_tui::FViewSort&  ind_view_sort_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_tui.FDb.ind_view_sort.GetOrCreate
+acr_tui::FViewSort&  ind_view_sort_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_tui.FDb.ind_view_sort.N
+inline i32           ind_view_sort_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_tui.FDb.ind_view_sort.InsertMaybe
+bool                 ind_view_sort_InsertMaybe(acr_tui::FViewSort& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_tui.FDb.ind_view_sort.Remove
+void                 ind_view_sort_Remove(acr_tui::FViewSort& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_tui.FDb.ind_view_sort.Reserve
+void                 ind_view_sort_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_tui.FDb.ind_view_sort.AbsReserve
+void                 ind_view_sort_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_tui.FDb.context_var.Alloc
+acr_tui::FContextVar& context_var_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_tui.FDb.context_var.AllocMaybe
+acr_tui::FContextVar* context_var_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_tui.FDb.context_var.InsertMaybe
+acr_tui::FContextVar* context_var_InsertMaybe(const ui::ContextVar &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_tui.FDb.context_var.AllocMem
+void*                context_var_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_tui.FDb.context_var.EmptyQ
+inline bool          context_var_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_tui.FDb.context_var.Find
+inline acr_tui::FContextVar* context_var_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_tui.FDb.context_var.Last
+inline acr_tui::FContextVar* context_var_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_tui.FDb.context_var.N
+inline i32           context_var_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_tui.FDb.context_var.RemoveAll
+void                 context_var_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_tui.FDb.context_var.RemoveLast
+void                 context_var_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_tui.FDb.context_var.qFind
+inline acr_tui::FContextVar& context_var_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_tui.FDb.context_var.XrefMaybe
+bool                 context_var_XrefMaybe(acr_tui::FContextVar &row);
+
+// Return true if hash is empty
+// func:acr_tui.FDb.ind_context_var.EmptyQ
+inline bool          ind_context_var_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_tui.FDb.ind_context_var.Find
+acr_tui::FContextVar* ind_context_var_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_tui.FDb.ind_context_var.FindX
+acr_tui::FContextVar& ind_context_var_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_tui.FDb.ind_context_var.GetOrCreate
+acr_tui::FContextVar& ind_context_var_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_tui.FDb.ind_context_var.N
+inline i32           ind_context_var_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_tui.FDb.ind_context_var.InsertMaybe
+bool                 ind_context_var_InsertMaybe(acr_tui::FContextVar& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_tui.FDb.ind_context_var.Remove
+void                 ind_context_var_Remove(acr_tui::FContextVar& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_tui.FDb.ind_context_var.Reserve
+void                 ind_context_var_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_tui.FDb.ind_context_var.AbsReserve
+void                 ind_context_var_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_tui.FDb.command.Alloc
+acr_tui::FCommand&   command_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_tui.FDb.command.AllocMaybe
+acr_tui::FCommand*   command_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_tui.FDb.command.InsertMaybe
+acr_tui::FCommand*   command_InsertMaybe(const ui::Command &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_tui.FDb.command.AllocMem
+void*                command_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_tui.FDb.command.EmptyQ
+inline bool          command_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_tui.FDb.command.Find
+inline acr_tui::FCommand* command_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_tui.FDb.command.Last
+inline acr_tui::FCommand* command_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_tui.FDb.command.N
+inline i32           command_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_tui.FDb.command.RemoveAll
+void                 command_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_tui.FDb.command.RemoveLast
+void                 command_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_tui.FDb.command.qFind
+inline acr_tui::FCommand& command_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_tui.FDb.command.XrefMaybe
+bool                 command_XrefMaybe(acr_tui::FCommand &row);
+
+// Return true if hash is empty
+// func:acr_tui.FDb.ind_command.EmptyQ
+inline bool          ind_command_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_tui.FDb.ind_command.Find
+acr_tui::FCommand*   ind_command_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_tui.FDb.ind_command.FindX
+acr_tui::FCommand&   ind_command_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_tui.FDb.ind_command.GetOrCreate
+acr_tui::FCommand&   ind_command_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_tui.FDb.ind_command.N
+inline i32           ind_command_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_tui.FDb.ind_command.InsertMaybe
+bool                 ind_command_InsertMaybe(acr_tui::FCommand& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_tui.FDb.ind_command.Remove
+void                 ind_command_Remove(acr_tui::FCommand& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_tui.FDb.ind_command.Reserve
+void                 ind_command_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_tui.FDb.ind_command.AbsReserve
+void                 ind_command_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_tui.FDb.layout_cfg.Alloc
+acr_tui::FLayoutCfg& layout_cfg_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_tui.FDb.layout_cfg.AllocMaybe
+acr_tui::FLayoutCfg* layout_cfg_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_tui.FDb.layout_cfg.InsertMaybe
+acr_tui::FLayoutCfg* layout_cfg_InsertMaybe(const ui::LayoutCfg &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_tui.FDb.layout_cfg.AllocMem
+void*                layout_cfg_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_tui.FDb.layout_cfg.EmptyQ
+inline bool          layout_cfg_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_tui.FDb.layout_cfg.Find
+inline acr_tui::FLayoutCfg* layout_cfg_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_tui.FDb.layout_cfg.Last
+inline acr_tui::FLayoutCfg* layout_cfg_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_tui.FDb.layout_cfg.N
+inline i32           layout_cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_tui.FDb.layout_cfg.RemoveAll
+void                 layout_cfg_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_tui.FDb.layout_cfg.RemoveLast
+void                 layout_cfg_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_tui.FDb.layout_cfg.qFind
+inline acr_tui::FLayoutCfg& layout_cfg_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_tui.FDb.layout_cfg.XrefMaybe
+bool                 layout_cfg_XrefMaybe(acr_tui::FLayoutCfg &row);
+
+// Return true if hash is empty
+// func:acr_tui.FDb.ind_layout_cfg.EmptyQ
+inline bool          ind_layout_cfg_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_tui.FDb.ind_layout_cfg.Find
+acr_tui::FLayoutCfg* ind_layout_cfg_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_tui.FDb.ind_layout_cfg.FindX
+acr_tui::FLayoutCfg& ind_layout_cfg_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_tui.FDb.ind_layout_cfg.GetOrCreate
+acr_tui::FLayoutCfg& ind_layout_cfg_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_tui.FDb.ind_layout_cfg.N
+inline i32           ind_layout_cfg_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_tui.FDb.ind_layout_cfg.InsertMaybe
+bool                 ind_layout_cfg_InsertMaybe(acr_tui::FLayoutCfg& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_tui.FDb.ind_layout_cfg.Remove
+void                 ind_layout_cfg_Remove(acr_tui::FLayoutCfg& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_tui.FDb.ind_layout_cfg.Reserve
+void                 ind_layout_cfg_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_tui.FDb.ind_layout_cfg.AbsReserve
+void                 ind_layout_cfg_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_tui.FDb.style_slot.Alloc
+acr_tui::FStyleSlot& style_slot_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_tui.FDb.style_slot.AllocMaybe
+acr_tui::FStyleSlot* style_slot_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_tui.FDb.style_slot.InsertMaybe
+acr_tui::FStyleSlot* style_slot_InsertMaybe(const ui::StyleSlot &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_tui.FDb.style_slot.AllocMem
+void*                style_slot_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_tui.FDb.style_slot.EmptyQ
+inline bool          style_slot_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_tui.FDb.style_slot.Find
+inline acr_tui::FStyleSlot* style_slot_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_tui.FDb.style_slot.Last
+inline acr_tui::FStyleSlot* style_slot_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_tui.FDb.style_slot.N
+inline i32           style_slot_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_tui.FDb.style_slot.RemoveAll
+void                 style_slot_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_tui.FDb.style_slot.RemoveLast
+void                 style_slot_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_tui.FDb.style_slot.qFind
+inline acr_tui::FStyleSlot& style_slot_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_tui.FDb.style_slot.XrefMaybe
+bool                 style_slot_XrefMaybe(acr_tui::FStyleSlot &row);
+
+// Return true if hash is empty
+// func:acr_tui.FDb.ind_style_slot.EmptyQ
+inline bool          ind_style_slot_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_tui.FDb.ind_style_slot.Find
+acr_tui::FStyleSlot* ind_style_slot_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_tui.FDb.ind_style_slot.FindX
+acr_tui::FStyleSlot& ind_style_slot_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_tui.FDb.ind_style_slot.GetOrCreate
+acr_tui::FStyleSlot& ind_style_slot_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_tui.FDb.ind_style_slot.N
+inline i32           ind_style_slot_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_tui.FDb.ind_style_slot.InsertMaybe
+bool                 ind_style_slot_InsertMaybe(acr_tui::FStyleSlot& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_tui.FDb.ind_style_slot.Remove
+void                 ind_style_slot_Remove(acr_tui::FStyleSlot& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_tui.FDb.ind_style_slot.Reserve
+void                 ind_style_slot_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_tui.FDb.ind_style_slot.AbsReserve
+void                 ind_style_slot_AbsReserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:acr_tui.FDb.window_curs.Reset
 inline void          _db_window_curs_Reset(_db_window_curs &curs, acr_tui::FDb &parent) __attribute__((nothrow));
@@ -1684,6 +2466,114 @@ inline void          _db_fconst_curs_Next(_db_fconst_curs &curs) __attribute__((
 // item access
 // func:acr_tui.FDb.fconst_curs.Access
 inline acr_tui::FFconst& _db_fconst_curs_Access(_db_fconst_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.view_curs.Reset
+inline void          _db_view_curs_Reset(_db_view_curs &curs, acr_tui::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.view_curs.ValidQ
+inline bool          _db_view_curs_ValidQ(_db_view_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_tui.FDb.view_curs.Next
+inline void          _db_view_curs_Next(_db_view_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_tui.FDb.view_curs.Access
+inline acr_tui::FView& _db_view_curs_Access(_db_view_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.view_source_curs.Reset
+inline void          _db_view_source_curs_Reset(_db_view_source_curs &curs, acr_tui::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.view_source_curs.ValidQ
+inline bool          _db_view_source_curs_ValidQ(_db_view_source_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_tui.FDb.view_source_curs.Next
+inline void          _db_view_source_curs_Next(_db_view_source_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_tui.FDb.view_source_curs.Access
+inline acr_tui::FViewSource& _db_view_source_curs_Access(_db_view_source_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.view_field_curs.Reset
+inline void          _db_view_field_curs_Reset(_db_view_field_curs &curs, acr_tui::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.view_field_curs.ValidQ
+inline bool          _db_view_field_curs_ValidQ(_db_view_field_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_tui.FDb.view_field_curs.Next
+inline void          _db_view_field_curs_Next(_db_view_field_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_tui.FDb.view_field_curs.Access
+inline acr_tui::FViewField& _db_view_field_curs_Access(_db_view_field_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.view_filter_curs.Reset
+inline void          _db_view_filter_curs_Reset(_db_view_filter_curs &curs, acr_tui::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.view_filter_curs.ValidQ
+inline bool          _db_view_filter_curs_ValidQ(_db_view_filter_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_tui.FDb.view_filter_curs.Next
+inline void          _db_view_filter_curs_Next(_db_view_filter_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_tui.FDb.view_filter_curs.Access
+inline acr_tui::FViewFilter& _db_view_filter_curs_Access(_db_view_filter_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.view_sort_curs.Reset
+inline void          _db_view_sort_curs_Reset(_db_view_sort_curs &curs, acr_tui::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.view_sort_curs.ValidQ
+inline bool          _db_view_sort_curs_ValidQ(_db_view_sort_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_tui.FDb.view_sort_curs.Next
+inline void          _db_view_sort_curs_Next(_db_view_sort_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_tui.FDb.view_sort_curs.Access
+inline acr_tui::FViewSort& _db_view_sort_curs_Access(_db_view_sort_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.context_var_curs.Reset
+inline void          _db_context_var_curs_Reset(_db_context_var_curs &curs, acr_tui::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.context_var_curs.ValidQ
+inline bool          _db_context_var_curs_ValidQ(_db_context_var_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_tui.FDb.context_var_curs.Next
+inline void          _db_context_var_curs_Next(_db_context_var_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_tui.FDb.context_var_curs.Access
+inline acr_tui::FContextVar& _db_context_var_curs_Access(_db_context_var_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.command_curs.Reset
+inline void          _db_command_curs_Reset(_db_command_curs &curs, acr_tui::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.command_curs.ValidQ
+inline bool          _db_command_curs_ValidQ(_db_command_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_tui.FDb.command_curs.Next
+inline void          _db_command_curs_Next(_db_command_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_tui.FDb.command_curs.Access
+inline acr_tui::FCommand& _db_command_curs_Access(_db_command_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.layout_cfg_curs.Reset
+inline void          _db_layout_cfg_curs_Reset(_db_layout_cfg_curs &curs, acr_tui::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.layout_cfg_curs.ValidQ
+inline bool          _db_layout_cfg_curs_ValidQ(_db_layout_cfg_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_tui.FDb.layout_cfg_curs.Next
+inline void          _db_layout_cfg_curs_Next(_db_layout_cfg_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_tui.FDb.layout_cfg_curs.Access
+inline acr_tui::FLayoutCfg& _db_layout_cfg_curs_Access(_db_layout_cfg_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.style_slot_curs.Reset
+inline void          _db_style_slot_curs_Reset(_db_style_slot_curs &curs, acr_tui::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.style_slot_curs.ValidQ
+inline bool          _db_style_slot_curs_ValidQ(_db_style_slot_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_tui.FDb.style_slot_curs.Next
+inline void          _db_style_slot_curs_Next(_db_style_slot_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_tui.FDb.style_slot_curs.Access
+inline acr_tui::FStyleSlot& _db_style_slot_curs_Access(_db_style_slot_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_tui.FDb..Init
 void                 FDb_Init();
@@ -1862,6 +2752,52 @@ inline void          FKeyMap_Init(acr_tui::FKeyMap& key_map);
 // func:acr_tui.FKeyMap..Uninit
 void                 FKeyMap_Uninit(acr_tui::FKeyMap& key_map) __attribute__((nothrow));
 
+// --- acr_tui.FLayoutCfg
+// create: acr_tui.FDb.layout_cfg (Lary)
+// global access: layout_cfg (Lary, by rowid)
+// global access: ind_layout_cfg (Thash, hash field layout_cfg)
+struct FLayoutCfg { // acr_tui.FLayoutCfg
+    acr_tui::FLayoutCfg*   ind_layout_cfg_next;      // hash next
+    u32                    ind_layout_cfg_hashval;   // hash value
+    algo::Smallstr50       layout_cfg;               //
+    algo::Smallstr50       p_widget;                 // Widget this layout applies to
+    i32                    min_w;                    //   0  Minimum width (0=no minimum)
+    i32                    min_h;                    //   0  Minimum height
+    i32                    max_w;                    //   0  Maximum width (0=unlimited)
+    i32                    max_h;                    //   0  Maximum height
+    i32                    flex;                     //   0  Flex weight for proportional sizing
+    i32                    padding;                  //   0  Inner padding
+    i32                    gap;                      //   0  Gap between children
+    algo::Smallstr50       halign;                   //   "left"  Horizontal alignment within container
+    algo::Smallstr50       valign;                   //   "top"  Vertical alignment within container
+    // func:acr_tui.FLayoutCfg..AssignOp
+    acr_tui::FLayoutCfg& operator =(const acr_tui::FLayoutCfg &rhs) = delete;
+    // func:acr_tui.FLayoutCfg..CopyCtor
+    FLayoutCfg(const acr_tui::FLayoutCfg &rhs) = delete;
+private:
+    // func:acr_tui.FLayoutCfg..Ctor
+    inline               FLayoutCfg() __attribute__((nothrow));
+    // func:acr_tui.FLayoutCfg..Dtor
+    inline               ~FLayoutCfg() __attribute__((nothrow));
+    friend acr_tui::FLayoutCfg& layout_cfg_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_tui::FLayoutCfg* layout_cfg_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 layout_cfg_RemoveAll() __attribute__((nothrow));
+    friend void                 layout_cfg_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_tui.FLayoutCfg.base.CopyOut
+void                 layout_cfg_CopyOut(acr_tui::FLayoutCfg &row, ui::LayoutCfg &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_tui.FLayoutCfg.base.CopyIn
+void                 layout_cfg_CopyIn(acr_tui::FLayoutCfg &row, ui::LayoutCfg &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_tui.FLayoutCfg..Init
+void                 FLayoutCfg_Init(acr_tui::FLayoutCfg& layout_cfg);
+// func:acr_tui.FLayoutCfg..Uninit
+void                 FLayoutCfg_Uninit(acr_tui::FLayoutCfg& layout_cfg) __attribute__((nothrow));
+
 // --- acr_tui.FNs
 // create: acr_tui.FDb.ns (Lary)
 // global access: ns (Lary, by rowid)
@@ -1941,6 +2877,45 @@ void                 style_CopyIn(acr_tui::FStyle &row, ui::Style &in) __attribu
 inline void          FStyle_Init(acr_tui::FStyle& style);
 // func:acr_tui.FStyle..Uninit
 void                 FStyle_Uninit(acr_tui::FStyle& style) __attribute__((nothrow));
+
+// --- acr_tui.FStyleSlot
+// create: acr_tui.FDb.style_slot (Lary)
+// global access: style_slot (Lary, by rowid)
+// global access: ind_style_slot (Thash, hash field style_slot)
+struct FStyleSlot { // acr_tui.FStyleSlot
+    acr_tui::FStyleSlot*   ind_style_slot_next;      // hash next
+    u32                    ind_style_slot_hashval;   // hash value
+    algo::Smallstr50       style_slot;               //
+    algo::Smallstr50       p_widget;                 // Widget this applies to
+    algo::Smallstr50       state;                    // Widget state this style applies to
+    algo::Smallstr50       p_style;                  // Style to apply in this state
+    // func:acr_tui.FStyleSlot..AssignOp
+    inline acr_tui::FStyleSlot& operator =(const acr_tui::FStyleSlot &rhs) = delete;
+    // func:acr_tui.FStyleSlot..CopyCtor
+    inline               FStyleSlot(const acr_tui::FStyleSlot &rhs) = delete;
+private:
+    // func:acr_tui.FStyleSlot..Ctor
+    inline               FStyleSlot() __attribute__((nothrow));
+    // func:acr_tui.FStyleSlot..Dtor
+    inline               ~FStyleSlot() __attribute__((nothrow));
+    friend acr_tui::FStyleSlot& style_slot_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_tui::FStyleSlot* style_slot_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 style_slot_RemoveAll() __attribute__((nothrow));
+    friend void                 style_slot_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_tui.FStyleSlot.base.CopyOut
+void                 style_slot_CopyOut(acr_tui::FStyleSlot &row, ui::StyleSlot &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_tui.FStyleSlot.base.CopyIn
+void                 style_slot_CopyIn(acr_tui::FStyleSlot &row, ui::StyleSlot &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_tui.FStyleSlot..Init
+inline void          FStyleSlot_Init(acr_tui::FStyleSlot& style_slot);
+// func:acr_tui.FStyleSlot..Uninit
+void                 FStyleSlot_Uninit(acr_tui::FStyleSlot& style_slot) __attribute__((nothrow));
 
 // --- acr_tui.FTableCfg
 // create: acr_tui.FDb.table_cfg (Lary)
@@ -2023,6 +2998,208 @@ void                 tree_cfg_CopyIn(acr_tui::FTreeCfg &row, ui::TreeCfg &in) __
 inline void          FTreeCfg_Init(acr_tui::FTreeCfg& tree_cfg);
 // func:acr_tui.FTreeCfg..Uninit
 void                 FTreeCfg_Uninit(acr_tui::FTreeCfg& tree_cfg) __attribute__((nothrow));
+
+// --- acr_tui.FView
+// create: acr_tui.FDb.view (Lary)
+// global access: view (Lary, by rowid)
+// global access: ind_view (Thash, hash field view)
+struct FView { // acr_tui.FView
+    acr_tui::FView*     ind_view_next;      // hash next
+    u32                 ind_view_hashval;   // hash value
+    algo::Smallstr50    view;               //
+    algo::Smallstr50    p_window;           // Optional window scope (empty = global)
+    algo::Smallstr100   base_ctype;         // Primary logical source ctype
+    algo::Comment       comment;            // Description
+    // func:acr_tui.FView..AssignOp
+    inline acr_tui::FView& operator =(const acr_tui::FView &rhs) = delete;
+    // func:acr_tui.FView..CopyCtor
+    inline               FView(const acr_tui::FView &rhs) = delete;
+private:
+    // func:acr_tui.FView..Ctor
+    inline               FView() __attribute__((nothrow));
+    // func:acr_tui.FView..Dtor
+    inline               ~FView() __attribute__((nothrow));
+    friend acr_tui::FView&      view_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_tui::FView*      view_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 view_RemoveAll() __attribute__((nothrow));
+    friend void                 view_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_tui.FView.base.CopyOut
+void                 view_CopyOut(acr_tui::FView &row, ui::View &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_tui.FView.base.CopyIn
+void                 view_CopyIn(acr_tui::FView &row, ui::View &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_tui.FView..Init
+inline void          FView_Init(acr_tui::FView& view);
+// func:acr_tui.FView..Uninit
+void                 FView_Uninit(acr_tui::FView& view) __attribute__((nothrow));
+
+// --- acr_tui.FViewField
+// create: acr_tui.FDb.view_field (Lary)
+// global access: view_field (Lary, by rowid)
+// global access: ind_view_field (Thash, hash field view_field)
+struct FViewField { // acr_tui.FViewField
+    acr_tui::FViewField*   ind_view_field_next;      // hash next
+    u32                    ind_view_field_hashval;   // hash value
+    algo::Smallstr50       view_field;               //
+    algo::Smallstr50       p_view;                   // Parent view
+    algo::Smallstr50       field;                    // Logical field name for binding
+    algo::Smallstr200      expr;                     // Source expression (e.g. Order.qty * Order.price)
+    algo::Smallstr50       title;                    // Display title
+    algo::Smallstr50       datatype;                 // Result data type hint
+    // func:acr_tui.FViewField..AssignOp
+    inline acr_tui::FViewField& operator =(const acr_tui::FViewField &rhs) = delete;
+    // func:acr_tui.FViewField..CopyCtor
+    inline               FViewField(const acr_tui::FViewField &rhs) = delete;
+private:
+    // func:acr_tui.FViewField..Ctor
+    inline               FViewField() __attribute__((nothrow));
+    // func:acr_tui.FViewField..Dtor
+    inline               ~FViewField() __attribute__((nothrow));
+    friend acr_tui::FViewField& view_field_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_tui::FViewField* view_field_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 view_field_RemoveAll() __attribute__((nothrow));
+    friend void                 view_field_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_tui.FViewField.base.CopyOut
+void                 view_field_CopyOut(acr_tui::FViewField &row, ui::ViewField &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_tui.FViewField.base.CopyIn
+void                 view_field_CopyIn(acr_tui::FViewField &row, ui::ViewField &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_tui.FViewField..Init
+inline void          FViewField_Init(acr_tui::FViewField& view_field);
+// func:acr_tui.FViewField..Uninit
+void                 FViewField_Uninit(acr_tui::FViewField& view_field) __attribute__((nothrow));
+
+// --- acr_tui.FViewFilter
+// create: acr_tui.FDb.view_filter (Lary)
+// global access: view_filter (Lary, by rowid)
+// global access: ind_view_filter (Thash, hash field view_filter)
+struct FViewFilter { // acr_tui.FViewFilter
+    acr_tui::FViewFilter*   ind_view_filter_next;      // hash next
+    u32                     ind_view_filter_hashval;   // hash value
+    algo::Smallstr50        view_filter;               //
+    algo::Smallstr50        p_view;                    // Parent view
+    algo::Smallstr200       expr;                      // Filter expression (e.g. Order.status != closed)
+    algo::Smallstr50        source;                    //   "fixed"  Origin: fixed/context/widget/runtime
+    bool                    enabled;                   //   true  Filter is active
+    i32                     priority;                  //   0  Evaluation priority (lower = first)
+    // func:acr_tui.FViewFilter..AssignOp
+    inline acr_tui::FViewFilter& operator =(const acr_tui::FViewFilter &rhs) = delete;
+    // func:acr_tui.FViewFilter..CopyCtor
+    inline               FViewFilter(const acr_tui::FViewFilter &rhs) = delete;
+private:
+    // func:acr_tui.FViewFilter..Ctor
+    inline               FViewFilter() __attribute__((nothrow));
+    // func:acr_tui.FViewFilter..Dtor
+    inline               ~FViewFilter() __attribute__((nothrow));
+    friend acr_tui::FViewFilter& view_filter_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_tui::FViewFilter* view_filter_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 view_filter_RemoveAll() __attribute__((nothrow));
+    friend void                 view_filter_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_tui.FViewFilter.base.CopyOut
+void                 view_filter_CopyOut(acr_tui::FViewFilter &row, ui::ViewFilter &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_tui.FViewFilter.base.CopyIn
+void                 view_filter_CopyIn(acr_tui::FViewFilter &row, ui::ViewFilter &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_tui.FViewFilter..Init
+inline void          FViewFilter_Init(acr_tui::FViewFilter& view_filter);
+// func:acr_tui.FViewFilter..Uninit
+void                 FViewFilter_Uninit(acr_tui::FViewFilter& view_filter) __attribute__((nothrow));
+
+// --- acr_tui.FViewSort
+// create: acr_tui.FDb.view_sort (Lary)
+// global access: view_sort (Lary, by rowid)
+// global access: ind_view_sort (Thash, hash field view_sort)
+struct FViewSort { // acr_tui.FViewSort
+    acr_tui::FViewSort*   ind_view_sort_next;      // hash next
+    u32                   ind_view_sort_hashval;   // hash value
+    algo::Smallstr50      view_sort;               //
+    algo::Smallstr50      p_view;                  // Parent view
+    algo::Smallstr200     expr;                    // Sort expression (field name or computed)
+    algo::Smallstr50      dir;                     //   "asc"  Sort direction
+    i32                   priority;                //   0  Sort priority (lower = first)
+    // func:acr_tui.FViewSort..AssignOp
+    inline acr_tui::FViewSort& operator =(const acr_tui::FViewSort &rhs) = delete;
+    // func:acr_tui.FViewSort..CopyCtor
+    inline               FViewSort(const acr_tui::FViewSort &rhs) = delete;
+private:
+    // func:acr_tui.FViewSort..Ctor
+    inline               FViewSort() __attribute__((nothrow));
+    // func:acr_tui.FViewSort..Dtor
+    inline               ~FViewSort() __attribute__((nothrow));
+    friend acr_tui::FViewSort&  view_sort_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_tui::FViewSort*  view_sort_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 view_sort_RemoveAll() __attribute__((nothrow));
+    friend void                 view_sort_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_tui.FViewSort.base.CopyOut
+void                 view_sort_CopyOut(acr_tui::FViewSort &row, ui::ViewSort &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_tui.FViewSort.base.CopyIn
+void                 view_sort_CopyIn(acr_tui::FViewSort &row, ui::ViewSort &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_tui.FViewSort..Init
+inline void          FViewSort_Init(acr_tui::FViewSort& view_sort);
+// func:acr_tui.FViewSort..Uninit
+void                 FViewSort_Uninit(acr_tui::FViewSort& view_sort) __attribute__((nothrow));
+
+// --- acr_tui.FViewSource
+// create: acr_tui.FDb.view_source (Lary)
+// global access: view_source (Lary, by rowid)
+// global access: ind_view_source (Thash, hash field view_source)
+struct FViewSource { // acr_tui.FViewSource
+    acr_tui::FViewSource*   ind_view_source_next;      // hash next
+    u32                     ind_view_source_hashval;   // hash value
+    algo::Smallstr50        view_source;               //
+    algo::Smallstr50        p_view;                    // Parent view
+    algo::Smallstr100       source_ctype;              // Source ctype for this join leg
+    algo::Smallstr50        alias;                     // Alias for this source in expressions
+    algo::Smallstr50        join_kind;                 //   "base"  Join type (exactly one must be base)
+    algo::Smallstr200       join_expr;                 // Join condition expression
+    // func:acr_tui.FViewSource..AssignOp
+    inline acr_tui::FViewSource& operator =(const acr_tui::FViewSource &rhs) = delete;
+    // func:acr_tui.FViewSource..CopyCtor
+    inline               FViewSource(const acr_tui::FViewSource &rhs) = delete;
+private:
+    // func:acr_tui.FViewSource..Ctor
+    inline               FViewSource() __attribute__((nothrow));
+    // func:acr_tui.FViewSource..Dtor
+    inline               ~FViewSource() __attribute__((nothrow));
+    friend acr_tui::FViewSource& view_source_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_tui::FViewSource* view_source_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 view_source_RemoveAll() __attribute__((nothrow));
+    friend void                 view_source_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_tui.FViewSource.base.CopyOut
+void                 view_source_CopyOut(acr_tui::FViewSource &row, ui::ViewSource &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_tui.FViewSource.base.CopyIn
+void                 view_source_CopyIn(acr_tui::FViewSource &row, ui::ViewSource &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_tui.FViewSource..Init
+inline void          FViewSource_Init(acr_tui::FViewSource& view_source);
+// func:acr_tui.FViewSource..Uninit
+void                 FViewSource_Uninit(acr_tui::FViewSource& view_source) __attribute__((nothrow));
 
 // --- acr_tui.FWidget
 // create: acr_tui.FDb.widget (Lary)
@@ -2340,6 +3517,78 @@ struct _db_fconst_curs {// cursor
     acr_tui::FDb *parent;
     i64 index;
     _db_fconst_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_view_curs {// cursor
+    typedef acr_tui::FView ChildType;
+    acr_tui::FDb *parent;
+    i64 index;
+    _db_view_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_view_source_curs {// cursor
+    typedef acr_tui::FViewSource ChildType;
+    acr_tui::FDb *parent;
+    i64 index;
+    _db_view_source_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_view_field_curs {// cursor
+    typedef acr_tui::FViewField ChildType;
+    acr_tui::FDb *parent;
+    i64 index;
+    _db_view_field_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_view_filter_curs {// cursor
+    typedef acr_tui::FViewFilter ChildType;
+    acr_tui::FDb *parent;
+    i64 index;
+    _db_view_filter_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_view_sort_curs {// cursor
+    typedef acr_tui::FViewSort ChildType;
+    acr_tui::FDb *parent;
+    i64 index;
+    _db_view_sort_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_context_var_curs {// cursor
+    typedef acr_tui::FContextVar ChildType;
+    acr_tui::FDb *parent;
+    i64 index;
+    _db_context_var_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_command_curs {// cursor
+    typedef acr_tui::FCommand ChildType;
+    acr_tui::FDb *parent;
+    i64 index;
+    _db_command_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_layout_cfg_curs {// cursor
+    typedef acr_tui::FLayoutCfg ChildType;
+    acr_tui::FDb *parent;
+    i64 index;
+    _db_layout_cfg_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_style_slot_curs {// cursor
+    typedef acr_tui::FStyleSlot ChildType;
+    acr_tui::FDb *parent;
+    i64 index;
+    _db_style_slot_curs(){ parent=NULL; index=0; }
 };
 
 } // gen:ns_curstext

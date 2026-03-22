@@ -70,6 +70,40 @@ inline  acr_tui::FColumn::~FColumn() {
     acr_tui::FColumn_Uninit(*this);
 }
 
+// --- acr_tui.FCommand..Init
+// Set all fields to initial values.
+inline void acr_tui::FCommand_Init(acr_tui::FCommand& command) {
+    command.ind_command_next = (acr_tui::FCommand*)-1; // (acr_tui.FDb.ind_command) not-in-hash
+    command.ind_command_hashval = 0; // stored hash value
+}
+
+// --- acr_tui.FCommand..Ctor
+inline  acr_tui::FCommand::FCommand() {
+    acr_tui::FCommand_Init(*this);
+}
+
+// --- acr_tui.FCommand..Dtor
+inline  acr_tui::FCommand::~FCommand() {
+    acr_tui::FCommand_Uninit(*this);
+}
+
+// --- acr_tui.FContextVar..Init
+// Set all fields to initial values.
+inline void acr_tui::FContextVar_Init(acr_tui::FContextVar& context_var) {
+    context_var.ind_context_var_next = (acr_tui::FContextVar*)-1; // (acr_tui.FDb.ind_context_var) not-in-hash
+    context_var.ind_context_var_hashval = 0; // stored hash value
+}
+
+// --- acr_tui.FContextVar..Ctor
+inline  acr_tui::FContextVar::FContextVar() {
+    acr_tui::FContextVar_Init(*this);
+}
+
+// --- acr_tui.FContextVar..Dtor
+inline  acr_tui::FContextVar::~FContextVar() {
+    acr_tui::FContextVar_Uninit(*this);
+}
+
 // --- acr_tui.FCtype..Init
 // Set all fields to initial values.
 inline void acr_tui::FCtype_Init(acr_tui::FCtype& ctype) {
@@ -936,6 +970,492 @@ inline i32 acr_tui::ind_fconst_N() {
     return _db.ind_fconst_n;
 }
 
+// --- acr_tui.FDb.view.EmptyQ
+// Return true if index is empty
+inline bool acr_tui::view_EmptyQ() {
+    return _db.view_n == 0;
+}
+
+// --- acr_tui.FDb.view.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_tui::FView* acr_tui::view_Find(u64 t) {
+    acr_tui::FView *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.view_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.view_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.view.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_tui::FView* acr_tui::view_Last() {
+    return view_Find(u64(_db.view_n-1));
+}
+
+// --- acr_tui.FDb.view.N
+// Return number of items in the pool
+inline i32 acr_tui::view_N() {
+    return _db.view_n;
+}
+
+// --- acr_tui.FDb.view.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_tui::FView& acr_tui::view_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.view_lary[bsr][index];
+}
+
+// --- acr_tui.FDb.ind_view.EmptyQ
+// Return true if hash is empty
+inline bool acr_tui::ind_view_EmptyQ() {
+    return _db.ind_view_n == 0;
+}
+
+// --- acr_tui.FDb.ind_view.N
+// Return number of items in the hash
+inline i32 acr_tui::ind_view_N() {
+    return _db.ind_view_n;
+}
+
+// --- acr_tui.FDb.view_source.EmptyQ
+// Return true if index is empty
+inline bool acr_tui::view_source_EmptyQ() {
+    return _db.view_source_n == 0;
+}
+
+// --- acr_tui.FDb.view_source.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_tui::FViewSource* acr_tui::view_source_Find(u64 t) {
+    acr_tui::FViewSource *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.view_source_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.view_source_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.view_source.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_tui::FViewSource* acr_tui::view_source_Last() {
+    return view_source_Find(u64(_db.view_source_n-1));
+}
+
+// --- acr_tui.FDb.view_source.N
+// Return number of items in the pool
+inline i32 acr_tui::view_source_N() {
+    return _db.view_source_n;
+}
+
+// --- acr_tui.FDb.view_source.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_tui::FViewSource& acr_tui::view_source_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.view_source_lary[bsr][index];
+}
+
+// --- acr_tui.FDb.ind_view_source.EmptyQ
+// Return true if hash is empty
+inline bool acr_tui::ind_view_source_EmptyQ() {
+    return _db.ind_view_source_n == 0;
+}
+
+// --- acr_tui.FDb.ind_view_source.N
+// Return number of items in the hash
+inline i32 acr_tui::ind_view_source_N() {
+    return _db.ind_view_source_n;
+}
+
+// --- acr_tui.FDb.view_field.EmptyQ
+// Return true if index is empty
+inline bool acr_tui::view_field_EmptyQ() {
+    return _db.view_field_n == 0;
+}
+
+// --- acr_tui.FDb.view_field.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_tui::FViewField* acr_tui::view_field_Find(u64 t) {
+    acr_tui::FViewField *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.view_field_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.view_field_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.view_field.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_tui::FViewField* acr_tui::view_field_Last() {
+    return view_field_Find(u64(_db.view_field_n-1));
+}
+
+// --- acr_tui.FDb.view_field.N
+// Return number of items in the pool
+inline i32 acr_tui::view_field_N() {
+    return _db.view_field_n;
+}
+
+// --- acr_tui.FDb.view_field.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_tui::FViewField& acr_tui::view_field_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.view_field_lary[bsr][index];
+}
+
+// --- acr_tui.FDb.ind_view_field.EmptyQ
+// Return true if hash is empty
+inline bool acr_tui::ind_view_field_EmptyQ() {
+    return _db.ind_view_field_n == 0;
+}
+
+// --- acr_tui.FDb.ind_view_field.N
+// Return number of items in the hash
+inline i32 acr_tui::ind_view_field_N() {
+    return _db.ind_view_field_n;
+}
+
+// --- acr_tui.FDb.view_filter.EmptyQ
+// Return true if index is empty
+inline bool acr_tui::view_filter_EmptyQ() {
+    return _db.view_filter_n == 0;
+}
+
+// --- acr_tui.FDb.view_filter.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_tui::FViewFilter* acr_tui::view_filter_Find(u64 t) {
+    acr_tui::FViewFilter *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.view_filter_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.view_filter_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.view_filter.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_tui::FViewFilter* acr_tui::view_filter_Last() {
+    return view_filter_Find(u64(_db.view_filter_n-1));
+}
+
+// --- acr_tui.FDb.view_filter.N
+// Return number of items in the pool
+inline i32 acr_tui::view_filter_N() {
+    return _db.view_filter_n;
+}
+
+// --- acr_tui.FDb.view_filter.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_tui::FViewFilter& acr_tui::view_filter_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.view_filter_lary[bsr][index];
+}
+
+// --- acr_tui.FDb.ind_view_filter.EmptyQ
+// Return true if hash is empty
+inline bool acr_tui::ind_view_filter_EmptyQ() {
+    return _db.ind_view_filter_n == 0;
+}
+
+// --- acr_tui.FDb.ind_view_filter.N
+// Return number of items in the hash
+inline i32 acr_tui::ind_view_filter_N() {
+    return _db.ind_view_filter_n;
+}
+
+// --- acr_tui.FDb.view_sort.EmptyQ
+// Return true if index is empty
+inline bool acr_tui::view_sort_EmptyQ() {
+    return _db.view_sort_n == 0;
+}
+
+// --- acr_tui.FDb.view_sort.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_tui::FViewSort* acr_tui::view_sort_Find(u64 t) {
+    acr_tui::FViewSort *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.view_sort_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.view_sort_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.view_sort.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_tui::FViewSort* acr_tui::view_sort_Last() {
+    return view_sort_Find(u64(_db.view_sort_n-1));
+}
+
+// --- acr_tui.FDb.view_sort.N
+// Return number of items in the pool
+inline i32 acr_tui::view_sort_N() {
+    return _db.view_sort_n;
+}
+
+// --- acr_tui.FDb.view_sort.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_tui::FViewSort& acr_tui::view_sort_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.view_sort_lary[bsr][index];
+}
+
+// --- acr_tui.FDb.ind_view_sort.EmptyQ
+// Return true if hash is empty
+inline bool acr_tui::ind_view_sort_EmptyQ() {
+    return _db.ind_view_sort_n == 0;
+}
+
+// --- acr_tui.FDb.ind_view_sort.N
+// Return number of items in the hash
+inline i32 acr_tui::ind_view_sort_N() {
+    return _db.ind_view_sort_n;
+}
+
+// --- acr_tui.FDb.context_var.EmptyQ
+// Return true if index is empty
+inline bool acr_tui::context_var_EmptyQ() {
+    return _db.context_var_n == 0;
+}
+
+// --- acr_tui.FDb.context_var.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_tui::FContextVar* acr_tui::context_var_Find(u64 t) {
+    acr_tui::FContextVar *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.context_var_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.context_var_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.context_var.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_tui::FContextVar* acr_tui::context_var_Last() {
+    return context_var_Find(u64(_db.context_var_n-1));
+}
+
+// --- acr_tui.FDb.context_var.N
+// Return number of items in the pool
+inline i32 acr_tui::context_var_N() {
+    return _db.context_var_n;
+}
+
+// --- acr_tui.FDb.context_var.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_tui::FContextVar& acr_tui::context_var_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.context_var_lary[bsr][index];
+}
+
+// --- acr_tui.FDb.ind_context_var.EmptyQ
+// Return true if hash is empty
+inline bool acr_tui::ind_context_var_EmptyQ() {
+    return _db.ind_context_var_n == 0;
+}
+
+// --- acr_tui.FDb.ind_context_var.N
+// Return number of items in the hash
+inline i32 acr_tui::ind_context_var_N() {
+    return _db.ind_context_var_n;
+}
+
+// --- acr_tui.FDb.command.EmptyQ
+// Return true if index is empty
+inline bool acr_tui::command_EmptyQ() {
+    return _db.command_n == 0;
+}
+
+// --- acr_tui.FDb.command.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_tui::FCommand* acr_tui::command_Find(u64 t) {
+    acr_tui::FCommand *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.command_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.command_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.command.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_tui::FCommand* acr_tui::command_Last() {
+    return command_Find(u64(_db.command_n-1));
+}
+
+// --- acr_tui.FDb.command.N
+// Return number of items in the pool
+inline i32 acr_tui::command_N() {
+    return _db.command_n;
+}
+
+// --- acr_tui.FDb.command.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_tui::FCommand& acr_tui::command_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.command_lary[bsr][index];
+}
+
+// --- acr_tui.FDb.ind_command.EmptyQ
+// Return true if hash is empty
+inline bool acr_tui::ind_command_EmptyQ() {
+    return _db.ind_command_n == 0;
+}
+
+// --- acr_tui.FDb.ind_command.N
+// Return number of items in the hash
+inline i32 acr_tui::ind_command_N() {
+    return _db.ind_command_n;
+}
+
+// --- acr_tui.FDb.layout_cfg.EmptyQ
+// Return true if index is empty
+inline bool acr_tui::layout_cfg_EmptyQ() {
+    return _db.layout_cfg_n == 0;
+}
+
+// --- acr_tui.FDb.layout_cfg.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_tui::FLayoutCfg* acr_tui::layout_cfg_Find(u64 t) {
+    acr_tui::FLayoutCfg *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.layout_cfg_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.layout_cfg_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.layout_cfg.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_tui::FLayoutCfg* acr_tui::layout_cfg_Last() {
+    return layout_cfg_Find(u64(_db.layout_cfg_n-1));
+}
+
+// --- acr_tui.FDb.layout_cfg.N
+// Return number of items in the pool
+inline i32 acr_tui::layout_cfg_N() {
+    return _db.layout_cfg_n;
+}
+
+// --- acr_tui.FDb.layout_cfg.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_tui::FLayoutCfg& acr_tui::layout_cfg_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.layout_cfg_lary[bsr][index];
+}
+
+// --- acr_tui.FDb.ind_layout_cfg.EmptyQ
+// Return true if hash is empty
+inline bool acr_tui::ind_layout_cfg_EmptyQ() {
+    return _db.ind_layout_cfg_n == 0;
+}
+
+// --- acr_tui.FDb.ind_layout_cfg.N
+// Return number of items in the hash
+inline i32 acr_tui::ind_layout_cfg_N() {
+    return _db.ind_layout_cfg_n;
+}
+
+// --- acr_tui.FDb.style_slot.EmptyQ
+// Return true if index is empty
+inline bool acr_tui::style_slot_EmptyQ() {
+    return _db.style_slot_n == 0;
+}
+
+// --- acr_tui.FDb.style_slot.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_tui::FStyleSlot* acr_tui::style_slot_Find(u64 t) {
+    acr_tui::FStyleSlot *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.style_slot_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.style_slot_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.style_slot.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_tui::FStyleSlot* acr_tui::style_slot_Last() {
+    return style_slot_Find(u64(_db.style_slot_n-1));
+}
+
+// --- acr_tui.FDb.style_slot.N
+// Return number of items in the pool
+inline i32 acr_tui::style_slot_N() {
+    return _db.style_slot_n;
+}
+
+// --- acr_tui.FDb.style_slot.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_tui::FStyleSlot& acr_tui::style_slot_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.style_slot_lary[bsr][index];
+}
+
+// --- acr_tui.FDb.ind_style_slot.EmptyQ
+// Return true if hash is empty
+inline bool acr_tui::ind_style_slot_EmptyQ() {
+    return _db.ind_style_slot_n == 0;
+}
+
+// --- acr_tui.FDb.ind_style_slot.N
+// Return number of items in the hash
+inline i32 acr_tui::ind_style_slot_N() {
+    return _db.ind_style_slot_n;
+}
+
 // --- acr_tui.FDb.window_curs.Reset
 // cursor points to valid item
 inline void acr_tui::_db_window_curs_Reset(_db_window_curs &curs, acr_tui::FDb &parent) {
@@ -1311,6 +1831,231 @@ inline acr_tui::FFconst& acr_tui::_db_fconst_curs_Access(_db_fconst_curs &curs) 
     return fconst_qFind(u64(curs.index));
 }
 
+// --- acr_tui.FDb.view_curs.Reset
+// cursor points to valid item
+inline void acr_tui::_db_view_curs_Reset(_db_view_curs &curs, acr_tui::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_tui.FDb.view_curs.ValidQ
+// cursor points to valid item
+inline bool acr_tui::_db_view_curs_ValidQ(_db_view_curs &curs) {
+    return curs.index < _db.view_n;
+}
+
+// --- acr_tui.FDb.view_curs.Next
+// proceed to next item
+inline void acr_tui::_db_view_curs_Next(_db_view_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_tui.FDb.view_curs.Access
+// item access
+inline acr_tui::FView& acr_tui::_db_view_curs_Access(_db_view_curs &curs) {
+    return view_qFind(u64(curs.index));
+}
+
+// --- acr_tui.FDb.view_source_curs.Reset
+// cursor points to valid item
+inline void acr_tui::_db_view_source_curs_Reset(_db_view_source_curs &curs, acr_tui::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_tui.FDb.view_source_curs.ValidQ
+// cursor points to valid item
+inline bool acr_tui::_db_view_source_curs_ValidQ(_db_view_source_curs &curs) {
+    return curs.index < _db.view_source_n;
+}
+
+// --- acr_tui.FDb.view_source_curs.Next
+// proceed to next item
+inline void acr_tui::_db_view_source_curs_Next(_db_view_source_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_tui.FDb.view_source_curs.Access
+// item access
+inline acr_tui::FViewSource& acr_tui::_db_view_source_curs_Access(_db_view_source_curs &curs) {
+    return view_source_qFind(u64(curs.index));
+}
+
+// --- acr_tui.FDb.view_field_curs.Reset
+// cursor points to valid item
+inline void acr_tui::_db_view_field_curs_Reset(_db_view_field_curs &curs, acr_tui::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_tui.FDb.view_field_curs.ValidQ
+// cursor points to valid item
+inline bool acr_tui::_db_view_field_curs_ValidQ(_db_view_field_curs &curs) {
+    return curs.index < _db.view_field_n;
+}
+
+// --- acr_tui.FDb.view_field_curs.Next
+// proceed to next item
+inline void acr_tui::_db_view_field_curs_Next(_db_view_field_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_tui.FDb.view_field_curs.Access
+// item access
+inline acr_tui::FViewField& acr_tui::_db_view_field_curs_Access(_db_view_field_curs &curs) {
+    return view_field_qFind(u64(curs.index));
+}
+
+// --- acr_tui.FDb.view_filter_curs.Reset
+// cursor points to valid item
+inline void acr_tui::_db_view_filter_curs_Reset(_db_view_filter_curs &curs, acr_tui::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_tui.FDb.view_filter_curs.ValidQ
+// cursor points to valid item
+inline bool acr_tui::_db_view_filter_curs_ValidQ(_db_view_filter_curs &curs) {
+    return curs.index < _db.view_filter_n;
+}
+
+// --- acr_tui.FDb.view_filter_curs.Next
+// proceed to next item
+inline void acr_tui::_db_view_filter_curs_Next(_db_view_filter_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_tui.FDb.view_filter_curs.Access
+// item access
+inline acr_tui::FViewFilter& acr_tui::_db_view_filter_curs_Access(_db_view_filter_curs &curs) {
+    return view_filter_qFind(u64(curs.index));
+}
+
+// --- acr_tui.FDb.view_sort_curs.Reset
+// cursor points to valid item
+inline void acr_tui::_db_view_sort_curs_Reset(_db_view_sort_curs &curs, acr_tui::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_tui.FDb.view_sort_curs.ValidQ
+// cursor points to valid item
+inline bool acr_tui::_db_view_sort_curs_ValidQ(_db_view_sort_curs &curs) {
+    return curs.index < _db.view_sort_n;
+}
+
+// --- acr_tui.FDb.view_sort_curs.Next
+// proceed to next item
+inline void acr_tui::_db_view_sort_curs_Next(_db_view_sort_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_tui.FDb.view_sort_curs.Access
+// item access
+inline acr_tui::FViewSort& acr_tui::_db_view_sort_curs_Access(_db_view_sort_curs &curs) {
+    return view_sort_qFind(u64(curs.index));
+}
+
+// --- acr_tui.FDb.context_var_curs.Reset
+// cursor points to valid item
+inline void acr_tui::_db_context_var_curs_Reset(_db_context_var_curs &curs, acr_tui::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_tui.FDb.context_var_curs.ValidQ
+// cursor points to valid item
+inline bool acr_tui::_db_context_var_curs_ValidQ(_db_context_var_curs &curs) {
+    return curs.index < _db.context_var_n;
+}
+
+// --- acr_tui.FDb.context_var_curs.Next
+// proceed to next item
+inline void acr_tui::_db_context_var_curs_Next(_db_context_var_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_tui.FDb.context_var_curs.Access
+// item access
+inline acr_tui::FContextVar& acr_tui::_db_context_var_curs_Access(_db_context_var_curs &curs) {
+    return context_var_qFind(u64(curs.index));
+}
+
+// --- acr_tui.FDb.command_curs.Reset
+// cursor points to valid item
+inline void acr_tui::_db_command_curs_Reset(_db_command_curs &curs, acr_tui::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_tui.FDb.command_curs.ValidQ
+// cursor points to valid item
+inline bool acr_tui::_db_command_curs_ValidQ(_db_command_curs &curs) {
+    return curs.index < _db.command_n;
+}
+
+// --- acr_tui.FDb.command_curs.Next
+// proceed to next item
+inline void acr_tui::_db_command_curs_Next(_db_command_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_tui.FDb.command_curs.Access
+// item access
+inline acr_tui::FCommand& acr_tui::_db_command_curs_Access(_db_command_curs &curs) {
+    return command_qFind(u64(curs.index));
+}
+
+// --- acr_tui.FDb.layout_cfg_curs.Reset
+// cursor points to valid item
+inline void acr_tui::_db_layout_cfg_curs_Reset(_db_layout_cfg_curs &curs, acr_tui::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_tui.FDb.layout_cfg_curs.ValidQ
+// cursor points to valid item
+inline bool acr_tui::_db_layout_cfg_curs_ValidQ(_db_layout_cfg_curs &curs) {
+    return curs.index < _db.layout_cfg_n;
+}
+
+// --- acr_tui.FDb.layout_cfg_curs.Next
+// proceed to next item
+inline void acr_tui::_db_layout_cfg_curs_Next(_db_layout_cfg_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_tui.FDb.layout_cfg_curs.Access
+// item access
+inline acr_tui::FLayoutCfg& acr_tui::_db_layout_cfg_curs_Access(_db_layout_cfg_curs &curs) {
+    return layout_cfg_qFind(u64(curs.index));
+}
+
+// --- acr_tui.FDb.style_slot_curs.Reset
+// cursor points to valid item
+inline void acr_tui::_db_style_slot_curs_Reset(_db_style_slot_curs &curs, acr_tui::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_tui.FDb.style_slot_curs.ValidQ
+// cursor points to valid item
+inline bool acr_tui::_db_style_slot_curs_ValidQ(_db_style_slot_curs &curs) {
+    return curs.index < _db.style_slot_n;
+}
+
+// --- acr_tui.FDb.style_slot_curs.Next
+// proceed to next item
+inline void acr_tui::_db_style_slot_curs_Next(_db_style_slot_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_tui.FDb.style_slot_curs.Access
+// item access
+inline acr_tui::FStyleSlot& acr_tui::_db_style_slot_curs_Access(_db_style_slot_curs &curs) {
+    return style_slot_qFind(u64(curs.index));
+}
+
 // --- acr_tui.FFconst..Init
 // Set all fields to initial values.
 inline void acr_tui::FFconst_Init(acr_tui::FFconst& fconst) {
@@ -1382,6 +2127,16 @@ inline  acr_tui::FKeyMap::~FKeyMap() {
     acr_tui::FKeyMap_Uninit(*this);
 }
 
+// --- acr_tui.FLayoutCfg..Ctor
+inline  acr_tui::FLayoutCfg::FLayoutCfg() {
+    acr_tui::FLayoutCfg_Init(*this);
+}
+
+// --- acr_tui.FLayoutCfg..Dtor
+inline  acr_tui::FLayoutCfg::~FLayoutCfg() {
+    acr_tui::FLayoutCfg_Uninit(*this);
+}
+
 // --- acr_tui.FNs..Init
 // Set all fields to initial values.
 inline void acr_tui::FNs_Init(acr_tui::FNs& ns) {
@@ -1421,6 +2176,23 @@ inline  acr_tui::FStyle::~FStyle() {
     acr_tui::FStyle_Uninit(*this);
 }
 
+// --- acr_tui.FStyleSlot..Init
+// Set all fields to initial values.
+inline void acr_tui::FStyleSlot_Init(acr_tui::FStyleSlot& style_slot) {
+    style_slot.ind_style_slot_next = (acr_tui::FStyleSlot*)-1; // (acr_tui.FDb.ind_style_slot) not-in-hash
+    style_slot.ind_style_slot_hashval = 0; // stored hash value
+}
+
+// --- acr_tui.FStyleSlot..Ctor
+inline  acr_tui::FStyleSlot::FStyleSlot() {
+    acr_tui::FStyleSlot_Init(*this);
+}
+
+// --- acr_tui.FStyleSlot..Dtor
+inline  acr_tui::FStyleSlot::~FStyleSlot() {
+    acr_tui::FStyleSlot_Uninit(*this);
+}
+
 // --- acr_tui.FTableCfg..Init
 // Set all fields to initial values.
 inline void acr_tui::FTableCfg_Init(acr_tui::FTableCfg& table_cfg) {
@@ -1458,6 +2230,97 @@ inline  acr_tui::FTreeCfg::FTreeCfg() {
 // --- acr_tui.FTreeCfg..Dtor
 inline  acr_tui::FTreeCfg::~FTreeCfg() {
     acr_tui::FTreeCfg_Uninit(*this);
+}
+
+// --- acr_tui.FView..Init
+// Set all fields to initial values.
+inline void acr_tui::FView_Init(acr_tui::FView& view) {
+    view.ind_view_next = (acr_tui::FView*)-1; // (acr_tui.FDb.ind_view) not-in-hash
+    view.ind_view_hashval = 0; // stored hash value
+}
+
+// --- acr_tui.FView..Ctor
+inline  acr_tui::FView::FView() {
+    acr_tui::FView_Init(*this);
+}
+
+// --- acr_tui.FView..Dtor
+inline  acr_tui::FView::~FView() {
+    acr_tui::FView_Uninit(*this);
+}
+
+// --- acr_tui.FViewField..Init
+// Set all fields to initial values.
+inline void acr_tui::FViewField_Init(acr_tui::FViewField& view_field) {
+    view_field.ind_view_field_next = (acr_tui::FViewField*)-1; // (acr_tui.FDb.ind_view_field) not-in-hash
+    view_field.ind_view_field_hashval = 0; // stored hash value
+}
+
+// --- acr_tui.FViewField..Ctor
+inline  acr_tui::FViewField::FViewField() {
+    acr_tui::FViewField_Init(*this);
+}
+
+// --- acr_tui.FViewField..Dtor
+inline  acr_tui::FViewField::~FViewField() {
+    acr_tui::FViewField_Uninit(*this);
+}
+
+// --- acr_tui.FViewFilter..Init
+// Set all fields to initial values.
+inline void acr_tui::FViewFilter_Init(acr_tui::FViewFilter& view_filter) {
+    view_filter.source = algo::strptr("fixed");
+    view_filter.enabled = bool(true);
+    view_filter.priority = i32(0);
+    view_filter.ind_view_filter_next = (acr_tui::FViewFilter*)-1; // (acr_tui.FDb.ind_view_filter) not-in-hash
+    view_filter.ind_view_filter_hashval = 0; // stored hash value
+}
+
+// --- acr_tui.FViewFilter..Ctor
+inline  acr_tui::FViewFilter::FViewFilter() {
+    acr_tui::FViewFilter_Init(*this);
+}
+
+// --- acr_tui.FViewFilter..Dtor
+inline  acr_tui::FViewFilter::~FViewFilter() {
+    acr_tui::FViewFilter_Uninit(*this);
+}
+
+// --- acr_tui.FViewSort..Init
+// Set all fields to initial values.
+inline void acr_tui::FViewSort_Init(acr_tui::FViewSort& view_sort) {
+    view_sort.dir = algo::strptr("asc");
+    view_sort.priority = i32(0);
+    view_sort.ind_view_sort_next = (acr_tui::FViewSort*)-1; // (acr_tui.FDb.ind_view_sort) not-in-hash
+    view_sort.ind_view_sort_hashval = 0; // stored hash value
+}
+
+// --- acr_tui.FViewSort..Ctor
+inline  acr_tui::FViewSort::FViewSort() {
+    acr_tui::FViewSort_Init(*this);
+}
+
+// --- acr_tui.FViewSort..Dtor
+inline  acr_tui::FViewSort::~FViewSort() {
+    acr_tui::FViewSort_Uninit(*this);
+}
+
+// --- acr_tui.FViewSource..Init
+// Set all fields to initial values.
+inline void acr_tui::FViewSource_Init(acr_tui::FViewSource& view_source) {
+    view_source.join_kind = algo::strptr("base");
+    view_source.ind_view_source_next = (acr_tui::FViewSource*)-1; // (acr_tui.FDb.ind_view_source) not-in-hash
+    view_source.ind_view_source_hashval = 0; // stored hash value
+}
+
+// --- acr_tui.FViewSource..Ctor
+inline  acr_tui::FViewSource::FViewSource() {
+    acr_tui::FViewSource_Init(*this);
+}
+
+// --- acr_tui.FViewSource..Dtor
+inline  acr_tui::FViewSource::~FViewSource() {
+    acr_tui::FViewSource_Uninit(*this);
 }
 
 // --- acr_tui.FWidget..Ctor
