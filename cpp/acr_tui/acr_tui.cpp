@@ -216,6 +216,17 @@ static bool running = true;
 static algo::Smallstr50 current_path;  // active DataPath
 static algo::Smallstr50 all_paths[8];
 static int n_paths = 0;
+static bool choosing_branch = false;
+static algo::Smallstr50 active_step;  // which DataStep we're viewing data from
+
+// Collected branch choices at current level
+struct BranchChoice {
+    algo::Smallstr50 step_key;
+    algo::Smallstr100 source_ctype;
+    int item_count;
+};
+static BranchChoice g_branches[16];
+static int g_nbranches = 0;
 
 // ============================================================================
 // Get items at current DataStep level, filtered by parent
@@ -231,20 +242,75 @@ struct ViewItem {
 static ViewItem g_items[8192];
 static int g_nitems = 0;
 
+// Count records matching a step + parent key
+static int CountStepItems(acr_tui::FDataStep& step, algo::strptr parent_key) {
+    CTypeIndex* ct = FindCType(step.source_ctype);
+    if (!ct) return 0;
+    if (!ch_N(step.link_field) || !ch_N(parent_key)) return ct->count;
+    int n = 0;
+    for (GRec* rec = ct->head; rec; rec = rec->next) {
+        if (!ch_N(rec->pkey)) continue;
+        algo::strptr prefix = algo::Pathcomp(rec->pkey, step.link_field);
+        if (prefix == parent_key) n++;
+    }
+    return n;
+}
+
+// Collect branch choices at next level
+static void CollectBranches() {
+    g_nbranches = 0;
+    algo::strptr parent_key;
+    if (current_level > 0) parent_key = algo::strptr(breadcrumb[current_level - 1]);
+
+    ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+        if (ds.p_path == current_path && ds.level == current_level && g_nbranches < 16) {
+            BranchChoice& bc = g_branches[g_nbranches];
+            bc.step_key = ds.data_step;
+            bc.source_ctype = ds.source_ctype;
+            bc.item_count = CountStepItems(ds, parent_key);
+            g_nbranches++;
+        }
+    }ind_end;
+}
+
 static void RefreshItems() {
     g_nitems = 0;
 
-    // Find current DataStep matching current_path + level
+    if (choosing_branch) {
+        // Show branch choices as items
+        CollectBranches();
+        for (int i = 0; i < g_nbranches; i++) {
+            ViewItem& item = g_items[g_nitems];
+            item.label = g_branches[i].source_ctype;
+            algo::cstring detail;
+            detail << g_branches[i].item_count << " items";
+            item.detail = detail;
+            item.key = g_branches[i].step_key;
+            item.has_children = g_branches[i].item_count > 0;
+            g_nitems++;
+        }
+        return;
+    }
+
+    // Find the active DataStep
     acr_tui::FDataStep* step = NULL;
-    ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-        if (ds.p_path == current_path && ds.level == current_level) { step = &ds; break; }
-    }ind_end;
+    if (ch_N(active_step)) {
+        ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+            if (ds.data_step == active_step) { step = &ds; break; }
+        }ind_end;
+    }
+    if (!step) {
+        // Fallback: find first step at current level
+        ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+            if (ds.p_path == current_path && ds.level == current_level) { step = &ds; break; }
+        }ind_end;
+    }
     if (!step) return;
 
-    // Check if there's a next level in this path
-    bool has_next = false;
+    // Check if there are next-level steps (for has_children)
+    int next_count = 0;
     ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-        if (ds.p_path == current_path && ds.level == current_level + 1) { has_next = true; break; }
+        if (ds.p_path == current_path && ds.level == current_level + 1) next_count++;
     }ind_end;
 
     // Parent key for filtering
@@ -291,7 +357,7 @@ static void RefreshItems() {
 
         item.detail = TupleGetAttr(rec->tuple, detail_name);
         item.key = rec->pkey;
-        item.has_children = has_next;
+        item.has_children = next_count > 0;
         g_nitems++;
     }
 }
@@ -315,19 +381,66 @@ static void DispatchMsg(const UiMsg& msg) {
             break;
         }
         case MSG_ACTIVATE:
-            if (selected_row < g_nitems && g_items[selected_row].has_children) {
+            if (choosing_branch) {
+                // User selected a branch — use it and show data
+                if (selected_row < g_nitems) {
+                    active_step = g_items[selected_row].key;
+                    choosing_branch = false;
+                    selected_row = 0;
+                    scroll_offset = 0;
+                    RefreshItems();
+                }
+            } else if (selected_row < g_nitems && g_items[selected_row].has_children) {
                 breadcrumb[current_level] = algo::strptr(g_items[selected_row].key);
                 current_level++;
                 selected_row = 0;
                 scroll_offset = 0;
+                // Check how many branches at next level
+                int branch_count = 0;
+                ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+                    if (ds.p_path == current_path && ds.level == current_level) branch_count++;
+                }ind_end;
+                if (branch_count > 1) {
+                    // Show branch choice menu
+                    choosing_branch = true;
+                    active_step = algo::Smallstr50();
+                } else {
+                    // Single branch — use it directly
+                    choosing_branch = false;
+                    ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+                        if (ds.p_path == current_path && ds.level == current_level) {
+                            active_step = ds.data_step; break;
+                        }
+                    }ind_end;
+                }
                 RefreshItems();
             }
             break;
         case MSG_CANCEL:
-            if (current_level > 0) {
+            if (choosing_branch) {
+                // Go back from branch choice to parent level
+                choosing_branch = false;
                 current_level--;
                 selected_row = 0;
                 scroll_offset = 0;
+                RefreshItems();
+            } else if (current_level > 0) {
+                current_level--;
+                selected_row = 0;
+                scroll_offset = 0;
+                // Check if this level has branches
+                int branch_count = 0;
+                ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+                    if (ds.p_path == current_path && ds.level == current_level) branch_count++;
+                }ind_end;
+                choosing_branch = branch_count > 1;
+                if (!choosing_branch) {
+                    ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+                        if (ds.p_path == current_path && ds.level == current_level) {
+                            active_step = ds.data_step; break;
+                        }
+                    }ind_end;
+                }
                 RefreshItems();
             }
             break;
@@ -337,6 +450,12 @@ static void DispatchMsg(const UiMsg& msg) {
                 current_level = 0;
                 selected_row = 0;
                 scroll_offset = 0;
+                choosing_branch = false;
+                active_step = algo::Smallstr50();
+                // Set active_step to first step at level 0
+                ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+                    if (ds.p_path == current_path && ds.level == 0) { active_step = ds.data_step; break; }
+                }ind_end;
                 RefreshItems();
             }
             break;
@@ -423,13 +542,16 @@ static void Render() {
     for (int i = 0; i < current_level; i++) {
         crumb << " \xe2\x96\xb8 " << breadcrumb[i];
     }
-    // Show current step's source ctype
-    ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-        if (ds.level == current_level) {
-            crumb << " \xe2\x96\xb8 [" << ds.source_ctype << "]";
-            break;
-        }
-    }ind_end;
+    if (choosing_branch) {
+        crumb << " \xe2\x96\xb8 [choose relationship]";
+    } else if (ch_N(active_step)) {
+        ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+            if (ds.data_step == active_step) {
+                crumb << " \xe2\x96\xb8 [" << ds.source_ctype << "]";
+                break;
+            }
+        }ind_end;
+    }
     term_str("\x1b[33m");
     PutStr(1, 0, crumb, W);
     ResetColor();
