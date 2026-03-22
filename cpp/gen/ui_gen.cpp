@@ -92,6 +92,23 @@ const char *ui_Color_color_magenta   = "magenta";
 const char *ui_Color_color_cyan      = "cyan";
 const char *ui_Color_color_white     = "white";
 
+// compile-time string constants for ui.EventType.event_type
+const char *ui_EventType_event_type_activate   = "activate";
+const char *ui_EventType_event_type_select     = "select";
+const char *ui_EventType_event_type_deselect   = "deselect";
+const char *ui_EventType_event_type_submit     = "submit";
+const char *ui_EventType_event_type_cancel     = "cancel";
+
+const char *ui_EventType_event_type_change   = "change";
+const char *ui_EventType_event_type_focus    = "focus";
+const char *ui_EventType_event_type_blur     = "blur";
+const char *ui_EventType_event_type_expand   = "expand";
+
+const char *ui_EventType_event_type_collapse   = "collapse";
+
+const char *ui_EventType_event_type_click          = "click";
+const char *ui_EventType_event_type_double_click   = "double_click";
+
 // compile-time string constants for ui.FilterSource.filter_source
 const char *ui_FilterSource_filter_source_fixed     = "fixed";
 const char *ui_FilterSource_filter_source_context   = "context";
@@ -158,6 +175,7 @@ const char *ui_WidgetType_widget_type_menu          = "menu";
 const char *ui_WidgetType_widget_type_separator     = "separator";
 const char *ui_WidgetType_widget_type_progressbar   = "progressbar";
 const char *ui_WidgetType_widget_type_canvas        = "canvas";
+const char *ui_WidgetType_widget_type_button        = "button";
 
 namespace ui { // gen:ns_print_proto
     // func:ui...SizeCheck
@@ -1376,6 +1394,163 @@ void ui::DataStep_Print(ui::DataStep& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"link_field", temp);
 }
 
+// --- ui.EventType..ReadFieldMaybe
+bool ui::EventType_ReadFieldMaybe(ui::EventType& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_event_type: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.event_type, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.EventType..ReadStrptrMaybe
+// Read fields of ui::EventType from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::EventType_ReadStrptrMaybe(ui::EventType &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.event_type") || algo::StripTypeTag(in_str, "ui.EventType");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && EventType_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.EventType..Print
+// print string representation of ROW to string STR
+// cfmt:ui.EventType.String  printfmt:Tuple
+void ui::EventType_Print(ui::EventType& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.event_type";
+
+    algo::Smallstr50_Print(row.event_type, temp);
+    PrintAttrSpaceReset(str,"event_type", temp);
+}
+
+// --- ui.EventTypeCase.event_type.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* ui::event_type_ToCstr(const ui::EventTypeCase& parent) {
+    const char *ret = NULL;
+    switch(event_type_GetEnum(parent)) {
+        case ui_EventTypeCase_activate     : ret = "activate";  break;
+        case ui_EventTypeCase_select       : ret = "select";  break;
+        case ui_EventTypeCase_deselect     : ret = "deselect";  break;
+        case ui_EventTypeCase_submit       : ret = "submit";  break;
+        case ui_EventTypeCase_cancel       : ret = "cancel";  break;
+        case ui_EventTypeCase_change       : ret = "change";  break;
+        case ui_EventTypeCase_focus        : ret = "focus";  break;
+        case ui_EventTypeCase_blur         : ret = "blur";  break;
+        case ui_EventTypeCase_expand       : ret = "expand";  break;
+        case ui_EventTypeCase_collapse     : ret = "collapse";  break;
+        case ui_EventTypeCase_click        : ret = "click";  break;
+        case ui_EventTypeCase_double_click : ret = "double_click";  break;
+    }
+    return ret;
+}
+
+// --- ui.EventTypeCase.event_type.Print
+// Convert event_type to a string. First, attempt conversion to a known string.
+// If no string matches, print event_type as a numeric value.
+void ui::event_type_Print(const ui::EventTypeCase& parent, algo::cstring &lhs) {
+    const char *strval = event_type_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.event_type;
+    }
+}
+
+// --- ui.EventTypeCase.event_type.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool ui::event_type_SetStrptrMaybe(ui::EventTypeCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('b','l','u','r'): {
+                    event_type_SetEnum(parent,ui_EventTypeCase_blur); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('c','l','i','c','k'): {
+                    event_type_SetEnum(parent,ui_EventTypeCase_click); ret = true; break;
+                }
+                case LE_STR5('f','o','c','u','s'): {
+                    event_type_SetEnum(parent,ui_EventTypeCase_focus); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('c','a','n','c','e','l'): {
+                    event_type_SetEnum(parent,ui_EventTypeCase_cancel); ret = true; break;
+                }
+                case LE_STR6('c','h','a','n','g','e'): {
+                    event_type_SetEnum(parent,ui_EventTypeCase_change); ret = true; break;
+                }
+                case LE_STR6('e','x','p','a','n','d'): {
+                    event_type_SetEnum(parent,ui_EventTypeCase_expand); ret = true; break;
+                }
+                case LE_STR6('s','e','l','e','c','t'): {
+                    event_type_SetEnum(parent,ui_EventTypeCase_select); ret = true; break;
+                }
+                case LE_STR6('s','u','b','m','i','t'): {
+                    event_type_SetEnum(parent,ui_EventTypeCase_submit); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 8: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','t','i','v','a','t','e'): {
+                    event_type_SetEnum(parent,ui_EventTypeCase_activate); ret = true; break;
+                }
+                case LE_STR8('c','o','l','l','a','p','s','e'): {
+                    event_type_SetEnum(parent,ui_EventTypeCase_collapse); ret = true; break;
+                }
+                case LE_STR8('d','e','s','e','l','e','c','t'): {
+                    event_type_SetEnum(parent,ui_EventTypeCase_deselect); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 12: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','o','u','b','l','e','_','c'): {
+                    if (memcmp(rhs.elems+8,"lick",4)==0) { event_type_SetEnum(parent,ui_EventTypeCase_double_click); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- ui.EventTypeCase.event_type.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void ui::event_type_SetStrptr(ui::EventTypeCase& parent, algo::strptr rhs, ui_EventTypeCaseEnum dflt) {
+    if (!event_type_SetStrptrMaybe(parent,rhs)) event_type_SetEnum(parent,dflt);
+}
+
 // --- ui.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -1420,6 +1595,7 @@ const char* ui::value_ToCstr(const ui::FieldId& parent) {
         case ui_FieldId_label_field        : ret = "label_field";  break;
         case ui_FieldId_detail_field       : ret = "detail_field";  break;
         case ui_FieldId_link_field         : ret = "link_field";  break;
+        case ui_FieldId_event_type         : ret = "event_type";  break;
         case ui_FieldId_filter_source      : ret = "filter_source";  break;
         case ui_FieldId_input_cfg          : ret = "input_cfg";  break;
         case ui_FieldId_maxlen             : ret = "maxlen";  break;
@@ -1457,6 +1633,10 @@ const char* ui::value_ToCstr(const ui::FieldId& parent) {
         case ui_FieldId_show_lines         : ret = "show_lines";  break;
         case ui_FieldId_child_field        : ret = "child_field";  break;
         case ui_FieldId_expanded_default   : ret = "expanded_default";  break;
+        case ui_FieldId_trigger            : ret = "trigger";  break;
+        case ui_FieldId_event              : ret = "event";  break;
+        case ui_FieldId_msg_ctype          : ret = "msg_ctype";  break;
+        case ui_FieldId_arg_expr           : ret = "arg_expr";  break;
         case ui_FieldId_view               : ret = "view";  break;
         case ui_FieldId_base_ctype         : ret = "base_ctype";  break;
         case ui_FieldId_view_field         : ret = "view_field";  break;
@@ -1600,6 +1780,9 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('c','o','l','o','r'): {
                     value_SetEnum(parent,ui_FieldId_color); ret = true; break;
                 }
+                case LE_STR5('e','v','e','n','t'): {
+                    value_SetEnum(parent,ui_FieldId_event); ret = true; break;
+                }
                 case LE_STR5('f','i','e','l','d'): {
                     value_SetEnum(parent,ui_FieldId_field); ret = true; break;
                 }
@@ -1709,6 +1892,9 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('p','a','d','d','i','n','g'): {
                     value_SetEnum(parent,ui_FieldId_padding); ret = true; break;
                 }
+                case LE_STR7('t','r','i','g','g','e','r'): {
+                    value_SetEnum(parent,ui_FieldId_trigger); ret = true; break;
+                }
                 case LE_STR7('v','i','s','i','b','l','e'): {
                     value_SetEnum(parent,ui_FieldId_visible); ret = true; break;
                 }
@@ -1717,6 +1903,9 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
         }
         case 8: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','r','g','_','e','x','p','r'): {
+                    value_SetEnum(parent,ui_FieldId_arg_expr); ret = true; break;
+                }
                 case LE_STR8('d','a','t','a','t','y','p','e'): {
                     value_SetEnum(parent,ui_FieldId_datatype); ret = true; break;
                 }
@@ -1773,6 +1962,10 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"d",1)==0) { value_SetEnum(parent,ui_FieldId_join_kind); ret = true; break; }
                     break;
                 }
+                case LE_STR8('m','s','g','_','c','t','y','p'): {
+                    if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,ui_FieldId_msg_ctype); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('p','_','c','o','m','m','a','n'): {
                     if (memcmp(rhs.elems+8,"d",1)==0) { value_SetEnum(parent,ui_FieldId_p_command); ret = true; break; }
                     break;
@@ -1800,6 +1993,10 @@ bool ui::value_SetStrptrMaybe(ui::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('b','a','s','e','_','c','t','y'): {
                     if (memcmp(rhs.elems+8,"pe",2)==0) { value_SetEnum(parent,ui_FieldId_base_ctype); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('e','v','e','n','t','_','t','y'): {
+                    if (memcmp(rhs.elems+8,"pe",2)==0) { value_SetEnum(parent,ui_FieldId_event_type); ret = true; break; }
                     break;
                 }
                 case LE_STR8('l','a','y','o','u','t','_','c'): {
@@ -3189,6 +3386,79 @@ void ui::TreeCfg_Print(ui::TreeCfg& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"p_data_path", temp);
 }
 
+// --- ui.Trigger..ReadFieldMaybe
+bool ui::Trigger_ReadFieldMaybe(ui::Trigger& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ui::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ui_FieldId_trigger: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.trigger, strval);
+        } break;
+        case ui_FieldId_p_widget: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_widget, strval);
+        } break;
+        case ui_FieldId_event: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.event, strval);
+        } break;
+        case ui_FieldId_p_command: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.p_command, strval);
+        } break;
+        case ui_FieldId_msg_ctype: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.msg_ctype, strval);
+        } break;
+        case ui_FieldId_arg_expr: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.arg_expr, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ui.Trigger..ReadStrptrMaybe
+// Read fields of ui::Trigger from an ascii string.
+// The format of the string is an ssim Tuple
+bool ui::Trigger_ReadStrptrMaybe(ui::Trigger &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ui.trigger") || algo::StripTypeTag(in_str, "ui.Trigger");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Trigger_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ui.Trigger..Print
+// print string representation of ROW to string STR
+// cfmt:ui.Trigger.String  printfmt:Tuple
+void ui::Trigger_Print(ui::Trigger& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ui.trigger";
+
+    algo::Smallstr50_Print(row.trigger, temp);
+    PrintAttrSpaceReset(str,"trigger", temp);
+
+    algo::Smallstr50_Print(row.p_widget, temp);
+    PrintAttrSpaceReset(str,"p_widget", temp);
+
+    algo::Smallstr50_Print(row.event, temp);
+    PrintAttrSpaceReset(str,"event", temp);
+
+    algo::Smallstr50_Print(row.p_command, temp);
+    PrintAttrSpaceReset(str,"p_command", temp);
+
+    algo::Smallstr100_Print(row.msg_ctype, temp);
+    PrintAttrSpaceReset(str,"msg_ctype", temp);
+
+    algo::Smallstr200_Print(row.arg_expr, temp);
+    PrintAttrSpaceReset(str,"arg_expr", temp);
+}
+
 // --- ui.VAlign..ReadFieldMaybe
 bool ui::VAlign_ReadFieldMaybe(ui::VAlign& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -3974,6 +4244,7 @@ const char* ui::widget_type_ToCstr(const ui::WidgetTypeCase& parent) {
         case ui_WidgetTypeCase_separator   : ret = "separator";  break;
         case ui_WidgetTypeCase_progressbar : ret = "progressbar";  break;
         case ui_WidgetTypeCase_canvas      : ret = "canvas";  break;
+        case ui_WidgetTypeCase_button      : ret = "button";  break;
     }
     return ret;
 }
@@ -4033,6 +4304,9 @@ bool ui::widget_type_SetStrptrMaybe(ui::WidgetTypeCase& parent, algo::strptr rhs
         }
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('b','u','t','t','o','n'): {
+                    widget_type_SetEnum(parent,ui_WidgetTypeCase_button); ret = true; break;
+                }
                 case LE_STR6('c','a','n','v','a','s'): {
                     widget_type_SetEnum(parent,ui_WidgetTypeCase_canvas); ret = true; break;
                 }

@@ -77,6 +77,7 @@ dmmeta.thash  field:acr_tui.FDb.ind_style  hashfld:ui.Style.style  unique:Y  com
 dmmeta.thash  field:acr_tui.FDb.ind_style_slot  hashfld:ui.StyleSlot.style_slot  unique:Y  comment:""
 dmmeta.thash  field:acr_tui.FDb.ind_table_cfg  hashfld:ui.TableCfg.table_cfg  unique:Y  comment:""
 dmmeta.thash  field:acr_tui.FDb.ind_tree_cfg  hashfld:ui.TreeCfg.tree_cfg  unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_trigger  hashfld:ui.Trigger.trigger  unique:Y  comment:""
 dmmeta.thash  field:acr_tui.FDb.ind_view  hashfld:ui.View.view  unique:Y  comment:""
 dmmeta.thash  field:acr_tui.FDb.ind_view_field  hashfld:ui.ViewField.view_field  unique:Y  comment:""
 dmmeta.thash  field:acr_tui.FDb.ind_view_filter  hashfld:ui.ViewFilter.view_filter  unique:Y  comment:""

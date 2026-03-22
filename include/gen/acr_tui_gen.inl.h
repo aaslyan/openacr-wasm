@@ -1456,6 +1456,60 @@ inline i32 acr_tui::ind_style_slot_N() {
     return _db.ind_style_slot_n;
 }
 
+// --- acr_tui.FDb.trigger.EmptyQ
+// Return true if index is empty
+inline bool acr_tui::trigger_EmptyQ() {
+    return _db.trigger_n == 0;
+}
+
+// --- acr_tui.FDb.trigger.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_tui::FTrigger* acr_tui::trigger_Find(u64 t) {
+    acr_tui::FTrigger *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.trigger_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.trigger_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.trigger.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_tui::FTrigger* acr_tui::trigger_Last() {
+    return trigger_Find(u64(_db.trigger_n-1));
+}
+
+// --- acr_tui.FDb.trigger.N
+// Return number of items in the pool
+inline i32 acr_tui::trigger_N() {
+    return _db.trigger_n;
+}
+
+// --- acr_tui.FDb.trigger.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_tui::FTrigger& acr_tui::trigger_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.trigger_lary[bsr][index];
+}
+
+// --- acr_tui.FDb.ind_trigger.EmptyQ
+// Return true if hash is empty
+inline bool acr_tui::ind_trigger_EmptyQ() {
+    return _db.ind_trigger_n == 0;
+}
+
+// --- acr_tui.FDb.ind_trigger.N
+// Return number of items in the hash
+inline i32 acr_tui::ind_trigger_N() {
+    return _db.ind_trigger_n;
+}
+
 // --- acr_tui.FDb.window_curs.Reset
 // cursor points to valid item
 inline void acr_tui::_db_window_curs_Reset(_db_window_curs &curs, acr_tui::FDb &parent) {
@@ -2056,6 +2110,31 @@ inline acr_tui::FStyleSlot& acr_tui::_db_style_slot_curs_Access(_db_style_slot_c
     return style_slot_qFind(u64(curs.index));
 }
 
+// --- acr_tui.FDb.trigger_curs.Reset
+// cursor points to valid item
+inline void acr_tui::_db_trigger_curs_Reset(_db_trigger_curs &curs, acr_tui::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_tui.FDb.trigger_curs.ValidQ
+// cursor points to valid item
+inline bool acr_tui::_db_trigger_curs_ValidQ(_db_trigger_curs &curs) {
+    return curs.index < _db.trigger_n;
+}
+
+// --- acr_tui.FDb.trigger_curs.Next
+// proceed to next item
+inline void acr_tui::_db_trigger_curs_Next(_db_trigger_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_tui.FDb.trigger_curs.Access
+// item access
+inline acr_tui::FTrigger& acr_tui::_db_trigger_curs_Access(_db_trigger_curs &curs) {
+    return trigger_qFind(u64(curs.index));
+}
+
 // --- acr_tui.FFconst..Init
 // Set all fields to initial values.
 inline void acr_tui::FFconst_Init(acr_tui::FFconst& fconst) {
@@ -2230,6 +2309,23 @@ inline  acr_tui::FTreeCfg::FTreeCfg() {
 // --- acr_tui.FTreeCfg..Dtor
 inline  acr_tui::FTreeCfg::~FTreeCfg() {
     acr_tui::FTreeCfg_Uninit(*this);
+}
+
+// --- acr_tui.FTrigger..Init
+// Set all fields to initial values.
+inline void acr_tui::FTrigger_Init(acr_tui::FTrigger& trigger) {
+    trigger.ind_trigger_next = (acr_tui::FTrigger*)-1; // (acr_tui.FDb.ind_trigger) not-in-hash
+    trigger.ind_trigger_hashval = 0; // stored hash value
+}
+
+// --- acr_tui.FTrigger..Ctor
+inline  acr_tui::FTrigger::FTrigger() {
+    acr_tui::FTrigger_Init(*this);
+}
+
+// --- acr_tui.FTrigger..Dtor
+inline  acr_tui::FTrigger::~FTrigger() {
+    acr_tui::FTrigger_Uninit(*this);
 }
 
 // --- acr_tui.FView..Init

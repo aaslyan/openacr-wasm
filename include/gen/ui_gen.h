@@ -168,6 +168,38 @@ enum ui_ColorCaseEnum {          // ui.ColorCase.color
 
 enum { ui_ColorCaseEnum_N = 9 };
 
+extern const char *  ui_EventType_event_type_activate;       // activate        fconst:ui.EventType.event_type/activate
+extern const char *  ui_EventType_event_type_select;         // select          fconst:ui.EventType.event_type/select
+extern const char *  ui_EventType_event_type_deselect;       // deselect        fconst:ui.EventType.event_type/deselect
+extern const char *  ui_EventType_event_type_submit;         // submit          fconst:ui.EventType.event_type/submit
+extern const char *  ui_EventType_event_type_cancel;         // cancel          fconst:ui.EventType.event_type/cancel
+extern const char *  ui_EventType_event_type_change;         // change          fconst:ui.EventType.event_type/change
+extern const char *  ui_EventType_event_type_focus;          // focus           fconst:ui.EventType.event_type/focus
+extern const char *  ui_EventType_event_type_blur;           // blur            fconst:ui.EventType.event_type/blur
+extern const char *  ui_EventType_event_type_expand;         // expand          fconst:ui.EventType.event_type/expand
+extern const char *  ui_EventType_event_type_collapse;       // collapse        fconst:ui.EventType.event_type/collapse
+extern const char *  ui_EventType_event_type_click;          // click           fconst:ui.EventType.event_type/click
+extern const char *  ui_EventType_event_type_double_click;   // double_click    fconst:ui.EventType.event_type/double_click
+
+// --- ui_EventTypeCaseEnum
+
+enum ui_EventTypeCaseEnum {                // ui.EventTypeCase.event_type
+     ui_EventTypeCase_activate       = 1
+    ,ui_EventTypeCase_select         = 2
+    ,ui_EventTypeCase_deselect       = 3
+    ,ui_EventTypeCase_submit         = 4
+    ,ui_EventTypeCase_cancel         = 5
+    ,ui_EventTypeCase_change         = 6
+    ,ui_EventTypeCase_focus          = 7
+    ,ui_EventTypeCase_blur           = 8
+    ,ui_EventTypeCase_expand         = 9
+    ,ui_EventTypeCase_collapse       = 10
+    ,ui_EventTypeCase_click          = 11
+    ,ui_EventTypeCase_double_click   = 12
+};
+
+enum { ui_EventTypeCaseEnum_N = 12 };
+
 
 // --- ui_FieldIdEnum
 
@@ -210,75 +242,80 @@ enum ui_FieldIdEnum {                     // ui.FieldId.value
     ,ui_FieldId_label_field        = 35
     ,ui_FieldId_detail_field       = 36
     ,ui_FieldId_link_field         = 37
-    ,ui_FieldId_filter_source      = 38
-    ,ui_FieldId_input_cfg          = 39
-    ,ui_FieldId_maxlen             = 40
-    ,ui_FieldId_join_kind          = 41
-    ,ui_FieldId_key_map            = 42
-    ,ui_FieldId_key                = 43
-    ,ui_FieldId_p_command          = 44
-    ,ui_FieldId_layout_cfg         = 45
-    ,ui_FieldId_min_w              = 46
-    ,ui_FieldId_min_h              = 47
-    ,ui_FieldId_max_w              = 48
-    ,ui_FieldId_max_h              = 49
-    ,ui_FieldId_flex               = 50
-    ,ui_FieldId_padding            = 51
-    ,ui_FieldId_gap                = 52
-    ,ui_FieldId_halign             = 53
-    ,ui_FieldId_valign             = 54
-    ,ui_FieldId_layout_type        = 55
-    ,ui_FieldId_selection_mode     = 56
-    ,ui_FieldId_sort_dir           = 57
-    ,ui_FieldId_style              = 58
-    ,ui_FieldId_fg                 = 59
-    ,ui_FieldId_bg                 = 60
-    ,ui_FieldId_bold               = 61
-    ,ui_FieldId_underline          = 62
-    ,ui_FieldId_border             = 63
-    ,ui_FieldId_style_slot         = 64
-    ,ui_FieldId_state              = 65
-    ,ui_FieldId_p_style            = 66
-    ,ui_FieldId_table_cfg          = 67
-    ,ui_FieldId_selectable         = 68
-    ,ui_FieldId_header             = 69
-    ,ui_FieldId_tree_cfg           = 70
-    ,ui_FieldId_indent             = 71
-    ,ui_FieldId_show_lines         = 72
-    ,ui_FieldId_child_field        = 73
-    ,ui_FieldId_expanded_default   = 74
-    ,ui_FieldId_view               = 75
-    ,ui_FieldId_base_ctype         = 76
-    ,ui_FieldId_view_field         = 77
-    ,ui_FieldId_view_filter        = 78
-    ,ui_FieldId_source             = 79
-    ,ui_FieldId_enabled            = 80
-    ,ui_FieldId_priority           = 81
-    ,ui_FieldId_view_sort          = 82
-    ,ui_FieldId_view_source        = 83
-    ,ui_FieldId_alias              = 84
-    ,ui_FieldId_join_expr          = 85
-    ,ui_FieldId_widget             = 86
-    ,ui_FieldId_p_parent           = 87
-    ,ui_FieldId_type               = 88
-    ,ui_FieldId_layout             = 89
-    ,ui_FieldId_row                = 90
-    ,ui_FieldId_col                = 91
-    ,ui_FieldId_h                  = 92
-    ,ui_FieldId_zorder             = 93
-    ,ui_FieldId_visible            = 94
-    ,ui_FieldId_selection          = 95
-    ,ui_FieldId_text               = 96
-    ,ui_FieldId_focusable          = 97
-    ,ui_FieldId_widget_state       = 98
-    ,ui_FieldId_widget_type        = 99
-    ,ui_FieldId_window             = 100
-    ,ui_FieldId_rows               = 101
-    ,ui_FieldId_cols               = 102
-    ,ui_FieldId_value              = 103
+    ,ui_FieldId_event_type         = 38
+    ,ui_FieldId_filter_source      = 39
+    ,ui_FieldId_input_cfg          = 40
+    ,ui_FieldId_maxlen             = 41
+    ,ui_FieldId_join_kind          = 42
+    ,ui_FieldId_key_map            = 43
+    ,ui_FieldId_key                = 44
+    ,ui_FieldId_p_command          = 45
+    ,ui_FieldId_layout_cfg         = 46
+    ,ui_FieldId_min_w              = 47
+    ,ui_FieldId_min_h              = 48
+    ,ui_FieldId_max_w              = 49
+    ,ui_FieldId_max_h              = 50
+    ,ui_FieldId_flex               = 51
+    ,ui_FieldId_padding            = 52
+    ,ui_FieldId_gap                = 53
+    ,ui_FieldId_halign             = 54
+    ,ui_FieldId_valign             = 55
+    ,ui_FieldId_layout_type        = 56
+    ,ui_FieldId_selection_mode     = 57
+    ,ui_FieldId_sort_dir           = 58
+    ,ui_FieldId_style              = 59
+    ,ui_FieldId_fg                 = 60
+    ,ui_FieldId_bg                 = 61
+    ,ui_FieldId_bold               = 62
+    ,ui_FieldId_underline          = 63
+    ,ui_FieldId_border             = 64
+    ,ui_FieldId_style_slot         = 65
+    ,ui_FieldId_state              = 66
+    ,ui_FieldId_p_style            = 67
+    ,ui_FieldId_table_cfg          = 68
+    ,ui_FieldId_selectable         = 69
+    ,ui_FieldId_header             = 70
+    ,ui_FieldId_tree_cfg           = 71
+    ,ui_FieldId_indent             = 72
+    ,ui_FieldId_show_lines         = 73
+    ,ui_FieldId_child_field        = 74
+    ,ui_FieldId_expanded_default   = 75
+    ,ui_FieldId_trigger            = 76
+    ,ui_FieldId_event              = 77
+    ,ui_FieldId_msg_ctype          = 78
+    ,ui_FieldId_arg_expr           = 79
+    ,ui_FieldId_view               = 80
+    ,ui_FieldId_base_ctype         = 81
+    ,ui_FieldId_view_field         = 82
+    ,ui_FieldId_view_filter        = 83
+    ,ui_FieldId_source             = 84
+    ,ui_FieldId_enabled            = 85
+    ,ui_FieldId_priority           = 86
+    ,ui_FieldId_view_sort          = 87
+    ,ui_FieldId_view_source        = 88
+    ,ui_FieldId_alias              = 89
+    ,ui_FieldId_join_expr          = 90
+    ,ui_FieldId_widget             = 91
+    ,ui_FieldId_p_parent           = 92
+    ,ui_FieldId_type               = 93
+    ,ui_FieldId_layout             = 94
+    ,ui_FieldId_row                = 95
+    ,ui_FieldId_col                = 96
+    ,ui_FieldId_h                  = 97
+    ,ui_FieldId_zorder             = 98
+    ,ui_FieldId_visible            = 99
+    ,ui_FieldId_selection          = 100
+    ,ui_FieldId_text               = 101
+    ,ui_FieldId_focusable          = 102
+    ,ui_FieldId_widget_state       = 103
+    ,ui_FieldId_widget_type        = 104
+    ,ui_FieldId_window             = 105
+    ,ui_FieldId_rows               = 106
+    ,ui_FieldId_cols               = 107
+    ,ui_FieldId_value              = 108
 };
 
-enum { ui_FieldIdEnum_N = 104 };
+enum { ui_FieldIdEnum_N = 109 };
 
 extern const char *  ui_FilterSource_filter_source_fixed;     // fixed      fconst:ui.FilterSource.filter_source/fixed
 extern const char *  ui_FilterSource_filter_source_context;   // context    fconst:ui.FilterSource.filter_source/context
@@ -426,6 +463,7 @@ extern const char *  ui_WidgetType_widget_type_menu;          // menu           
 extern const char *  ui_WidgetType_widget_type_separator;     // separator      fconst:ui.WidgetType.widget_type/separator
 extern const char *  ui_WidgetType_widget_type_progressbar;   // progressbar    fconst:ui.WidgetType.widget_type/progressbar
 extern const char *  ui_WidgetType_widget_type_canvas;        // canvas         fconst:ui.WidgetType.widget_type/canvas
+extern const char *  ui_WidgetType_widget_type_button;        // button         fconst:ui.WidgetType.widget_type/button
 
 // --- ui_WidgetTypeCaseEnum
 
@@ -442,9 +480,10 @@ enum ui_WidgetTypeCaseEnum {               // ui.WidgetTypeCase.widget_type
     ,ui_WidgetTypeCase_separator     = 10
     ,ui_WidgetTypeCase_progressbar   = 11
     ,ui_WidgetTypeCase_canvas        = 12
+    ,ui_WidgetTypeCase_button        = 13
 };
 
-enum { ui_WidgetTypeCaseEnum_N = 12 };
+enum { ui_WidgetTypeCaseEnum_N = 13 };
 
 namespace ui { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 ActionTypePkey;
@@ -458,6 +497,7 @@ namespace ui { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 ContextVarPkey;
     typedef algo::Smallstr50 DataPathPkey;
     typedef algo::Smallstr50 DataStepPkey;
+    typedef algo::Smallstr50 EventTypePkey;
     typedef algo::Smallstr50 FilterSourcePkey;
     typedef algo::Smallstr50 HAlignPkey;
     typedef algo::Smallstr50 InputCfgPkey;
@@ -471,6 +511,7 @@ namespace ui { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 StyleSlotPkey;
     typedef algo::Smallstr50 TableCfgPkey;
     typedef algo::Smallstr50 TreeCfgPkey;
+    typedef algo::Smallstr50 TriggerPkey;
     typedef algo::Smallstr50 VAlignPkey;
     typedef algo::Smallstr50 ViewPkey;
     typedef algo::Smallstr50 ViewFieldPkey;
@@ -501,6 +542,8 @@ namespace ui { struct Command; }
 namespace ui { struct ContextVar; }
 namespace ui { struct DataPath; }
 namespace ui { struct DataStep; }
+namespace ui { struct EventType; }
+namespace ui { struct EventTypeCase; }
 namespace ui { struct FieldId; }
 namespace ui { struct FilterSource; }
 namespace ui { struct FilterSourceCase; }
@@ -521,6 +564,7 @@ namespace ui { struct Style; }
 namespace ui { struct StyleSlot; }
 namespace ui { struct TableCfg; }
 namespace ui { struct TreeCfg; }
+namespace ui { struct Trigger; }
 namespace ui { struct VAlign; }
 namespace ui { struct VAlignCase; }
 namespace ui { struct View; }
@@ -601,13 +645,13 @@ inline void          ActionTypeCase_Init(ui::ActionTypeCase& parent);
 struct Binding { // ui.Binding: Connects widget to data source
     algo::Smallstr50    binding;        //
     algo::Smallstr50    p_widget;       // Widget this binding applies to
-    algo::Smallstr100   source_ctype;   // Source ctype (e.g. samp_mdb.User)
-    algo::Smallstr100   source_field;   // Source field (e.g. zd_user, ind_user)
-    algo::Smallstr50    kind;           //   "collection"  Binding type
-    algo::Smallstr50    dir;            //   "read"  Binding direction
-    algo::Smallstr50    p_data_path;    // DataPath for traversal (empty for direct binding)
-    algo::Smallstr50    p_view;         // View for derived data binding (empty for direct binding)
-    algo::Smallstr200   expr;           // Expression for computed value binding
+    algo::Smallstr100   source_ctype;   // Direct source: ctype name (e.g. dmmeta.Ns)
+    algo::Smallstr100   source_field;   // Direct source: field or llist name (e.g. zd_user)
+    algo::Smallstr50    kind;           //   "collection"  Binding type: value, collection, tree, command, property
+    algo::Smallstr50    dir;            //   "read"  Direction: read, write, readwrite
+    algo::Smallstr50    p_data_path;    // Path source: DataPath for structural traversal
+    algo::Smallstr50    p_view;         // View source: derived dataset
+    algo::Smallstr200   expr;           // Expression source: computed value
     // func:ui.Binding..Ctor
     inline               Binding() __attribute__((nothrow));
 };
@@ -874,7 +918,7 @@ inline void          ColorCase_Init(ui::ColorCase& parent);
 struct Column { // ui.Column: Table column definition
     algo::Smallstr50   column;     //
     algo::Smallstr50   p_widget;   // Parent table widget
-    algo::Smallstr50   field;      // Field name to display
+    algo::Smallstr50   field;      // Field name: ViewField.field when bound to View, raw source field when bound directly
     algo::Smallstr50   title;      // Column header title
     i32                w;          //   10  Column width
     bool               sortable;   //   false  Column is sortable
@@ -966,11 +1010,11 @@ void                 DataPath_Print(ui::DataPath& row, algo::cstring& str) __att
 struct DataStep { // ui.DataStep: One level in a data navigation path
     algo::Smallstr50    data_step;      //
     algo::Smallstr50    p_path;         // Parent data path
-    i32                 level;          //   0  Depth level (0=root)
-    algo::Smallstr100   source_ctype;   // Ctype to display at this level
-    algo::Smallstr50    label_field;    // Field to show as label
-    algo::Smallstr50    detail_field;   // Field to show as detail/description
-    algo::Smallstr50    link_field;     // Pathcomp to match parent key (e.g. ctype.LL for namespace prefix)
+    i32                 level;          //   0  Navigation depth (0=root)
+    algo::Smallstr100   source_ctype;   // Ctype to display at this level (ssimfile tag, e.g. dmmeta.ns)
+    algo::Smallstr50    label_field;    // Tuple attribute to display as label
+    algo::Smallstr50    detail_field;   // Tuple attribute to display as detail text
+    algo::Smallstr50    link_field;     // Pathcomp expression for parent-child filtering (see doc/link-field-syntax.md)
     // func:ui.DataStep..Ctor
     inline               DataStep() __attribute__((nothrow));
 };
@@ -988,6 +1032,67 @@ inline void          DataStep_Init(ui::DataStep& parent);
 // cfmt:ui.DataStep.String  printfmt:Tuple
 // func:ui.DataStep..Print
 void                 DataStep_Print(ui::DataStep& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.EventType
+struct EventType { // ui.EventType: Widget event that can trigger a message
+    algo::Smallstr50   event_type;   //
+    // func:ui.EventType..Ctor
+    inline               EventType() __attribute__((nothrow));
+};
+
+// func:ui.EventType..ReadFieldMaybe
+bool                 EventType_ReadFieldMaybe(ui::EventType& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::EventType from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.EventType..ReadStrptrMaybe
+bool                 EventType_ReadStrptrMaybe(ui::EventType &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ui.EventType.String  printfmt:Tuple
+// func:ui.EventType..Print
+void                 EventType_Print(ui::EventType& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.EventTypeCase
+#pragma pack(push,1)
+struct EventTypeCase { // ui.EventTypeCase: enum helper Widget event that can trigger a message
+    u8   event_type;   //   0
+    // func:ui.EventTypeCase.event_type.Cast
+    inline               operator ui_EventTypeCaseEnum() const __attribute__((nothrow));
+    // func:ui.EventTypeCase..Ctor
+    inline               EventTypeCase() __attribute__((nothrow));
+    // func:ui.EventTypeCase..FieldwiseCtor
+    explicit inline               EventTypeCase(u8 in_event_type) __attribute__((nothrow));
+    // func:ui.EventTypeCase..EnumCtor
+    inline               EventTypeCase(ui_EventTypeCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+// func:ui.EventTypeCase.event_type.GetEnum
+inline ui_EventTypeCaseEnum event_type_GetEnum(const ui::EventTypeCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:ui.EventTypeCase.event_type.SetEnum
+inline void          event_type_SetEnum(ui::EventTypeCase& parent, ui_EventTypeCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:ui.EventTypeCase.event_type.ToCstr
+const char*          event_type_ToCstr(const ui::EventTypeCase& parent) __attribute__((nothrow));
+// Convert event_type to a string. First, attempt conversion to a known string.
+// If no string matches, print event_type as a numeric value.
+// func:ui.EventTypeCase.event_type.Print
+void                 event_type_Print(const ui::EventTypeCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:ui.EventTypeCase.event_type.SetStrptrMaybe
+bool                 event_type_SetStrptrMaybe(ui::EventTypeCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:ui.EventTypeCase.event_type.SetStrptr
+void                 event_type_SetStrptr(ui::EventTypeCase& parent, algo::strptr rhs, ui_EventTypeCaseEnum dflt) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:ui.EventTypeCase..Init
+inline void          EventTypeCase_Init(ui::EventTypeCase& parent);
 
 // --- ui.FieldId
 #pragma pack(push,1)
@@ -1558,15 +1663,15 @@ inline void          TableCfg_Init(ui::TableCfg& parent);
 void                 TableCfg_Print(ui::TableCfg& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ui.TreeCfg
-struct TreeCfg { // ui.TreeCfg: Tree widget configuration (simple mode via child_field)
+struct TreeCfg { // ui.TreeCfg: Tree widget config: child_field for simple hierarchy, p_data_path for generalized traversal (p_data_path wins if both set)
     algo::Smallstr50    tree_cfg;           //
     algo::Smallstr50    p_widget;           // Tree widget
     i32                 indent;             //   2  Indentation per level
     bool                show_lines;         //   true  Draw tree connection lines
-    algo::Smallstr100   child_field;        // Field that provides children (e.g. Project.zd_task)
+    algo::Smallstr100   child_field;        // Simple hierarchy: field on parent ctype that lists children (e.g. Project.zd_task)
     algo::Smallstr50    label_field;        // Field to display as node label
     bool                expanded_default;   //   false  Nodes expanded by default
-    algo::Smallstr50    p_data_path;        // Generalized traversal mode (takes precedence over child_field)
+    algo::Smallstr50    p_data_path;        // Generalized traversal: DataPath with multi-level DataSteps (takes precedence over child_field)
     // func:ui.TreeCfg..Ctor
     inline               TreeCfg() __attribute__((nothrow));
 };
@@ -1584,6 +1689,29 @@ inline void          TreeCfg_Init(ui::TreeCfg& parent);
 // cfmt:ui.TreeCfg.String  printfmt:Tuple
 // func:ui.TreeCfg..Print
 void                 TreeCfg_Print(ui::TreeCfg& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- ui.Trigger
+struct Trigger { // ui.Trigger: Maps widget event to emitted message or command
+    algo::Smallstr50    trigger;     //
+    algo::Smallstr50    p_widget;    // Widget that emits this event
+    algo::Smallstr50    event;       // Widget event (activate, select, submit, etc.)
+    algo::Smallstr50    p_command;   // Command to invoke (empty = emit generic message)
+    algo::Smallstr100   msg_ctype;   // Message ctype to emit (e.g. uimsg.SelectMsg). Empty = use p_command
+    algo::Smallstr200   arg_expr;    // Argument mapping expression (e.g. row_key=)
+    // func:ui.Trigger..Ctor
+    inline               Trigger() __attribute__((nothrow));
+};
+
+// func:ui.Trigger..ReadFieldMaybe
+bool                 Trigger_ReadFieldMaybe(ui::Trigger& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of ui::Trigger from an ascii string.
+// The format of the string is an ssim Tuple
+// func:ui.Trigger..ReadStrptrMaybe
+bool                 Trigger_ReadStrptrMaybe(ui::Trigger &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ui.Trigger.String  printfmt:Tuple
+// func:ui.Trigger..Print
+void                 Trigger_Print(ui::Trigger& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ui.VAlign
 struct VAlign { // ui.VAlign: Vertical alignment
@@ -1770,22 +1898,22 @@ void                 ViewSource_Print(ui::ViewSource& row, algo::cstring& str) _
 // --- ui.Widget
 struct Widget { // ui.Widget: Universal widget: structure, placement, interaction
     algo::Smallstr50    widget;      //
-    algo::Smallstr50    p_window;    // Parent window
+    algo::Smallstr50    p_window;    // Owning window
     algo::Smallstr50    p_parent;    // Parent widget (empty for top-level)
-    algo::Smallstr50    type;        // Widget type
-    algo::Smallstr50    layout;      //   "absolute"  Layout mode for children
-    i32                 row;         //   0  Row position
-    i32                 col;         //   0  Column position
-    i32                 w;           //   0  Width
-    i32                 h;           //   0  Height
-    i32                 zorder;      //   0  Z-order for overlapping
-    bool                visible;     //   true  Visible
-    bool                enabled;     //   true  Enabled for interaction
-    algo::Smallstr50    selection;   //   "none"  Selection mode
-    algo::Smallstr50    p_style;     // Style (empty to inherit from parent)
-    algo::Smallstr100   title;       // Widget title
-    algo::Smallstr200   text;        // Static text content (for label, statusbar)
-    bool                focusable;   //   false  Widget can receive focus
+    algo::Smallstr50    type;        // Widget type (label, table, tree, etc.)
+    algo::Smallstr50    layout;      //   "absolute"  Layout mode for children (absolute, vertical, horizontal, grid, etc.)
+    i32                 row;         //   0  Row position (absolute layout)
+    i32                 col;         //   0  Column position (absolute layout)
+    i32                 w;           //   0  Width in columns
+    i32                 h;           //   0  Height in rows
+    i32                 zorder;      //   0  Z-order for overlapping widgets
+    bool                visible;     //   true  Widget is visible
+    bool                enabled;     //   true  Widget accepts interaction
+    algo::Smallstr50    selection;   //   "none"  Selection behavior (none, single, multi)
+    algo::Smallstr50    p_style;     // Base style (empty = inherit from parent)
+    algo::Smallstr100   title;       // Widget title (panel header, tab label)
+    algo::Smallstr200   text;        // Static text content (label, statusbar)
+    bool                focusable;   //   false  Widget can receive keyboard focus
     // func:ui.Widget..Ctor
     inline               Widget() __attribute__((nothrow));
 };
@@ -1930,8 +2058,8 @@ inline void          WidgetTypeCase_Init(ui::WidgetTypeCase& parent);
 struct Window { // ui.Window: Top-level terminal/browser window
     algo::Smallstr50    window;   //
     algo::Smallstr100   title;    // Window title
-    i32                 rows;     //   24  Terminal rows
-    i32                 cols;     //   80  Terminal columns
+    i32                 rows;     //   24  Terminal height in rows
+    i32                 cols;     //   80  Terminal width in columns
     // func:ui.Window..Ctor
     inline               Window() __attribute__((nothrow));
 };
@@ -1965,6 +2093,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const ui::Command &row);//
 inline algo::cstring &operator <<(algo::cstring &str, const ui::ContextVar &row);// cfmt:ui.ContextVar.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::DataPath &row);// cfmt:ui.DataPath.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::DataStep &row);// cfmt:ui.DataStep.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::EventType &row);// cfmt:ui.EventType.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::FieldId &row);// cfmt:ui.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::FilterSource &row);// cfmt:ui.FilterSource.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::HAlign &row);// cfmt:ui.HAlign.String
@@ -1979,6 +2108,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const ui::Style &row);// c
 inline algo::cstring &operator <<(algo::cstring &str, const ui::StyleSlot &row);// cfmt:ui.StyleSlot.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::TableCfg &row);// cfmt:ui.TableCfg.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::TreeCfg &row);// cfmt:ui.TreeCfg.String
+inline algo::cstring &operator <<(algo::cstring &str, const ui::Trigger &row);// cfmt:ui.Trigger.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::VAlign &row);// cfmt:ui.VAlign.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::View &row);// cfmt:ui.View.String
 inline algo::cstring &operator <<(algo::cstring &str, const ui::ViewField &row);// cfmt:ui.ViewField.String

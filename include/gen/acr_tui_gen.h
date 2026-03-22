@@ -76,23 +76,25 @@ enum acr_tui_TableIdEnum {                   // acr_tui.TableId.value
     ,acr_tui_TableId_ui_table_cfg     = 15   // ui.table_cfg -> acr_tui.FTableCfg
     ,acr_tui_TableId_ui_TreeCfg       = 16   // ui.TreeCfg -> acr_tui.FTreeCfg
     ,acr_tui_TableId_ui_tree_cfg      = 16   // ui.tree_cfg -> acr_tui.FTreeCfg
-    ,acr_tui_TableId_ui_View          = 17   // ui.View -> acr_tui.FView
-    ,acr_tui_TableId_ui_view          = 17   // ui.view -> acr_tui.FView
-    ,acr_tui_TableId_ui_ViewField     = 18   // ui.ViewField -> acr_tui.FViewField
-    ,acr_tui_TableId_ui_view_field    = 18   // ui.view_field -> acr_tui.FViewField
-    ,acr_tui_TableId_ui_ViewFilter    = 19   // ui.ViewFilter -> acr_tui.FViewFilter
-    ,acr_tui_TableId_ui_view_filter   = 19   // ui.view_filter -> acr_tui.FViewFilter
-    ,acr_tui_TableId_ui_ViewSort      = 20   // ui.ViewSort -> acr_tui.FViewSort
-    ,acr_tui_TableId_ui_view_sort     = 20   // ui.view_sort -> acr_tui.FViewSort
-    ,acr_tui_TableId_ui_ViewSource    = 21   // ui.ViewSource -> acr_tui.FViewSource
-    ,acr_tui_TableId_ui_view_source   = 21   // ui.view_source -> acr_tui.FViewSource
-    ,acr_tui_TableId_ui_Widget        = 22   // ui.Widget -> acr_tui.FWidget
-    ,acr_tui_TableId_ui_widget        = 22   // ui.widget -> acr_tui.FWidget
-    ,acr_tui_TableId_ui_Window        = 23   // ui.Window -> acr_tui.FWindow
-    ,acr_tui_TableId_ui_window        = 23   // ui.window -> acr_tui.FWindow
+    ,acr_tui_TableId_ui_Trigger       = 17   // ui.Trigger -> acr_tui.FTrigger
+    ,acr_tui_TableId_ui_trigger       = 17   // ui.trigger -> acr_tui.FTrigger
+    ,acr_tui_TableId_ui_View          = 18   // ui.View -> acr_tui.FView
+    ,acr_tui_TableId_ui_view          = 18   // ui.view -> acr_tui.FView
+    ,acr_tui_TableId_ui_ViewField     = 19   // ui.ViewField -> acr_tui.FViewField
+    ,acr_tui_TableId_ui_view_field    = 19   // ui.view_field -> acr_tui.FViewField
+    ,acr_tui_TableId_ui_ViewFilter    = 20   // ui.ViewFilter -> acr_tui.FViewFilter
+    ,acr_tui_TableId_ui_view_filter   = 20   // ui.view_filter -> acr_tui.FViewFilter
+    ,acr_tui_TableId_ui_ViewSort      = 21   // ui.ViewSort -> acr_tui.FViewSort
+    ,acr_tui_TableId_ui_view_sort     = 21   // ui.view_sort -> acr_tui.FViewSort
+    ,acr_tui_TableId_ui_ViewSource    = 22   // ui.ViewSource -> acr_tui.FViewSource
+    ,acr_tui_TableId_ui_view_source   = 22   // ui.view_source -> acr_tui.FViewSource
+    ,acr_tui_TableId_ui_Widget        = 23   // ui.Widget -> acr_tui.FWidget
+    ,acr_tui_TableId_ui_widget        = 23   // ui.widget -> acr_tui.FWidget
+    ,acr_tui_TableId_ui_Window        = 24   // ui.Window -> acr_tui.FWindow
+    ,acr_tui_TableId_ui_window        = 24   // ui.window -> acr_tui.FWindow
 };
 
-enum { acr_tui_TableIdEnum_N = 48 };
+enum { acr_tui_TableIdEnum_N = 50 };
 
 namespace acr_tui { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -117,6 +119,7 @@ namespace ui { struct Style; }
 namespace ui { struct StyleSlot; }
 namespace ui { struct TableCfg; }
 namespace ui { struct TreeCfg; }
+namespace ui { struct Trigger; }
 namespace ui { struct View; }
 namespace ui { struct ViewField; }
 namespace ui { struct ViewFilter; }
@@ -148,6 +151,7 @@ namespace acr_tui { struct _db_context_var_curs; }
 namespace acr_tui { struct _db_command_curs; }
 namespace acr_tui { struct _db_layout_cfg_curs; }
 namespace acr_tui { struct _db_style_slot_curs; }
+namespace acr_tui { struct _db_trigger_curs; }
 namespace acr_tui { struct FBinding; }
 namespace acr_tui { struct FColumn; }
 namespace acr_tui { struct FCommand; }
@@ -167,6 +171,7 @@ namespace acr_tui { struct FStyle; }
 namespace acr_tui { struct FStyleSlot; }
 namespace acr_tui { struct FTableCfg; }
 namespace acr_tui { struct FTreeCfg; }
+namespace acr_tui { struct FTrigger; }
 namespace acr_tui { struct FView; }
 namespace acr_tui { struct FViewField; }
 namespace acr_tui { struct FViewFilter; }
@@ -186,13 +191,13 @@ namespace acr_tui { // gen:ns_print_struct
 struct FBinding { // acr_tui.FBinding
     algo::Smallstr50     binding;               //
     algo::Smallstr50     p_widget;              // Widget this binding applies to
-    algo::Smallstr100    source_ctype;          // Source ctype (e.g. samp_mdb.User)
-    algo::Smallstr100    source_field;          // Source field (e.g. zd_user, ind_user)
-    algo::Smallstr50     kind;                  //   "collection"  Binding type
-    algo::Smallstr50     dir;                   //   "read"  Binding direction
-    algo::Smallstr50     p_data_path;           // DataPath for traversal (empty for direct binding)
-    algo::Smallstr50     p_view;                // View for derived data binding (empty for direct binding)
-    algo::Smallstr200    expr;                  // Expression for computed value binding
+    algo::Smallstr100    source_ctype;          // Direct source: ctype name (e.g. dmmeta.Ns)
+    algo::Smallstr100    source_field;          // Direct source: field or llist name (e.g. zd_user)
+    algo::Smallstr50     kind;                  //   "collection"  Binding type: value, collection, tree, command, property
+    algo::Smallstr50     dir;                   //   "read"  Direction: read, write, readwrite
+    algo::Smallstr50     p_data_path;           // Path source: DataPath for structural traversal
+    algo::Smallstr50     p_view;                // View source: derived dataset
+    algo::Smallstr200    expr;                  // Expression source: computed value
     acr_tui::FBinding*   ind_binding_next;      // hash next
     u32                  ind_binding_hashval;   // hash value
     // func:acr_tui.FBinding..AssignOp
@@ -230,7 +235,7 @@ void                 FBinding_Uninit(acr_tui::FBinding& binding) __attribute__((
 struct FColumn { // acr_tui.FColumn
     algo::Smallstr50    column;               //
     algo::Smallstr50    p_widget;             // Parent table widget
-    algo::Smallstr50    field;                // Field name to display
+    algo::Smallstr50    field;                // Field name: ViewField.field when bound to View, raw source field when bound directly
     algo::Smallstr50    title;                // Column header title
     i32                 w;                    //   10  Column width
     bool                sortable;             //   false  Column is sortable
@@ -434,11 +439,11 @@ void                 FDataPath_Uninit(acr_tui::FDataPath& data_path) __attribute
 struct FDataStep { // acr_tui.FDataStep
     algo::Smallstr50      data_step;               //
     algo::Smallstr50      p_path;                  // Parent data path
-    i32                   level;                   //   0  Depth level (0=root)
-    algo::Smallstr100     source_ctype;            // Ctype to display at this level
-    algo::Smallstr50      label_field;             // Field to show as label
-    algo::Smallstr50      detail_field;            // Field to show as detail/description
-    algo::Smallstr50      link_field;              // Pathcomp to match parent key (e.g. ctype.LL for namespace prefix)
+    i32                   level;                   //   0  Navigation depth (0=root)
+    algo::Smallstr100     source_ctype;            // Ctype to display at this level (ssimfile tag, e.g. dmmeta.ns)
+    algo::Smallstr50      label_field;             // Tuple attribute to display as label
+    algo::Smallstr50      detail_field;            // Tuple attribute to display as detail text
+    algo::Smallstr50      link_field;              // Pathcomp expression for parent-child filtering (see doc/link-field-syntax.md)
     acr_tui::FDataStep*   ind_data_step_next;      // hash next
     u32                   ind_data_step_hashval;   // hash value
     // func:acr_tui.FDataStep..AssignOp
@@ -606,6 +611,11 @@ struct FDb { // acr_tui.FDb
     acr_tui::FStyleSlot**    ind_style_slot_buckets_elems;    // pointer to bucket array
     i32                      ind_style_slot_buckets_n;        // number of elements in bucket array
     i32                      ind_style_slot_n;                // number of elements in the hash table
+    acr_tui::FTrigger*       trigger_lary[32];                // level array
+    i32                      trigger_n;                       // number of elements in array
+    acr_tui::FTrigger**      ind_trigger_buckets_elems;       // pointer to bucket array
+    i32                      ind_trigger_buckets_n;           // number of elements in bucket array
+    i32                      ind_trigger_n;                   // number of elements in the hash table
     acr_tui::trace           trace;                           //
 };
 
@@ -2286,6 +2296,74 @@ void                 ind_style_slot_Reserve(int n) __attribute__((nothrow));
 // func:acr_tui.FDb.ind_style_slot.AbsReserve
 void                 ind_style_slot_AbsReserve(int n) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_tui.FDb.trigger.Alloc
+acr_tui::FTrigger&   trigger_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_tui.FDb.trigger.AllocMaybe
+acr_tui::FTrigger*   trigger_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_tui.FDb.trigger.InsertMaybe
+acr_tui::FTrigger*   trigger_InsertMaybe(const ui::Trigger &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_tui.FDb.trigger.AllocMem
+void*                trigger_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_tui.FDb.trigger.EmptyQ
+inline bool          trigger_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_tui.FDb.trigger.Find
+inline acr_tui::FTrigger* trigger_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_tui.FDb.trigger.Last
+inline acr_tui::FTrigger* trigger_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_tui.FDb.trigger.N
+inline i32           trigger_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_tui.FDb.trigger.RemoveAll
+void                 trigger_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_tui.FDb.trigger.RemoveLast
+void                 trigger_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_tui.FDb.trigger.qFind
+inline acr_tui::FTrigger& trigger_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_tui.FDb.trigger.XrefMaybe
+bool                 trigger_XrefMaybe(acr_tui::FTrigger &row);
+
+// Return true if hash is empty
+// func:acr_tui.FDb.ind_trigger.EmptyQ
+inline bool          ind_trigger_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_tui.FDb.ind_trigger.Find
+acr_tui::FTrigger*   ind_trigger_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_tui.FDb.ind_trigger.FindX
+acr_tui::FTrigger&   ind_trigger_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_tui.FDb.ind_trigger.GetOrCreate
+acr_tui::FTrigger&   ind_trigger_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_tui.FDb.ind_trigger.N
+inline i32           ind_trigger_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_tui.FDb.ind_trigger.InsertMaybe
+bool                 ind_trigger_InsertMaybe(acr_tui::FTrigger& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_tui.FDb.ind_trigger.Remove
+void                 ind_trigger_Remove(acr_tui::FTrigger& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_tui.FDb.ind_trigger.Reserve
+void                 ind_trigger_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_tui.FDb.ind_trigger.AbsReserve
+void                 ind_trigger_AbsReserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:acr_tui.FDb.window_curs.Reset
 inline void          _db_window_curs_Reset(_db_window_curs &curs, acr_tui::FDb &parent) __attribute__((nothrow));
@@ -2574,6 +2652,18 @@ inline void          _db_style_slot_curs_Next(_db_style_slot_curs &curs) __attri
 // item access
 // func:acr_tui.FDb.style_slot_curs.Access
 inline acr_tui::FStyleSlot& _db_style_slot_curs_Access(_db_style_slot_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.trigger_curs.Reset
+inline void          _db_trigger_curs_Reset(_db_trigger_curs &curs, acr_tui::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_tui.FDb.trigger_curs.ValidQ
+inline bool          _db_trigger_curs_ValidQ(_db_trigger_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_tui.FDb.trigger_curs.Next
+inline void          _db_trigger_curs_Next(_db_trigger_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_tui.FDb.trigger_curs.Access
+inline acr_tui::FTrigger& _db_trigger_curs_Access(_db_trigger_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_tui.FDb..Init
 void                 FDb_Init();
@@ -2967,10 +3057,10 @@ struct FTreeCfg { // acr_tui.FTreeCfg
     algo::Smallstr50     p_widget;               // Tree widget
     i32                  indent;                 //   2  Indentation per level
     bool                 show_lines;             //   true  Draw tree connection lines
-    algo::Smallstr100    child_field;            // Field that provides children (e.g. Project.zd_task)
+    algo::Smallstr100    child_field;            // Simple hierarchy: field on parent ctype that lists children (e.g. Project.zd_task)
     algo::Smallstr50     label_field;            // Field to display as node label
     bool                 expanded_default;       //   false  Nodes expanded by default
-    algo::Smallstr50     p_data_path;            // Generalized traversal mode (takes precedence over child_field)
+    algo::Smallstr50     p_data_path;            // Generalized traversal: DataPath with multi-level DataSteps (takes precedence over child_field)
     // func:acr_tui.FTreeCfg..AssignOp
     inline acr_tui::FTreeCfg& operator =(const acr_tui::FTreeCfg &rhs) = delete;
     // func:acr_tui.FTreeCfg..CopyCtor
@@ -2998,6 +3088,47 @@ void                 tree_cfg_CopyIn(acr_tui::FTreeCfg &row, ui::TreeCfg &in) __
 inline void          FTreeCfg_Init(acr_tui::FTreeCfg& tree_cfg);
 // func:acr_tui.FTreeCfg..Uninit
 void                 FTreeCfg_Uninit(acr_tui::FTreeCfg& tree_cfg) __attribute__((nothrow));
+
+// --- acr_tui.FTrigger
+// create: acr_tui.FDb.trigger (Lary)
+// global access: trigger (Lary, by rowid)
+// global access: ind_trigger (Thash, hash field trigger)
+struct FTrigger { // acr_tui.FTrigger
+    acr_tui::FTrigger*   ind_trigger_next;      // hash next
+    u32                  ind_trigger_hashval;   // hash value
+    algo::Smallstr50     trigger;               //
+    algo::Smallstr50     p_widget;              // Widget that emits this event
+    algo::Smallstr50     event;                 // Widget event (activate, select, submit, etc.)
+    algo::Smallstr50     p_command;             // Command to invoke (empty = emit generic message)
+    algo::Smallstr100    msg_ctype;             // Message ctype to emit (e.g. uimsg.SelectMsg). Empty = use p_command
+    algo::Smallstr200    arg_expr;              // Argument mapping expression (e.g. row_key=)
+    // func:acr_tui.FTrigger..AssignOp
+    inline acr_tui::FTrigger& operator =(const acr_tui::FTrigger &rhs) = delete;
+    // func:acr_tui.FTrigger..CopyCtor
+    inline               FTrigger(const acr_tui::FTrigger &rhs) = delete;
+private:
+    // func:acr_tui.FTrigger..Ctor
+    inline               FTrigger() __attribute__((nothrow));
+    // func:acr_tui.FTrigger..Dtor
+    inline               ~FTrigger() __attribute__((nothrow));
+    friend acr_tui::FTrigger&   trigger_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_tui::FTrigger*   trigger_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 trigger_RemoveAll() __attribute__((nothrow));
+    friend void                 trigger_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_tui.FTrigger.base.CopyOut
+void                 trigger_CopyOut(acr_tui::FTrigger &row, ui::Trigger &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_tui.FTrigger.base.CopyIn
+void                 trigger_CopyIn(acr_tui::FTrigger &row, ui::Trigger &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_tui.FTrigger..Init
+inline void          FTrigger_Init(acr_tui::FTrigger& trigger);
+// func:acr_tui.FTrigger..Uninit
+void                 FTrigger_Uninit(acr_tui::FTrigger& trigger) __attribute__((nothrow));
 
 // --- acr_tui.FView
 // create: acr_tui.FDb.view (Lary)
@@ -3209,22 +3340,22 @@ struct FWidget { // acr_tui.FWidget
     acr_tui::FWidget*   ind_widget_next;      // hash next
     u32                 ind_widget_hashval;   // hash value
     algo::Smallstr50    widget;               //
-    algo::Smallstr50    p_window;             // Parent window
+    algo::Smallstr50    p_window;             // Owning window
     algo::Smallstr50    p_parent;             // Parent widget (empty for top-level)
-    algo::Smallstr50    type;                 // Widget type
-    algo::Smallstr50    layout;               //   "absolute"  Layout mode for children
-    i32                 row;                  //   0  Row position
-    i32                 col;                  //   0  Column position
-    i32                 w;                    //   0  Width
-    i32                 h;                    //   0  Height
-    i32                 zorder;               //   0  Z-order for overlapping
-    bool                visible;              //   true  Visible
-    bool                enabled;              //   true  Enabled for interaction
-    algo::Smallstr50    selection;            //   "none"  Selection mode
-    algo::Smallstr50    p_style;              // Style (empty to inherit from parent)
-    algo::Smallstr100   title;                // Widget title
-    algo::Smallstr200   text;                 // Static text content (for label, statusbar)
-    bool                focusable;            //   false  Widget can receive focus
+    algo::Smallstr50    type;                 // Widget type (label, table, tree, etc.)
+    algo::Smallstr50    layout;               //   "absolute"  Layout mode for children (absolute, vertical, horizontal, grid, etc.)
+    i32                 row;                  //   0  Row position (absolute layout)
+    i32                 col;                  //   0  Column position (absolute layout)
+    i32                 w;                    //   0  Width in columns
+    i32                 h;                    //   0  Height in rows
+    i32                 zorder;               //   0  Z-order for overlapping widgets
+    bool                visible;              //   true  Widget is visible
+    bool                enabled;              //   true  Widget accepts interaction
+    algo::Smallstr50    selection;            //   "none"  Selection behavior (none, single, multi)
+    algo::Smallstr50    p_style;              // Base style (empty = inherit from parent)
+    algo::Smallstr100   title;                // Widget title (panel header, tab label)
+    algo::Smallstr200   text;                 // Static text content (label, statusbar)
+    bool                focusable;            //   false  Widget can receive keyboard focus
     // func:acr_tui.FWidget..AssignOp
     acr_tui::FWidget&    operator =(const acr_tui::FWidget &rhs) = delete;
     // func:acr_tui.FWidget..CopyCtor
@@ -3262,8 +3393,8 @@ struct FWindow { // acr_tui.FWindow
     u32                 ind_window_hashval;   // hash value
     algo::Smallstr50    window;               //
     algo::Smallstr100   title;                // Window title
-    i32                 rows;                 //   24  Terminal rows
-    i32                 cols;                 //   80  Terminal columns
+    i32                 rows;                 //   24  Terminal height in rows
+    i32                 cols;                 //   80  Terminal width in columns
     // func:acr_tui.FWindow..AssignOp
     inline acr_tui::FWindow& operator =(const acr_tui::FWindow &rhs) = delete;
     // func:acr_tui.FWindow..CopyCtor
@@ -3589,6 +3720,14 @@ struct _db_style_slot_curs {// cursor
     acr_tui::FDb *parent;
     i64 index;
     _db_style_slot_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_trigger_curs {// cursor
+    typedef acr_tui::FTrigger ChildType;
+    acr_tui::FDb *parent;
+    i64 index;
+    _db_trigger_curs(){ parent=NULL; index=0; }
 };
 
 } // gen:ns_curstext

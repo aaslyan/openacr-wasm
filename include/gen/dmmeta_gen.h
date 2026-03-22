@@ -746,6 +746,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_ui_command;                  // ui
 extern const char *  dmmeta_Ssimfile_ssimfile_ui_context_var;              // ui.context_var               fconst:dmmeta.Ssimfile.ssimfile/ui.context_var
 extern const char *  dmmeta_Ssimfile_ssimfile_ui_data_path;                // ui.data_path                 fconst:dmmeta.Ssimfile.ssimfile/ui.data_path
 extern const char *  dmmeta_Ssimfile_ssimfile_ui_data_step;                // ui.data_step                 fconst:dmmeta.Ssimfile.ssimfile/ui.data_step
+extern const char *  dmmeta_Ssimfile_ssimfile_ui_event_type;               // ui.event_type                fconst:dmmeta.Ssimfile.ssimfile/ui.event_type
 extern const char *  dmmeta_Ssimfile_ssimfile_ui_filter_source;            // ui.filter_source             fconst:dmmeta.Ssimfile.ssimfile/ui.filter_source
 extern const char *  dmmeta_Ssimfile_ssimfile_ui_h_align;                  // ui.h_align                   fconst:dmmeta.Ssimfile.ssimfile/ui.h_align
 extern const char *  dmmeta_Ssimfile_ssimfile_ui_input_cfg;                // ui.input_cfg                 fconst:dmmeta.Ssimfile.ssimfile/ui.input_cfg
@@ -759,6 +760,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_ui_style;                    // ui
 extern const char *  dmmeta_Ssimfile_ssimfile_ui_style_slot;               // ui.style_slot                fconst:dmmeta.Ssimfile.ssimfile/ui.style_slot
 extern const char *  dmmeta_Ssimfile_ssimfile_ui_table_cfg;                // ui.table_cfg                 fconst:dmmeta.Ssimfile.ssimfile/ui.table_cfg
 extern const char *  dmmeta_Ssimfile_ssimfile_ui_tree_cfg;                 // ui.tree_cfg                  fconst:dmmeta.Ssimfile.ssimfile/ui.tree_cfg
+extern const char *  dmmeta_Ssimfile_ssimfile_ui_trigger;                  // ui.trigger                   fconst:dmmeta.Ssimfile.ssimfile/ui.trigger
 extern const char *  dmmeta_Ssimfile_ssimfile_ui_v_align;                  // ui.v_align                   fconst:dmmeta.Ssimfile.ssimfile/ui.v_align
 extern const char *  dmmeta_Ssimfile_ssimfile_ui_view;                     // ui.view                      fconst:dmmeta.Ssimfile.ssimfile/ui.view
 extern const char *  dmmeta_Ssimfile_ssimfile_ui_view_field;               // ui.view_field                fconst:dmmeta.Ssimfile.ssimfile/ui.view_field

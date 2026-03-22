@@ -114,6 +114,8 @@ namespace acr_tui { // gen:ns_print_proto
     static bool          layout_cfg_InputMaybe(ui::LayoutCfg &elem) __attribute__((nothrow));
     // func:acr_tui.FDb.style_slot.InputMaybe
     static bool          style_slot_InputMaybe(ui::StyleSlot &elem) __attribute__((nothrow));
+    // func:acr_tui.FDb.trigger.InputMaybe
+    static bool          trigger_InputMaybe(ui::Trigger &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:acr_tui.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -507,7 +509,7 @@ static void acr_tui::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_tui.Input'  signature:'20652faa9c64d4344f89d572cbfdf7b8e8b94108'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_tui.Input'  signature:'fa3739b4685bff1aec871bbdc74ff18d8082b231'");
 }
 
 // --- acr_tui.FDb._db.InsertStrptrMaybe
@@ -662,6 +664,12 @@ bool acr_tui::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && style_slot_InputMaybe(elem);
             break;
         }
+        case acr_tui_TableId_ui_Trigger: { // finput:acr_tui.FDb.trigger
+            ui::Trigger elem;
+            retval = ui::Trigger_ReadStrptrMaybe(elem, str);
+            retval = retval && trigger_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -688,12 +696,13 @@ bool acr_tui::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.view_sort"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.view_filter"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.view_field"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.command"),recursive);
+        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.trigger"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.data_path"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.tree_cfg"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.table_cfg"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.style_slot"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.layout_cfg"),recursive);
-        retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.command"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.key_map"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.input_cfg"),recursive);
         retval = retval && acr_tui::LoadTuplesFile(algo::SsimFname(root,"ui.data_step"),recursive);
@@ -6319,6 +6328,237 @@ void acr_tui::ind_style_slot_AbsReserve(int n) {
     }
 }
 
+// --- acr_tui.FDb.trigger.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_tui::FTrigger& acr_tui::trigger_Alloc() {
+    acr_tui::FTrigger* row = trigger_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_tui.out_of_mem  field:acr_tui.FDb.trigger  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_tui.FDb.trigger.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_tui::FTrigger* acr_tui::trigger_AllocMaybe() {
+    acr_tui::FTrigger *row = (acr_tui::FTrigger*)trigger_AllocMem();
+    if (row) {
+        new (row) acr_tui::FTrigger; // call constructor
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.trigger.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_tui::FTrigger* acr_tui::trigger_InsertMaybe(const ui::Trigger &value) {
+    acr_tui::FTrigger *row = &trigger_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    trigger_CopyIn(*row,const_cast<ui::Trigger&>(value));
+    bool ok = trigger_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        trigger_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_tui.FDb.trigger.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_tui::trigger_AllocMem() {
+    u64 new_nelems     = _db.trigger_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_tui::FTrigger*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.trigger_lary[bsr];
+        if (!lev) {
+            lev=(acr_tui::FTrigger*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FTrigger) * (u64(1)<<bsr));
+            _db.trigger_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.trigger_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.trigger.RemoveAll
+// Remove all elements from Lary
+void acr_tui::trigger_RemoveAll() {
+    for (u64 n = _db.trigger_n; n>0; ) {
+        n--;
+        trigger_qFind(u64(n)).~FTrigger(); // destroy last element
+        _db.trigger_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.trigger.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_tui::trigger_RemoveLast() {
+    u64 n = _db.trigger_n;
+    if (n > 0) {
+        n -= 1;
+        trigger_qFind(u64(n)).~FTrigger();
+        _db.trigger_n = i32(n);
+    }
+}
+
+// --- acr_tui.FDb.trigger.InputMaybe
+static bool acr_tui::trigger_InputMaybe(ui::Trigger &elem) {
+    bool retval = true;
+    retval = trigger_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_tui.FDb.trigger.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_tui::trigger_XrefMaybe(acr_tui::FTrigger &row) {
+    bool retval = true;
+    (void)row;
+    // insert trigger into index ind_trigger
+    if (true) { // user-defined insert condition
+        bool success = ind_trigger_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_tui.duplicate_key  xref:acr_tui.FDb.ind_trigger"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_trigger.Find
+// Find row by key. Return NULL if not found.
+acr_tui::FTrigger* acr_tui::ind_trigger_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_trigger_buckets_n - 1);
+    acr_tui::FTrigger *ret = _db.ind_trigger_buckets_elems[index];
+    for (; ret && !((*ret).trigger == key); ret = ret->ind_trigger_next) {
+    }
+    return ret;
+}
+
+// --- acr_tui.FDb.ind_trigger.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_tui::FTrigger& acr_tui::ind_trigger_FindX(const algo::strptr& key) {
+    acr_tui::FTrigger* ret = ind_trigger_Find(key);
+    vrfy(ret, tempstr() << "acr_tui.key_error  table:ind_trigger  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_trigger.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_tui::FTrigger& acr_tui::ind_trigger_GetOrCreate(const algo::strptr& key) {
+    acr_tui::FTrigger* ret = ind_trigger_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &trigger_Alloc();
+        (*ret).trigger = key;
+        bool good = trigger_XrefMaybe(*ret);
+        if (!good) {
+            trigger_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_tui.create_error  table:ind_trigger  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_tui.FDb.ind_trigger.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_tui::ind_trigger_InsertMaybe(acr_tui::FTrigger& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_trigger_next == (acr_tui::FTrigger*)-1)) {// check if in hash already
+        row.ind_trigger_hashval = algo::Smallstr50_Hash(0, row.trigger);
+        ind_trigger_Reserve(1);
+        u32 index = row.ind_trigger_hashval & (_db.ind_trigger_buckets_n - 1);
+        acr_tui::FTrigger* *prev = &_db.ind_trigger_buckets_elems[index];
+        do {
+            acr_tui::FTrigger* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).trigger == row.trigger) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_trigger_next;
+        } while (true);
+        if (retval) {
+            row.ind_trigger_next = *prev;
+            _db.ind_trigger_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_tui.FDb.ind_trigger.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_tui::ind_trigger_Remove(acr_tui::FTrigger& row) {
+    if (LIKELY(row.ind_trigger_next != (acr_tui::FTrigger*)-1)) {// check if in hash already
+        u32 index = row.ind_trigger_hashval & (_db.ind_trigger_buckets_n - 1);
+        acr_tui::FTrigger* *prev = &_db.ind_trigger_buckets_elems[index]; // addr of pointer to current element
+        while (acr_tui::FTrigger *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_trigger_next; // unlink (singly linked list)
+                _db.ind_trigger_n--;
+                row.ind_trigger_next = (acr_tui::FTrigger*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_trigger_next;
+        }
+    }
+}
+
+// --- acr_tui.FDb.ind_trigger.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_tui::ind_trigger_Reserve(int n) {
+    ind_trigger_AbsReserve(_db.ind_trigger_n + n);
+}
+
+// --- acr_tui.FDb.ind_trigger.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_tui::ind_trigger_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_trigger_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_tui::FTrigger*);
+        u32 new_size = new_nbuckets * sizeof(acr_tui::FTrigger*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_tui::FTrigger* *new_buckets = (acr_tui::FTrigger**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_tui.out_of_memory  field:acr_tui.FDb.ind_trigger");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_trigger_buckets_n; i++) {
+            acr_tui::FTrigger* elem = _db.ind_trigger_buckets_elems[i];
+            while (elem) {
+                acr_tui::FTrigger &row        = *elem;
+                acr_tui::FTrigger* next       = row.ind_trigger_next;
+                u32 index          = row.ind_trigger_hashval & (new_nbuckets-1);
+                row.ind_trigger_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_trigger_buckets_elems, old_size);
+        _db.ind_trigger_buckets_elems = new_buckets;
+        _db.ind_trigger_buckets_n = new_nbuckets;
+    }
+}
+
 // --- acr_tui.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr_tui::trace_RowidFind(int t) {
@@ -6790,6 +7030,25 @@ void acr_tui::FDb_Init() {
         FatalErrorExit("out of memory"); // (acr_tui.FDb.ind_style_slot)
     }
     memset(_db.ind_style_slot_buckets_elems, 0, sizeof(acr_tui::FStyleSlot*)*_db.ind_style_slot_buckets_n); // (acr_tui.FDb.ind_style_slot)
+    // initialize LAry trigger (acr_tui.FDb.trigger)
+    _db.trigger_n = 0;
+    memset(_db.trigger_lary, 0, sizeof(_db.trigger_lary)); // zero out all level pointers
+    acr_tui::FTrigger* trigger_first = (acr_tui::FTrigger*)algo_lib::malloc_AllocMem(sizeof(acr_tui::FTrigger) * (u64(1)<<4));
+    if (!trigger_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.trigger_lary[i]  = trigger_first;
+        trigger_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_tui::FTrigger;
+    _db.ind_trigger_n             	= 0; // (acr_tui.FDb.ind_trigger)
+    _db.ind_trigger_buckets_n     	= 4; // (acr_tui.FDb.ind_trigger)
+    _db.ind_trigger_buckets_elems 	= (acr_tui::FTrigger**)algo_lib::malloc_AllocMem(sizeof(acr_tui::FTrigger*)*_db.ind_trigger_buckets_n); // initial buckets (acr_tui.FDb.ind_trigger)
+    if (!_db.ind_trigger_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_tui.FDb.ind_trigger)
+    }
+    memset(_db.ind_trigger_buckets_elems, 0, sizeof(acr_tui::FTrigger*)*_db.ind_trigger_buckets_n); // (acr_tui.FDb.ind_trigger)
 
     acr_tui::InitReflection();
 }
@@ -6797,6 +7056,12 @@ void acr_tui::FDb_Init() {
 // --- acr_tui.FDb..Uninit
 void acr_tui::FDb_Uninit() {
     acr_tui::FDb &row = _db; (void)row;
+
+    // acr_tui.FDb.ind_trigger.Uninit (Thash)  //
+    // skip destruction of ind_trigger in global scope
+
+    // acr_tui.FDb.trigger.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr_tui.FDb.ind_style_slot.Uninit (Thash)  //
     // skip destruction of ind_style_slot in global scope
@@ -7257,6 +7522,34 @@ void acr_tui::FTreeCfg_Uninit(acr_tui::FTreeCfg& tree_cfg) {
     ind_tree_cfg_Remove(row); // remove tree_cfg from index ind_tree_cfg
 }
 
+// --- acr_tui.FTrigger.base.CopyOut
+// Copy fields out of row
+void acr_tui::trigger_CopyOut(acr_tui::FTrigger &row, ui::Trigger &out) {
+    out.trigger = row.trigger;
+    out.p_widget = row.p_widget;
+    out.event = row.event;
+    out.p_command = row.p_command;
+    out.msg_ctype = row.msg_ctype;
+    out.arg_expr = row.arg_expr;
+}
+
+// --- acr_tui.FTrigger.base.CopyIn
+// Copy fields in to row
+void acr_tui::trigger_CopyIn(acr_tui::FTrigger &row, ui::Trigger &in) {
+    row.trigger = in.trigger;
+    row.p_widget = in.p_widget;
+    row.event = in.event;
+    row.p_command = in.p_command;
+    row.msg_ctype = in.msg_ctype;
+    row.arg_expr = in.arg_expr;
+}
+
+// --- acr_tui.FTrigger..Uninit
+void acr_tui::FTrigger_Uninit(acr_tui::FTrigger& trigger) {
+    acr_tui::FTrigger &row = trigger; (void)row;
+    ind_trigger_Remove(row); // remove trigger from index ind_trigger
+}
+
 // --- acr_tui.FView.base.CopyOut
 // Copy fields out of row
 void acr_tui::view_CopyOut(acr_tui::FView &row, ui::View &out) {
@@ -7581,6 +7874,7 @@ const char* acr_tui::value_ToCstr(const acr_tui::TableId& parent) {
         case acr_tui_TableId_ui_StyleSlot  : ret = "ui.StyleSlot";  break;
         case acr_tui_TableId_ui_TableCfg   : ret = "ui.TableCfg";  break;
         case acr_tui_TableId_ui_TreeCfg    : ret = "ui.TreeCfg";  break;
+        case acr_tui_TableId_ui_Trigger    : ret = "ui.Trigger";  break;
         case acr_tui_TableId_ui_View       : ret = "ui.View";  break;
         case acr_tui_TableId_ui_ViewField  : ret = "ui.ViewField";  break;
         case acr_tui_TableId_ui_ViewFilter : ret = "ui.ViewFilter";  break;
@@ -7688,6 +7982,10 @@ bool acr_tui::value_SetStrptrMaybe(acr_tui::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"fg",2)==0) { value_SetEnum(parent,acr_tui_TableId_ui_TreeCfg); ret = true; break; }
                     break;
                 }
+                case LE_STR8('u','i','.','T','r','i','g','g'): {
+                    if (memcmp(rhs.elems+8,"er",2)==0) { value_SetEnum(parent,acr_tui_TableId_ui_Trigger); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('u','i','.','b','i','n','d','i'): {
                     if (memcmp(rhs.elems+8,"ng",2)==0) { value_SetEnum(parent,acr_tui_TableId_ui_binding); ret = true; break; }
                     break;
@@ -7698,6 +7996,10 @@ bool acr_tui::value_SetStrptrMaybe(acr_tui::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('u','i','.','k','e','y','_','m'): {
                     if (memcmp(rhs.elems+8,"ap",2)==0) { value_SetEnum(parent,acr_tui_TableId_ui_key_map); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('u','i','.','t','r','i','g','g'): {
+                    if (memcmp(rhs.elems+8,"er",2)==0) { value_SetEnum(parent,acr_tui_TableId_ui_trigger); ret = true; break; }
                     break;
                 }
             }

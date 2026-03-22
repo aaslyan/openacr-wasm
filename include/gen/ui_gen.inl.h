@@ -291,6 +291,49 @@ inline  ui::DataStep::DataStep() {
     ui::DataStep_Init(*this);
 }
 
+// --- ui.EventType..Ctor
+inline  ui::EventType::EventType() {
+}
+
+// --- ui.EventTypeCase.event_type.GetEnum
+// Get value of field as enum type
+inline ui_EventTypeCaseEnum ui::event_type_GetEnum(const ui::EventTypeCase& parent) {
+    return ui_EventTypeCaseEnum(parent.event_type);
+}
+
+// --- ui.EventTypeCase.event_type.SetEnum
+// Set value of field from enum type.
+inline void ui::event_type_SetEnum(ui::EventTypeCase& parent, ui_EventTypeCaseEnum rhs) {
+    parent.event_type = u8(rhs);
+}
+
+// --- ui.EventTypeCase.event_type.Cast
+inline  ui::EventTypeCase::operator ui_EventTypeCaseEnum() const {
+    return ui_EventTypeCaseEnum((*this).event_type);
+}
+
+// --- ui.EventTypeCase..Init
+// Set all fields to initial values.
+inline void ui::EventTypeCase_Init(ui::EventTypeCase& parent) {
+    parent.event_type = u8(0);
+}
+
+// --- ui.EventTypeCase..Ctor
+inline  ui::EventTypeCase::EventTypeCase() {
+    ui::EventTypeCase_Init(*this);
+}
+
+// --- ui.EventTypeCase..FieldwiseCtor
+inline  ui::EventTypeCase::EventTypeCase(u8 in_event_type)
+    : event_type(in_event_type)
+ {
+}
+
+// --- ui.EventTypeCase..EnumCtor
+inline  ui::EventTypeCase::EventTypeCase(ui_EventTypeCaseEnum arg) {
+    this->event_type = u8(arg);
+}
+
 // --- ui.FieldId.value.GetEnum
 // Get value of field as enum type
 inline ui_FieldIdEnum ui::value_GetEnum(const ui::FieldId& parent) {
@@ -653,6 +696,10 @@ inline  ui::TreeCfg::TreeCfg() {
     ui::TreeCfg_Init(*this);
 }
 
+// --- ui.Trigger..Ctor
+inline  ui::Trigger::Trigger() {
+}
+
 // --- ui.VAlign..Ctor
 inline  ui::VAlign::VAlign() {
 }
@@ -898,6 +945,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::DataStep &
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::EventType &row) {// cfmt:ui.EventType.String
+    ui::EventType_Print(const_cast<ui::EventType&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::FieldId &row) {// cfmt:ui.FieldId.String
     ui::FieldId_Print(const_cast<ui::FieldId&>(row), str);
     return str;
@@ -965,6 +1017,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::TableCfg &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::TreeCfg &row) {// cfmt:ui.TreeCfg.String
     ui::TreeCfg_Print(const_cast<ui::TreeCfg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ui::Trigger &row) {// cfmt:ui.Trigger.String
+    ui::Trigger_Print(const_cast<ui::Trigger&>(row), str);
     return str;
 }
 

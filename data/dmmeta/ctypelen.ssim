@@ -143,7 +143,7 @@ dmmeta.ctypelen  ctype:acr_tui.FContextVar  len:584  alignment:8  padbytes:10  p
 dmmeta.ctypelen  ctype:acr_tui.FCtype  len:272  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FDataPath  len:224  alignment:8  padbytes:8  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FDataStep  len:384  alignment:8  padbytes:6  plaindata:N
-dmmeta.ctypelen  ctype:acr_tui.FDb  len:6744  alignment:8  padbytes:103  plaindata:N
+dmmeta.ctypelen  ctype:acr_tui.FDb  len:7024  alignment:8  padbytes:107  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FFconst  len:520  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FField  len:672  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FInputCfg  len:128  alignment:8  padbytes:7  plaindata:N
@@ -154,6 +154,7 @@ dmmeta.ctypelen  ctype:acr_tui.FStyle  len:224  alignment:8  padbytes:2  plainda
 dmmeta.ctypelen  ctype:acr_tui.FStyleSlot  len:224  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FTableCfg  len:120  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FTreeCfg  len:328  alignment:8  padbytes:0  plaindata:N
+dmmeta.ctypelen  ctype:acr_tui.FTrigger  len:528  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FView  len:376  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FViewField  len:480  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:acr_tui.FViewFilter  len:376  alignment:8  padbytes:1  plaindata:N
@@ -1298,6 +1299,7 @@ dmmeta.ctypelen  ctype:ui.Command  len:358  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.ContextVar  len:562  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.DataPath  len:204  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.DataStep  len:368  alignment:4  padbytes:2  plaindata:Y
+dmmeta.ctypelen  ctype:ui.EventType  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.FilterSource  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.HAlign  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.InputCfg  len:112  alignment:4  padbytes:3  plaindata:Y
@@ -1311,6 +1313,7 @@ dmmeta.ctypelen  ctype:ui.Style  len:210  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.StyleSlot  len:208  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.TableCfg  len:106  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.TreeCfg  len:316  alignment:4  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:ui.Trigger  len:512  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.VAlign  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.View  len:358  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ui.ViewField  len:462  alignment:1  padbytes:0  plaindata:Y

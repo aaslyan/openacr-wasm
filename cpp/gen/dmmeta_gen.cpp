@@ -511,6 +511,7 @@ const char *dmmeta_Ssimfile_ssimfile_ui_command         = "ui.command";
 const char *dmmeta_Ssimfile_ssimfile_ui_context_var     = "ui.context_var";
 const char *dmmeta_Ssimfile_ssimfile_ui_data_path       = "ui.data_path";
 const char *dmmeta_Ssimfile_ssimfile_ui_data_step       = "ui.data_step";
+const char *dmmeta_Ssimfile_ssimfile_ui_event_type      = "ui.event_type";
 const char *dmmeta_Ssimfile_ssimfile_ui_filter_source   = "ui.filter_source";
 const char *dmmeta_Ssimfile_ssimfile_ui_h_align         = "ui.h_align";
 const char *dmmeta_Ssimfile_ssimfile_ui_input_cfg       = "ui.input_cfg";
@@ -526,6 +527,7 @@ const char *dmmeta_Ssimfile_ssimfile_ui_style_slot       = "ui.style_slot";
 const char *dmmeta_Ssimfile_ssimfile_ui_table_cfg        = "ui.table_cfg";
 const char *dmmeta_Ssimfile_ssimfile_ui_tree_cfg         = "ui.tree_cfg";
 
+const char *dmmeta_Ssimfile_ssimfile_ui_trigger      = "ui.trigger";
 const char *dmmeta_Ssimfile_ssimfile_ui_v_align      = "ui.v_align";
 const char *dmmeta_Ssimfile_ssimfile_ui_view         = "ui.view";
 const char *dmmeta_Ssimfile_ssimfile_ui_view_field   = "ui.view_field";
