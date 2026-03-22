@@ -2,138 +2,15 @@
 //
 // License: GPL
 // Target: acr_tui (exe) -- Terminal UI browser for OpenACR schemas
-// Exceptions: yes
 // Source: cpp/acr_tui/acr_tui.cpp
 //
-// Generic data-driven TUI browser
-// Loads all ssim data as tuples, navigates via DataPath, renders from ui.* schema
+// Terminal frontend — uses shared logic from acr_browse.h
 
-#include "include/algo.h"
-#include "include/acr_tui.h"
+#include "include/acr_browse.h"
 #include <termios.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <signal.h>
-#include <dirent.h>
-
-// ============================================================================
-// Generic record store — holds all loaded ssim data as tuples
-// ============================================================================
-
-struct GRec {
-    algo::cstring ctype_tag;   // e.g. "dmmeta.ns", "dmmeta.ctype"
-    algo::cstring pkey;        // primary key value
-    algo::Tuple   tuple;       // parsed attributes
-    GRec* next;                // linked list per ctype
-};
-
-static const int MAX_CTYPES = 256;
-static const int MAX_RECS = 100000;
-static GRec g_recs[MAX_RECS];
-static int g_nrecs = 0;
-
-// Index: ctype_tag -> linked list of records
-struct CTypeIndex {
-    algo::cstring tag;
-    GRec* head;
-    GRec* tail;
-    int count;
-};
-static CTypeIndex g_ctypes[MAX_CTYPES];
-static int g_nctypes = 0;
-
-static CTypeIndex* FindCType(algo::strptr tag) {
-    for (int i = 0; i < g_nctypes; i++) {
-        if (algo::strptr(g_ctypes[i].tag) == tag) return &g_ctypes[i];
-    }
-    return NULL;
-}
-
-static CTypeIndex* GetOrCreateCType(algo::strptr tag) {
-    CTypeIndex* ct = FindCType(tag);
-    if (!ct && g_nctypes < MAX_CTYPES) {
-        ct = &g_ctypes[g_nctypes++];
-        ct->tag = tag;
-        ct->head = ct->tail = NULL;
-        ct->count = 0;
-    }
-    return ct;
-}
-
-static void LoadRecord(algo::strptr line) {
-    if (g_nrecs >= MAX_RECS) return;
-    line = algo::Trimmed(line);
-    if (!ch_N(line) || line.elems[0] == '#') return;
-
-    algo::Tuple tuple;
-    if (!algo::Tuple_ReadStrptrMaybe(tuple, line)) return;
-
-    algo::strptr tag = tuple.head.value;
-    if (!ch_N(tag)) return;
-
-    GRec* rec = &g_recs[g_nrecs++];
-    rec->ctype_tag = tag;
-    rec->tuple = tuple;
-    rec->next = NULL;
-
-    // Primary key is first attribute value
-    if (tuple.attrs_n > 0) {
-        rec->pkey = tuple.attrs_elems[0].value;
-    }
-
-    CTypeIndex* ct = GetOrCreateCType(tag);
-    if (ct) {
-        if (ct->tail) { ct->tail->next = rec; ct->tail = rec; }
-        else { ct->head = ct->tail = rec; }
-        ct->count++;
-    }
-}
-
-static void LoadSsimFile(algo::strptr path) {
-    tempstr content = algo::FileToString(path, algo::FileFlags());
-    algo::StringIter iter(content);
-    while (!iter.EofQ()) {
-        algo::strptr line = algo::GetLine(iter);
-        LoadRecord(line);
-    }
-}
-
-static void LoadAllData(algo::strptr datadir) {
-    // Scan data/ for subdirectories, each subdir has ssim files
-    DIR* dir = opendir(datadir.elems ? (char*)algo::Zeroterm(tempstr(datadir)) : "data");
-    if (!dir) return;
-    struct dirent* ent;
-    while ((ent = readdir(dir)) != NULL) {
-        if (ent->d_name[0] == '.') continue;
-        algo::cstring subdir;
-        subdir << datadir << "/" << ent->d_name;
-        DIR* sub = opendir((char*)algo::Zeroterm(tempstr(subdir)));
-        if (!sub) continue;
-        struct dirent* sent;
-        while ((sent = readdir(sub)) != NULL) {
-            algo::strptr fname(sent->d_name);
-            if (algo::EndsWithQ(fname, ".ssim")) {
-                algo::cstring filepath;
-                filepath << subdir << "/" << fname;
-                LoadSsimFile(filepath);
-            }
-        }
-        closedir(sub);
-    }
-    closedir(dir);
-}
-
-// Extract an attribute value by name from a tuple
-static algo::strptr TupleGetAttr(const algo::Tuple& t, algo::strptr name) {
-    for (u32 i = 0; i < t.attrs_n; i++) {
-        if (algo::strptr(t.attrs_elems[i].name) == name) {
-            return algo::strptr(t.attrs_elems[i].value);
-        }
-    }
-    // Also check head (the type tag's value is the pkey)
-    if (algo::strptr(t.head.name) == name) return algo::strptr(t.head.value);
-    return algo::strptr();
-}
 
 // ============================================================================
 // Terminal I/O
@@ -156,7 +33,6 @@ static void PutStr(int row, int col, algo::strptr s, int maxw) {
     }
 }
 
-// Style from ui.Style records
 static void ApplyStyleByName(algo::strptr style_name) {
     acr_tui::FStyle* style = acr_tui::ind_style_Find(style_name);
     if (!style) return;
@@ -205,360 +81,46 @@ static void EnableRawMode() {
 }
 
 // ============================================================================
-// Navigation state
-// ============================================================================
-
-static int current_level = 0;
-static int selected_row = 0;
-static int scroll_offset = 0;
-static algo::Smallstr100 breadcrumb[16];
-static bool running = true;
-static algo::Smallstr50 current_path;  // active DataPath
-static algo::Smallstr50 all_paths[8];
-static int n_paths = 0;
-static bool choosing_branch = false;
-static algo::Smallstr50 active_step;  // which DataStep we're viewing data from
-
-// View modes
-enum ViewMode { VIEW_LIST = 0, VIEW_GRAPH = 1, VIEW_RAW = 2 };
-static ViewMode view_mode = VIEW_LIST;
-static algo::cstring graph_output;  // cached amc_vis output
-static int graph_scroll = 0;
-
-// Collected branch choices at current level
-struct BranchChoice {
-    algo::Smallstr50 step_key;
-    algo::Smallstr100 source_ctype;
-    int item_count;
-};
-static BranchChoice g_branches[16];
-static int g_nbranches = 0;
-
-// ============================================================================
-// Get items at current DataStep level, filtered by parent
-// ============================================================================
-
-struct ViewItem {
-    algo::cstring label;
-    algo::cstring detail;
-    algo::cstring key;
-    bool has_children;
-};
-
-static ViewItem g_items[8192];
-static int g_nitems = 0;
-
-// Count records matching a step + parent key
-static int CountStepItems(acr_tui::FDataStep& step, algo::strptr parent_key) {
-    CTypeIndex* ct = FindCType(step.source_ctype);
-    if (!ct) return 0;
-    if (!ch_N(step.link_field) || !ch_N(parent_key)) return ct->count;
-    int n = 0;
-    for (GRec* rec = ct->head; rec; rec = rec->next) {
-        if (!ch_N(rec->pkey)) continue;
-        algo::strptr prefix = algo::Pathcomp(rec->pkey, step.link_field);
-        if (prefix == parent_key) n++;
-    }
-    return n;
-}
-
-// Collect branch choices at next level
-static void CollectBranches() {
-    g_nbranches = 0;
-    algo::strptr parent_key;
-    if (current_level > 0) parent_key = algo::strptr(breadcrumb[current_level - 1]);
-
-    ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-        if (ds.p_path == current_path && ds.level == current_level && g_nbranches < 16) {
-            BranchChoice& bc = g_branches[g_nbranches];
-            bc.step_key = ds.data_step;
-            bc.source_ctype = ds.source_ctype;
-            bc.item_count = CountStepItems(ds, parent_key);
-            g_nbranches++;
-        }
-    }ind_end;
-}
-
-static void RefreshItems() {
-    g_nitems = 0;
-
-    if (choosing_branch) {
-        // Show branch choices as items
-        CollectBranches();
-        for (int i = 0; i < g_nbranches; i++) {
-            ViewItem& item = g_items[g_nitems];
-            item.label = g_branches[i].source_ctype;
-            algo::cstring detail;
-            detail << g_branches[i].item_count << " items";
-            item.detail = detail;
-            item.key = g_branches[i].step_key;
-            item.has_children = g_branches[i].item_count > 0;
-            g_nitems++;
-        }
-        return;
-    }
-
-    // Find the active DataStep
-    acr_tui::FDataStep* step = NULL;
-    if (ch_N(active_step)) {
-        ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-            if (ds.data_step == active_step) { step = &ds; break; }
-        }ind_end;
-    }
-    if (!step) {
-        // Fallback: find first step at current level
-        ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-            if (ds.p_path == current_path && ds.level == current_level) { step = &ds; break; }
-        }ind_end;
-    }
-    if (!step) return;
-
-    // Check if there are next-level steps (for has_children)
-    int next_count = 0;
-    ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-        if (ds.p_path == current_path && ds.level == current_level + 1) next_count++;
-    }ind_end;
-
-    // Parent key for filtering
-    algo::strptr parent_key;
-    if (current_level > 0) parent_key = algo::strptr(breadcrumb[current_level - 1]);
-
-    // Find records matching source_ctype
-    CTypeIndex* ct = FindCType(step->source_ctype);
-    if (!ct) return;
-
-    algo::strptr link = step->link_field;  // e.g. ".LL" or "/LL"
-    algo::strptr label_name = step->label_field;
-    algo::strptr detail_name = step->detail_field;
-
-    for (GRec* rec = ct->head; rec && g_nitems < 8192; rec = rec->next) {
-        // Skip empty pkey records
-        if (!ch_N(rec->pkey)) continue;
-
-        // Apply filter: extract pathcomp from pkey, match parent
-        if (ch_N(link) && ch_N(parent_key)) {
-            algo::strptr pkey = rec->pkey;
-            algo::strptr prefix = algo::Pathcomp(pkey, link);
-            if (prefix != parent_key) continue;
-        }
-
-        ViewItem& item = g_items[g_nitems];
-        // Extract label from tuple attributes
-        item.label = TupleGetAttr(rec->tuple, label_name);
-        // If label is empty, use pkey
-        if (!ch_N(item.label)) item.label = rec->pkey;
-        // For deeper levels, show just the local part (strip parent prefix)
-        if (ch_N(link) && ch_N(parent_key)) {
-            (void)item.label;
-            // Strip prefix using the link pathcomp's complement
-            // e.g. if link is ".LL", show ".LR" part
-            if (link == ".LL") {
-                algo::strptr local = algo::Pathcomp(rec->pkey, ".LR");
-                if (ch_N(local)) item.label = local;
-            } else if (link == "/LL") {
-                algo::strptr local = algo::Pathcomp(rec->pkey, "/LR");
-                if (ch_N(local)) item.label = local;
-            }
-        }
-
-        item.detail = TupleGetAttr(rec->tuple, detail_name);
-        item.key = rec->pkey;
-        item.has_children = next_count > 0;
-        g_nitems++;
-    }
-}
-
-// ============================================================================
-// External tool view: pipe to amc_vis / acr and capture output
+// External tool view (terminal only — pipes to amc_vis / acr)
 // ============================================================================
 
 static void RunExternalView() {
     graph_output = algo::cstring();
     graph_scroll = 0;
 
-    // Determine what to visualize based on current selection
     algo::cstring cmd;
-    if (view_mode == VIEW_GRAPH) {
-        // amc_vis: need a ctype name
-        // If we're viewing ctypes, use the selected one
-        // If viewing fields, use the parent ctype
-        algo::strptr key;
-        if (selected_row < g_nitems) key = algo::strptr(g_items[selected_row].key);
+    algo::strptr key;
+    if (selected_row < g_nitems) key = algo::strptr(g_items[selected_row].key);
 
-        // Find which DataStep we're on to determine context
-        acr_tui::FDataStep* step = NULL;
-        if (ch_N(active_step)) {
-            ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-                if (ds.data_step == active_step) { step = &ds; break; }
-            }ind_end;
-        }
-
-        algo::cstring ctype_arg;
-        if (step && step->source_ctype == "dmmeta.ctype" && ch_N(key)) {
-            // We're on a ctype list — use the selected ctype directly
-            // key is like "dmmeta.Ns", need to convert to exe-qualified form
-            // amc_vis wants ctype like "acr.FCtype" — but also works with plain ctype
-            ctype_arg = key;
-        } else if (step && step->source_ctype == "dmmeta.field" && ch_N(key)) {
-            // We're on a field list — use parent ctype
-            algo::strptr parent = algo::Pathcomp(key, ".RL");
-            if (ch_N(parent)) ctype_arg = parent;
-        } else if (step && step->source_ctype == "dmmeta.ns" && ch_N(key)) {
-            // Namespace level — show all ctypes for this ns
-            ctype_arg << key << ".%";
-        } else if (ch_N(key)) {
-            ctype_arg = key;
-        }
-
-        if (ch_N(ctype_arg)) {
-            cmd << "amc_vis " << ctype_arg << " -xref 2>&1";
-        }
-    } else if (view_mode == VIEW_RAW) {
-        // acr -t: show ssim tree of selected record
-        algo::strptr key;
-        if (selected_row < g_nitems) key = algo::strptr(g_items[selected_row].key);
-        acr_tui::FDataStep* step = NULL;
-        if (ch_N(active_step)) {
-            ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-                if (ds.data_step == active_step) { step = &ds; break; }
-            }ind_end;
-        }
-        if (step && ch_N(key)) {
-            cmd << "acr -t " << step->source_ctype << ":" << key << " 2>&1";
-        }
+    acr_tui::FDataStep* step = NULL;
+    if (ch_N(active_step)) {
+        ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+            if (ds.data_step == active_step) { step = &ds; break; }
+        }ind_end;
     }
 
-    if (!ch_N(cmd)) {
-        graph_output = "No visualization available for current selection";
-        return;
+    if (view_mode == VIEW_GRAPH && step && ch_N(key)) {
+        algo::cstring arg;
+        if (step->source_ctype == "dmmeta.ctype") arg = key;
+        else if (step->source_ctype == "dmmeta.field") arg = algo::Pathcomp(key, ".RL");
+        else if (step->source_ctype == "dmmeta.ns") { arg << key << ".%"; }
+        else arg = key;
+        if (ch_N(arg)) cmd << "amc_vis " << arg << " -xref 2>&1";
+    } else if (view_mode == VIEW_RAW && step && ch_N(key)) {
+        cmd << "acr -t " << step->source_ctype << ":" << key << " 2>&1";
     }
 
-    // Run command and capture output
+    if (!ch_N(cmd)) { graph_output = "No visualization available"; return; }
+
     FILE* pipe = popen((char*)algo::Zeroterm(tempstr(cmd)), "r");
-    if (!pipe) {
-        graph_output = "Failed to run command";
-        return;
-    }
+    if (!pipe) { graph_output = "Failed to run command"; return; }
     char buf[4096];
-    while (fgets(buf, sizeof(buf), pipe)) {
-        graph_output << buf;
-    }
+    while (fgets(buf, sizeof(buf), pipe)) graph_output << buf;
     pclose(pipe);
 }
 
 // ============================================================================
-// Message dispatch
-// ============================================================================
-
-enum { MSG_NAVIGATE = 1, MSG_ACTIVATE = 2, MSG_CANCEL = 3, MSG_QUIT = 4, MSG_SWITCH_PATH = 5, MSG_TOGGLE_VIEW = 6 };
-struct UiMsg { u32 type; i32 direction; i32 path_idx; UiMsg() : type(0), direction(0), path_idx(0) {} };
-
-static void DispatchMsg(const UiMsg& msg) {
-    switch (msg.type) {
-        case MSG_QUIT: running = false; break;
-        case MSG_NAVIGATE: {
-            int new_sel = selected_row + msg.direction;
-            if (new_sel >= 0 && new_sel < g_nitems) selected_row = new_sel;
-            int visible = term_rows - 5;
-            if (selected_row < scroll_offset) scroll_offset = selected_row;
-            if (selected_row >= scroll_offset + visible) scroll_offset = selected_row - visible + 1;
-            break;
-        }
-        case MSG_ACTIVATE:
-            if (choosing_branch) {
-                // User selected a branch — use it and show data
-                if (selected_row < g_nitems) {
-                    active_step = g_items[selected_row].key;
-                    choosing_branch = false;
-                    selected_row = 0;
-                    scroll_offset = 0;
-                    RefreshItems();
-                }
-            } else if (selected_row < g_nitems && g_items[selected_row].has_children) {
-                breadcrumb[current_level] = algo::strptr(g_items[selected_row].key);
-                current_level++;
-                selected_row = 0;
-                scroll_offset = 0;
-                // Check how many branches at next level
-                int branch_count = 0;
-                ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-                    if (ds.p_path == current_path && ds.level == current_level) branch_count++;
-                }ind_end;
-                if (branch_count > 1) {
-                    // Show branch choice menu
-                    choosing_branch = true;
-                    active_step = algo::Smallstr50();
-                } else {
-                    // Single branch — use it directly
-                    choosing_branch = false;
-                    ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-                        if (ds.p_path == current_path && ds.level == current_level) {
-                            active_step = ds.data_step; break;
-                        }
-                    }ind_end;
-                }
-                RefreshItems();
-            }
-            break;
-        case MSG_CANCEL:
-            if (choosing_branch) {
-                // Go back from branch choice to parent level
-                choosing_branch = false;
-                current_level--;
-                selected_row = 0;
-                scroll_offset = 0;
-                RefreshItems();
-            } else if (current_level > 0) {
-                current_level--;
-                selected_row = 0;
-                scroll_offset = 0;
-                // Check if this level has branches
-                int branch_count = 0;
-                ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-                    if (ds.p_path == current_path && ds.level == current_level) branch_count++;
-                }ind_end;
-                choosing_branch = branch_count > 1;
-                if (!choosing_branch) {
-                    ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-                        if (ds.p_path == current_path && ds.level == current_level) {
-                            active_step = ds.data_step; break;
-                        }
-                    }ind_end;
-                }
-                RefreshItems();
-            }
-            break;
-        case MSG_SWITCH_PATH:
-            if (msg.path_idx >= 0 && msg.path_idx < n_paths) {
-                current_path = all_paths[msg.path_idx];
-                current_level = 0;
-                selected_row = 0;
-                scroll_offset = 0;
-                choosing_branch = false;
-                active_step = algo::Smallstr50();
-                // Set active_step to first step at level 0
-                ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-                    if (ds.p_path == current_path && ds.level == 0) { active_step = ds.data_step; break; }
-                }ind_end;
-                RefreshItems();
-            }
-            break;
-        case MSG_TOGGLE_VIEW:
-            if (view_mode == VIEW_LIST) {
-                view_mode = VIEW_GRAPH;
-                RunExternalView();
-            } else if (view_mode == VIEW_GRAPH) {
-                view_mode = VIEW_RAW;
-                RunExternalView();
-            } else {
-                view_mode = VIEW_LIST;
-            }
-            break;
-    }
-}
-
-// ============================================================================
-// Input: read key, translate via keymap
+// Input
 // ============================================================================
 
 static UiMsg ReadInput() {
@@ -583,41 +145,28 @@ static UiMsg ReadInput() {
     else if (ch == 3) { msg.type = MSG_QUIT; return msg; }
     else ch_Add(key_name, ch);
 
-    // View toggle: v cycles list → graph → raw → list
     if (ch == 'v') {
         msg.type = MSG_TOGGLE_VIEW;
+        if ((view_mode + 1) % 3 != VIEW_LIST) RunExternalView();
         return msg;
     }
 
-    // In graph/raw view, j/k/arrows scroll, Esc goes back to list
     if (view_mode != VIEW_LIST) {
         if (key_name == "j" || key_name == "Down") { graph_scroll++; return msg; }
         if (key_name == "k" || key_name == "Up") { if (graph_scroll > 0) graph_scroll--; return msg; }
-        if (key_name == "Esc" || key_name == "Left" || key_name == "h") {
-            view_mode = VIEW_LIST;
-            return msg;
-        }
+        if (key_name == "Esc" || key_name == "Left" || key_name == "h") { view_mode = VIEW_LIST; return msg; }
         if (key_name == "q") { msg.type = MSG_QUIT; return msg; }
-        return msg;  // swallow other keys in view mode
+        return msg;
     }
 
-    // Path switching: 1-9 switches DataPath
     if (ch >= '1' && ch <= '9') {
         int idx = ch - '1';
-        if (idx < n_paths) {
-            msg.type = MSG_SWITCH_PATH;
-            msg.path_idx = idx;
-            return msg;
-        }
+        if (idx < n_paths) { msg.type = MSG_SWITCH_PATH; msg.path_idx = idx; return msg; }
     }
 
-    // Match keymaps from ui.key_map
     ind_beg(acr_tui::_db_key_map_curs, km, acr_tui::_db) {
         if (km.key != key_name) continue;
-        // p_widget scope check (empty = global)
-        if (ch_N(km.p_widget) > 0) {
-            // For now, all keys apply to the browser widget
-        }
+        if (ch_N(km.p_widget) > 0) {}
         algo::strptr action = km.action;
         if (action == "quit")           msg.type = MSG_QUIT;
         else if (action == "navigate_next") { msg.type = MSG_NAVIGATE; msg.direction = 1; }
@@ -631,16 +180,15 @@ static UiMsg ReadInput() {
 }
 
 // ============================================================================
-// Renderer — reads widget definitions from ui.* schema
+// Render
 // ============================================================================
 
 static void Render() {
     if (need_resize) UpdateTermSize();
     int W = term_cols;
-
     ClearScreen();
 
-    // Find title widget and render it
+    // Title
     ind_beg(acr_tui::_db_widget_curs, w, acr_tui::_db) {
         if (w.type == "label" && w.visible) {
             ApplyStyleByName(w.p_style);
@@ -649,22 +197,8 @@ static void Render() {
         }
     }ind_end;
 
-    // Breadcrumb bar (row 1)
-    algo::cstring crumb;
-    crumb << " " << current_path;
-    for (int i = 0; i < current_level; i++) {
-        crumb << " \xe2\x96\xb8 " << breadcrumb[i];
-    }
-    if (choosing_branch) {
-        crumb << " \xe2\x96\xb8 [choose relationship]";
-    } else if (ch_N(active_step)) {
-        ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-            if (ds.data_step == active_step) {
-                crumb << " \xe2\x96\xb8 [" << ds.source_ctype << "]";
-                break;
-            }
-        }ind_end;
-    }
+    // Breadcrumb
+    algo::cstring crumb = GetBreadcrumb();
     term_str("\x1b[33m");
     PutStr(1, 0, crumb, W);
     ResetColor();
@@ -678,13 +212,11 @@ static void Render() {
     int visible = term_rows - 5;
 
     if (view_mode == VIEW_LIST) {
-        // List view — current behavior
         for (int i = 0; i < visible && (scroll_offset + i) < g_nitems; i++) {
             int idx = scroll_offset + i;
             ViewItem& item = g_items[idx];
             bool sel = idx == selected_row;
             if (sel) ApplyStyleByName("selected");
-
             algo::cstring line;
             if (item.has_children) line << " \xe2\x96\xb8 ";
             else line << "   ";
@@ -698,8 +230,6 @@ static void Render() {
             PutStr(3 + i, 0, line, W);
             ResetColor();
         }
-
-        // Scroll bar
         if (g_nitems > visible && visible > 0) {
             int bar_h = (visible * visible) / g_nitems;
             if (bar_h < 1) bar_h = 1;
@@ -712,10 +242,8 @@ static void Render() {
             ResetColor();
         }
     } else {
-        // Graph or Raw view — display captured external tool output
         algo::StringIter iter(graph_output);
-        int line_num = 0;
-        int row = 0;
+        int line_num = 0, row = 0;
         while (!iter.EofQ() && row < visible) {
             algo::strptr line = algo::GetLine(iter);
             if (line_num >= graph_scroll) {
@@ -734,20 +262,15 @@ static void Render() {
     for (int i = 0; i < W; i++) term_str("\xe2\x94\x80");
     ResetColor();
 
-    // Status bar — from statusbar widget
+    // Status bar
     ind_beg(acr_tui::_db_widget_curs, w, acr_tui::_db) {
         if (w.type == "statusbar" && w.visible) {
             ApplyStyleByName(w.p_style);
             algo::cstring status;
-            // Show path tabs
             for (int pi = 0; pi < n_paths; pi++) {
-                if (all_paths[pi] == current_path) {
-                    status << " [" << (pi+1) << ":" << all_paths[pi] << "]";
-                } else {
-                    status << "  " << (pi+1) << ":" << all_paths[pi];
-                }
+                if (all_paths[pi] == current_path) status << " [" << (pi+1) << ":" << all_paths[pi] << "]";
+                else status << "  " << (pi+1) << ":" << all_paths[pi];
             }
-            // Show view mode
             const char* vname = view_mode == VIEW_LIST ? "list" : view_mode == VIEW_GRAPH ? "GRAPH" : "RAW";
             status << "  v:" << vname << "  " << g_nitems << " items";
             PutStr(term_rows - 1, 0, status, W);
@@ -761,24 +284,14 @@ static void Render() {
 // ============================================================================
 
 void acr_tui::Main() {
-    // Load all ssim data generically from data/ directory
     LoadAllData("data");
-
-    // Collect available DataPaths
-    ind_beg(acr_tui::_db_data_path_curs, dp, acr_tui::_db) {
-        if (n_paths < 8) {
-            all_paths[n_paths++] = dp.data_path;
-        }
-    }ind_end;
-    if (n_paths > 0) current_path = all_paths[0];
-
+    InitPaths();
     RefreshItems();
-
     EnableRawMode();
 
     while (running) {
         Render();
         UiMsg msg = ReadInput();
-        if (msg.type != 0) DispatchMsg(msg);
+        if (msg.type != 0) DispatchMsg(msg, term_rows - 5);
     }
 }

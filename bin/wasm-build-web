@@ -1,0 +1,55 @@
+#!/bin/bash
+# Build acr_web WASM module — browser version of acr_tui
+set -e
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+EMSDK_DIR="${EMSDK_DIR:-$HOME/emsdk}"
+OUT_DIR="$SCRIPT_DIR/wasm/build"
+
+if [ ! -f "$EMSDK_DIR/emsdk_env.sh" ]; then
+    echo "Error: emsdk not found at $EMSDK_DIR"; exit 1
+fi
+source "$EMSDK_DIR/emsdk_env.sh" 2>/dev/null
+mkdir -p "$OUT_DIR"
+
+echo "Building acr_web WASM..."
+
+em++ \
+    -O2 \
+    -s MODULARIZE=1 \
+    -s EXPORT_NAME="AcrWeb" \
+    -s ALLOW_MEMORY_GROWTH=1 \
+    -s ENVIRONMENT='web,node' \
+    -s ERROR_ON_UNDEFINED_SYMBOLS=0 \
+    -s INVOKE_RUN=0 \
+    --bind \
+    -I"$SCRIPT_DIR" \
+    -I"$SCRIPT_DIR/include" \
+    -DWASM_CRC32_SHIM_DEFINED \
+    -include "$SCRIPT_DIR/include/wasm_crc32_shim.h" \
+    "$SCRIPT_DIR/wasm/acr_web.cpp" \
+    "$SCRIPT_DIR/cpp/gen/acr_tui_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/dmmeta_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/ui_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/algo_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/algo_lib_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/command_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/report_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/lib_json_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/lib_prot_gen.cpp" \
+    "$SCRIPT_DIR/cpp/gen/lib_exec_gen.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/lib.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/cpu_hz.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/string.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/fmt.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/errtext.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/crc32.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/prlog.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/regx.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/time.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/line.cpp" \
+    "$SCRIPT_DIR/cpp/lib/algo/arg.cpp" \
+    -o "$OUT_DIR/acr_web.js"
+
+echo "Built:"
+ls -lh "$OUT_DIR/acr_web.js" "$OUT_DIR/acr_web.wasm"
