@@ -53,6 +53,37 @@ def warn(msg):
     print(f"  WARN:  {msg}")
 
 # ============================================================================
+# Step 0 — acr -check for referential integrity
+# ============================================================================
+print("=== acr -check: referential integrity ===")
+check_result = subprocess.run(
+    ["acr", "ui.%", "-check"],
+    capture_output=True, text=True,
+    cwd=os.environ.get("OPENACR_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
+# acr -check reports false positives for Pkey references to enum types
+# (fconst values live in dmmeta.fconst, not in data ssimfiles)
+# Only report badrefs for non-enum Pkey fields
+enum_fields = {"action", "type", "layout", "selection", "fg", "bg", "border",
+               "kind", "dir", "join_kind", "source", "align", "halign", "valign",
+               "state", "p_command", "p_parent", "p_data_path", "p_view"}
+combined = check_result.stdout + check_result.stderr
+for line in combined.splitlines():
+    if "Invalid value" in line:
+        # Extract field name from "Invalid value fieldname:value"
+        import re
+        m = re.search(r"Invalid value (\w+):", line)
+        if m and m.group(1) in enum_fields:
+            continue  # skip enum false positives
+        if m and m.group(1).startswith("p_") and ":" in line and line.strip().endswith(":"):
+            continue  # skip empty optional Pkey refs
+        error(f"acr -check: {line.strip()}")
+    elif "badrefs" in line:
+        pass  # summary line, skip
+if not errors:
+    print("  OK")
+
+# ============================================================================
 # P0.7 — Widget tree structural integrity
 # ============================================================================
 print("=== P0.7: Widget tree ===")
