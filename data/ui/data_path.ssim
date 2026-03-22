@@ -1,1 +1,3 @@
-ui.data_path  data_path:schema  comment:"Browse OpenACR schema: ns → ctype → field → fconst"
+ui.data_path  data_path:schema  comment:"Browse schema: namespace → ctype → field → fconst"
+ui.data_path  data_path:build   comment:"Browse build: target → source files"
+ui.data_path  data_path:ui      comment:"Browse UI: widget → column/binding/keymap"

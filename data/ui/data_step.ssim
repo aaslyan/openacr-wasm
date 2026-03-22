@@ -1,4 +1,8 @@
-ui.data_step  data_step:schema.0  p_path:schema  level:0  source_ctype:dmmeta.ns      label_field:ns      detail_field:comment  link_field:""
-ui.data_step  data_step:schema.1  p_path:schema  level:1  source_ctype:dmmeta.ctype   label_field:ctype   detail_field:comment  link_field:.LL
-ui.data_step  data_step:schema.2  p_path:schema  level:2  source_ctype:dmmeta.field   label_field:field   detail_field:arg      link_field:.RL
-ui.data_step  data_step:schema.3  p_path:schema  level:3  source_ctype:dmmeta.fconst  label_field:fconst  detail_field:value    link_field:/LL
+ui.data_step  data_step:schema.0  p_path:schema  level:0  source_ctype:dmmeta.ns      label_field:ns       detail_field:comment   link_field:""
+ui.data_step  data_step:schema.1  p_path:schema  level:1  source_ctype:dmmeta.ctype   label_field:ctype    detail_field:comment   link_field:.LL
+ui.data_step  data_step:schema.2  p_path:schema  level:2  source_ctype:dmmeta.field   label_field:field    detail_field:arg       link_field:.RL
+ui.data_step  data_step:schema.3  p_path:schema  level:3  source_ctype:dmmeta.fconst  label_field:fconst   detail_field:value     link_field:/LL
+ui.data_step  data_step:build.0   p_path:build   level:0  source_ctype:dev.target     label_field:target   detail_field:""        link_field:""
+ui.data_step  data_step:build.1   p_path:build   level:1  source_ctype:dev.targsrc    label_field:targsrc  detail_field:comment   link_field:.LL
+ui.data_step  data_step:ui.0      p_path:ui      level:0  source_ctype:ui.widget      label_field:widget   detail_field:title     link_field:""
+ui.data_step  data_step:ui.1      p_path:ui      level:1  source_ctype:ui.column      label_field:column   detail_field:field     link_field:.LL

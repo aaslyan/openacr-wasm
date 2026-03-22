@@ -1,4 +1,7 @@
 ui.key_map  key_map:global.q       p_widget:""       key:q       action:quit
+ui.key_map  key_map:global.1       p_widget:""       key:1       action:activate
+ui.key_map  key_map:global.2       p_widget:""       key:2       action:activate
+ui.key_map  key_map:global.3       p_widget:""       key:3       action:activate
 ui.key_map  key_map:browser.j      p_widget:browser  key:j       action:navigate_next
 ui.key_map  key_map:browser.k      p_widget:browser  key:k       action:navigate_prev
 ui.key_map  key_map:browser.down   p_widget:browser  key:Down    action:navigate_next

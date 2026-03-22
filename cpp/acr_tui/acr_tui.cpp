@@ -213,6 +213,9 @@ static int selected_row = 0;
 static int scroll_offset = 0;
 static algo::Smallstr100 breadcrumb[16];
 static bool running = true;
+static algo::Smallstr50 current_path;  // active DataPath
+static algo::Smallstr50 all_paths[8];
+static int n_paths = 0;
 
 // ============================================================================
 // Get items at current DataStep level, filtered by parent
@@ -231,17 +234,17 @@ static int g_nitems = 0;
 static void RefreshItems() {
     g_nitems = 0;
 
-    // Find current DataStep
+    // Find current DataStep matching current_path + level
     acr_tui::FDataStep* step = NULL;
     ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-        if (ds.level == current_level) { step = &ds; break; }
+        if (ds.p_path == current_path && ds.level == current_level) { step = &ds; break; }
     }ind_end;
     if (!step) return;
 
-    // Check if there's a next level (determines has_children)
+    // Check if there's a next level in this path
     bool has_next = false;
     ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
-        if (ds.level == current_level + 1) { has_next = true; break; }
+        if (ds.p_path == current_path && ds.level == current_level + 1) { has_next = true; break; }
     }ind_end;
 
     // Parent key for filtering
@@ -257,6 +260,9 @@ static void RefreshItems() {
     algo::strptr detail_name = step->detail_field;
 
     for (GRec* rec = ct->head; rec && g_nitems < 8192; rec = rec->next) {
+        // Skip empty pkey records
+        if (!ch_N(rec->pkey)) continue;
+
         // Apply filter: extract pathcomp from pkey, match parent
         if (ch_N(link) && ch_N(parent_key)) {
             algo::strptr pkey = rec->pkey;
@@ -294,8 +300,8 @@ static void RefreshItems() {
 // Message dispatch
 // ============================================================================
 
-enum { MSG_NAVIGATE = 1, MSG_ACTIVATE = 2, MSG_CANCEL = 3, MSG_QUIT = 4 };
-struct UiMsg { u32 type; i32 direction; };
+enum { MSG_NAVIGATE = 1, MSG_ACTIVATE = 2, MSG_CANCEL = 3, MSG_QUIT = 4, MSG_SWITCH_PATH = 5 };
+struct UiMsg { u32 type; i32 direction; i32 path_idx; UiMsg() : type(0), direction(0), path_idx(0) {} };
 
 static void DispatchMsg(const UiMsg& msg) {
     switch (msg.type) {
@@ -325,6 +331,15 @@ static void DispatchMsg(const UiMsg& msg) {
                 RefreshItems();
             }
             break;
+        case MSG_SWITCH_PATH:
+            if (msg.path_idx >= 0 && msg.path_idx < n_paths) {
+                current_path = all_paths[msg.path_idx];
+                current_level = 0;
+                selected_row = 0;
+                scroll_offset = 0;
+                RefreshItems();
+            }
+            break;
     }
 }
 
@@ -333,7 +348,7 @@ static void DispatchMsg(const UiMsg& msg) {
 // ============================================================================
 
 static UiMsg ReadInput() {
-    UiMsg msg = {0, 0};
+    UiMsg msg;
     char ch;
     if (read(STDIN_FILENO, &ch, 1) != 1) { msg.type = MSG_QUIT; return msg; }
 
@@ -353,6 +368,16 @@ static UiMsg ReadInput() {
     else if (ch == '\t') key_name = "Tab";
     else if (ch == 3) { msg.type = MSG_QUIT; return msg; }
     else ch_Add(key_name, ch);
+
+    // Path switching: 1-9 switches DataPath
+    if (ch >= '1' && ch <= '9') {
+        int idx = ch - '1';
+        if (idx < n_paths) {
+            msg.type = MSG_SWITCH_PATH;
+            msg.path_idx = idx;
+            return msg;
+        }
+    }
 
     // Match keymaps from ui.key_map
     ind_beg(acr_tui::_db_key_map_curs, km, acr_tui::_db) {
@@ -394,11 +419,7 @@ static void Render() {
 
     // Breadcrumb bar (row 1)
     algo::cstring crumb;
-    // Show data path name
-    ind_beg(acr_tui::_db_data_path_curs, dp, acr_tui::_db) {
-        crumb << " " << dp.data_path;
-        break;
-    }ind_end;
+    crumb << " " << current_path;
     for (int i = 0; i < current_level; i++) {
         crumb << " \xe2\x96\xb8 " << breadcrumb[i];
     }
@@ -471,12 +492,15 @@ static void Render() {
         if (w.type == "statusbar" && w.visible) {
             ApplyStyleByName(w.p_style);
             algo::cstring status;
-            status << " \xe2\x86\x91\xe2\x86\x93:navigate  "
-                   << "Enter/\xe2\x86\x92:open  "
-                   << "Esc/\xe2\x86\x90:back  "
-                   << "q:quit  "
-                   << g_nitems << " items  "
-                   << "loaded:" << g_nrecs;
+            // Show path tabs
+            for (int pi = 0; pi < n_paths; pi++) {
+                if (all_paths[pi] == current_path) {
+                    status << " [" << (pi+1) << ":" << all_paths[pi] << "]";
+                } else {
+                    status << "  " << (pi+1) << ":" << all_paths[pi];
+                }
+            }
+            status << "  " << g_nitems << " items  q:quit";
             PutStr(term_rows - 1, 0, status, W);
             ResetColor();
         }
@@ -491,8 +515,14 @@ void acr_tui::Main() {
     // Load all ssim data generically from data/ directory
     LoadAllData("data");
 
-    // ui.* tables are already loaded via finput by FDb_Init
-    // Refresh items for level 0
+    // Collect available DataPaths
+    ind_beg(acr_tui::_db_data_path_curs, dp, acr_tui::_db) {
+        if (n_paths < 8) {
+            all_paths[n_paths++] = dp.data_path;
+        }
+    }ind_end;
+    if (n_paths > 0) current_path = all_paths[0];
+
     RefreshItems();
 
     EnableRawMode();
