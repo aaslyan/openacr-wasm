@@ -1,374 +1,236 @@
-# OpenACR UI Framework — Design Document
+# OpenACR UI Framework
 
-## Vision
+## The Problem
 
-A fully data-driven UI framework where every aspect of the interface — structure,
-layout, styling, data binding, events, and interaction — is defined as relational
-ssim records. The same UI definition renders on terminal (ANSI), browser (WASM/Canvas),
-or any future backend. No hand-written UI code — just data.
+Building UIs today means writing code. Lots of it. Want a table? Write a table
+component. Want a tree? Write a tree component. Want to change a column? Recompile.
+Want the same UI in a browser? Rewrite everything in JavaScript.
 
-## Core Principle
+OpenACR already proved that data structures don't need hand-written code — you
+define them as relational records, and `amc` generates everything. We apply the
+same idea to user interfaces.
 
-**A widget declares what it is, where it lives, how it looks, what data it reflects,
-what actions it emits, and how it reacts to state changes.**
+## The Idea
 
-All six aspects are expressed as ssim records. The renderer is a thin loop that
-reads the widget tree and draws it. The event system is a typed message pipeline.
-Adding a new widget, changing a layout, or binding to different data is a one-line
-ssim edit — no recompilation needed.
-
-## Architecture
+**What if a UI was just data?**
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        Input Layer                                  │
-│  Terminal: raw keypress → TranslateKey()                           │
-│  Browser:  DOM event    → JS handler                               │
-│  Replay:   file/stream  → read UiMsg                               │
-│  Test:     programmatic → construct UiMsg                          │
-└──────────────────────────┬──────────────────────────────────────────┘
-                           │ UiMsg (typed binary message)
-                           ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                      Message Pipeline                               │
-│                                                                     │
-│  TranslateKey(ch) → KeyMap lookup → UiMsg { type, widget, ... }    │
-│                                                                     │
-│  DispatchMsg(msg) → switch(msg.type) {                             │
-│      NAVIGATE  → HandleNavigate()   // pure state update           │
-│      FOCUS     → HandleFocus()      // pure state update           │
-│      EXPAND    → HandleExpand()     // pure state update           │
-│      QUIT      → HandleQuit()       // set running=false           │
-│      ...                                                            │
-│  }                                                                  │
-│                                                                     │
-│  LogMsg(msg) → msg_log[] ring buffer (replay, debug, test)         │
-└──────────────────────────┬──────────────────────────────────────────┘
-                           │ State change
-                           ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                       UI State                                      │
-│                                                                     │
-│  Widget tree (loaded from ui.widget ssim)                          │
-│  Focus index, selection per widget, expanded nodes                  │
-│  All state is in-memory AMC data structures                        │
-└──────────────────────────┬──────────────────────────────────────────┘
-                           │ Render()
-                           ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                      Output Layer                                   │
-│  Terminal: walk widget tree → ANSI escape sequences                 │
-│  Browser:  walk widget tree → Canvas/DOM draw calls                 │
-│  Test:     walk widget tree → assert on positions/content          │
-└─────────────────────────────────────────────────────────────────────┘
+ui.widget  widget:users  type:table  row:2  col:0  w:40  h:10  title:Users  selection:single
+ui.column  column:users.name   p_widget:users  field:name   title:Name   w:15
+ui.column  column:users.email  p_widget:users  field:email  title:Email  w:25
+ui.binding binding:users  p_widget:users  source_ctype:myapp.User  source_field:zd_user  kind:collection
 ```
 
-**Key insight**: Message handlers are pure state functions — no I/O, no rendering,
-no platform dependencies. This makes them testable, replayable, and portable.
+Four lines. That's a complete interactive table with selection, column headers,
+and data binding to any AMC-generated type. No C++ UI code. No JavaScript.
+Change the field names, the table shows different data. Add a column, it appears.
+Remove one, it's gone. All without recompilation.
 
-## Three Layers
+## How It Works
 
-The schema explicitly models three orthogonal concerns:
+The framework has three parts:
 
-### 1. Structural Layer — What exists?
+**1. You describe the UI in ssim files** — windows, widgets, styles, key bindings,
+data connections. This is the "what."
 
-| Ctype | Purpose |
-|-------|---------|
-| `ui.Window` | Top-level container (rows, cols, title) |
-| `ui.Widget` | Universal widget (type, position, parent, visibility) |
-| `ui.WidgetType` | Enum: label, table, tree, input, list, panel, tabs, statusbar, menu, separator, progressbar, canvas |
-| `ui.LayoutType` | Enum: absolute, vertical, horizontal, grid, stack, dock, split, form, flow |
+**2. A message pipeline processes input** — every keypress becomes a typed message.
+Messages flow through a dispatcher that updates state. This is the "how."
 
-### 2. Presentation Layer — How does it look?
+**3. A thin renderer draws the result** — it reads the widget tree and current
+state, outputs to terminal or browser. This is the "where."
 
-| Ctype | Purpose |
-|-------|---------|
-| `ui.Style` | Visual properties: fg/bg color, bold, underline, border |
-| `ui.StyleSlot` | State-based style override: widget + state → style |
-| `ui.WidgetState` | Enum: normal, focused, selected, disabled, editing, error |
-| `ui.Color` | Enum: default, black, red, green, yellow, blue, magenta, cyan, white |
-| `ui.BorderStyle` | Enum: none, single, double, rounded, ascii |
-| `ui.Align` | Enum: left, center, right, top, bottom, stretch |
-| `ui.Column` | Table column definition: field, title, width, alignment, sortable, hidden, editable |
-| `ui.LayoutCfg` | Managed layout hints: flex, min/max size, padding, gap, alignment |
+The renderer is the only platform-specific part. Everything else — the widget
+definitions, the event handling, the state management — is portable C++ that
+compiles to both native and WebAssembly.
 
-### 3. Behavior Layer — How does it interact?
+## A Concrete Example
 
-| Ctype | Purpose |
-|-------|---------|
-| `ui.Binding` | Connects widget to data: source ctype + field, kind, direction |
-| `ui.BindingKind` | Enum: value, collection, tree, command, property |
-| `ui.BindingDir` | Enum: read, write, readwrite |
-| `ui.KeyMap` | Maps key → action per widget (or global) |
-| `ui.ActionType` | Enum: insert, delete, navigate_next/prev, edit, toggle_expand, select, scroll, focus, quit, activate, cancel, submit, open, close, copy, paste, refresh, search, page_up/down, home, end, sort, filter, expand_all, collapse_all |
-| `ui.Command` | Parameterized action: action + target widget + argument |
-| `ui.TableCfg` | Table config: selectable, header |
-| `ui.TreeCfg` | Tree config: indent, show_lines, child_field, label_field, expanded_default |
-| `ui.InputCfg` | Input config: editable, maxlen |
-
-## Message Protocol (uimsg)
-
-All user interactions are modeled as typed binary messages following the OpenACR
-`ams` (Algo Messaging System) pattern.
-
-### Header
+We built `acr_tui` — a terminal application that browses OpenACR's own schema
+(1600+ types, 5000+ fields). The entire UI is defined in 7 ssim files:
 
 ```
-uimsg.MsgHeader
-  type:u32      — message type ID (dmmeta.typefld)
-  length:u32    — message length in bytes (dmmeta.lenfld)
+data/ui/window.ssim     — 1 record:  24x80 terminal window
+data/ui/style.ssim      — 5 records: header, selected, panel, status, title
+data/ui/widget.ssim     — 4 records: title label, namespace tree, fields table, status bar
+data/ui/binding.ssim    — 2 records: tree → dmmeta.Ns, table → dmmeta.Field
+data/ui/column.ssim     — 3 records: field name, arg type, reftype
+data/ui/tree_cfg.ssim   — 1 record:  indent=2, show_lines, child_field
+data/ui/key_map.ssim    — 7 records: j/k=navigate, Tab=focus, Enter=expand, q=quit
 ```
 
-### Message Types
+23 lines of data. The C++ renderer is generic — it doesn't know about namespaces
+or fields. It just follows the bindings.
 
-| Type ID | Message | Fields | Purpose |
-|---------|---------|--------|---------|
-| 1 | `KeyPressMsg` | key:u8, modifiers:u8 | Raw keypress |
-| 2 | `NavigateMsg` | widget, direction:i8 | Move selection up/down |
-| 3 | `FocusMsg` | widget | Change focus to widget |
-| 4 | `ScrollMsg` | widget, delta:i32 | Scroll content |
-| 5 | `ExpandMsg` | widget, node_key, expand:bool | Expand/collapse tree node |
-| 6 | `EditMsg` | widget, field, value | Edit a field value |
-| 7 | `SelectMsg` | widget, row_key | Select a row |
-| 8 | `InsertMsg` | ssim (Varlen) | Insert record via ssim tuple |
-| 9 | `DeleteMsg` | ctype, key | Delete a record |
-| 10 | `QuitMsg` | (none) | Exit application |
-| 11 | `RefreshMsg` | (none) | Force redraw |
-| 12 | `CommandMsg` | command, arg | Execute parameterized command |
+Want to browse `samp_mdb` instead of `dmmeta`? Change two binding records. Same
+renderer, same key mappings, different data.
 
-### Properties
+## Messages: Why Keypresses Aren't Actions
 
-- **Binary dispatch**: AMC generates a switch on `MsgHeader.type` — zero-overhead routing
-- **Fixed layout**: packed structs, no heap allocation, no parsing
-- **Replayable**: message stream can be recorded to file, replayed for testing
-- **Network-ready**: same binary messages work over WebSocket for remote UI
-- **Portable**: same messages used by terminal (C++), browser (WASM), and test harness
+When you press `j`, the framework doesn't directly move the cursor. Instead:
 
-### Future: Mouse Events
+1. Raw keypress `j` arrives
+2. KeyMap lookup: `j` on widget `ns_tree` → action `navigate_next`
+3. A `NavigateMsg` is created: `{type:2, widget:ns_tree, direction:1}`
+4. The message is dispatched to `HandleNavigate()` — a pure function that increments `selected[focus_idx]`
+5. The message is logged in a ring buffer
+6. The renderer redraws
 
-```
-uimsg.MouseMsg — row:u16, col:u16, button:u8, action:u8 (click/release/move/scroll)
-```
+Why this indirection? Because messages are data. You can:
 
-The click handler resolves (row, col) to a widget, then emits the appropriate
-semantic message (FocusMsg, SelectMsg, ExpandMsg, etc.).
+- **Record** a session: save the message stream to a file
+- **Replay** it: feed the messages back, get identical behavior
+- **Test** without a terminal: construct messages programmatically, assert on state
+- **Remote control**: send messages over WebSocket from another machine
+- **Undo**: reverse the message stream (for reversible actions)
 
-## Data Binding
-
-The `ui.Binding` ctype connects a widget to application data.
+The message types follow the OpenACR `ams` protocol pattern — packed binary structs
+with a header containing type ID and length. AMC generates the dispatch switch.
 
 ```
-ui.binding  binding:ns_tree   p_widget:ns_tree   source_ctype:dmmeta.Ns
-            source_field:zd_ns  kind:tree  dir:read
+uimsg.MsgHeader     type:u32  length:u32
+uimsg.NavigateMsg   base:MsgHeader  widget:Smallstr50  direction:i8
+uimsg.ExpandMsg     base:MsgHeader  widget:Smallstr50  node_key:Smallstr50  expand:bool
+uimsg.EditMsg       base:MsgHeader  widget:Smallstr50  field:Smallstr50  value:Smallstr200
+uimsg.InsertMsg     base:MsgHeader  ssim:char(Varlen)
+uimsg.QuitMsg       base:MsgHeader
+... (12 message types total)
 ```
 
-### Binding Kinds
+Every possible user interaction has a message type. The handler for each message
+is a pure state function — no I/O, no rendering, no platform dependencies.
 
-| Kind | Behavior |
-|------|----------|
-| `value` | Widget displays a single scalar field value |
-| `collection` | Widget iterates a list/pool (table rows) |
-| `tree` | Widget renders hierarchical data (tree nodes) |
-| `command` | Widget triggers an action when activated |
-| `property` | Widget reflects a property (visibility, enabled, style) |
+## Data Binding: The Generic Part
 
-### Binding Direction
-
-| Direction | Behavior |
-|-----------|----------|
-| `read` | Widget displays data (one-way) |
-| `write` | Widget modifies data (one-way input) |
-| `readwrite` | Widget displays and modifies data (two-way) |
-
-### How Binding Works
-
-1. Renderer encounters a table widget
-2. Looks up `ui.Binding` for that widget → gets `source_ctype` and `source_field`
-3. Iterates the bound collection using AMC-generated cursors
-4. For each record, reads fields specified by `ui.Column` entries
-5. Renders each cell at the correct position with the correct style
-
-This is generic — the renderer doesn't know about `dmmeta.Ns` or `samp_mdb.User`.
-It only knows "iterate this collection, display these fields."
-
-## State-Based Styling
-
-Instead of hardcoding focus/selection colors, the `ui.StyleSlot` ctype maps
-widget state to style overrides:
+The magic is in `ui.Binding`. It tells a widget where its data comes from:
 
 ```
-ui.style_slot  style_slot:ns_tree.focused   p_widget:ns_tree  state:focused   p_style:focus_style
-ui.style_slot  style_slot:ns_tree.selected  p_widget:ns_tree  state:selected  p_style:selected_style
-ui.style_slot  style_slot:fields.focused    p_widget:fields   state:focused   p_style:focus_style
+ui.binding  binding:users  p_widget:users  source_ctype:myapp.User  source_field:zd_user  kind:collection  dir:read
 ```
 
-The renderer checks the widget's current state, looks up the StyleSlot, and applies
-the matching style. Base style comes from `Widget.p_style`; state overrides come
-from StyleSlot records.
+The renderer sees this and knows: iterate the `zd_user` linked list, for each
+record read the fields specified by `ui.Column`, display them in the table cells.
 
-## Layout System
+It works for any AMC ctype. The renderer doesn't import `myapp.User` — it uses
+AMC-generated Print/Read functions and field metadata to render generically.
 
-Two modes:
+Binding kinds:
 
-### Absolute (default)
+| Kind | What it means |
+|------|---------------|
+| `value` | Display a single field (label showing "Users: 42") |
+| `collection` | Iterate a list (table rows, list items) |
+| `tree` | Navigate parent-child hierarchy (tree nodes) |
+| `command` | Trigger an action (button click) |
+| `property` | Reflect a widget property (visibility, enabled) |
 
-Widget specifies exact `row`, `col`, `w`, `h`. The renderer places it there.
-Simple, predictable, works for fixed terminal layouts.
+## Styling: State-Aware
 
-### Managed (vertical, horizontal, grid, etc.)
-
-Widget specifies layout type on the container. Children use `ui.LayoutCfg` to
-express flex weight, min/max size, alignment, padding, and gap. The layout engine
-computes positions at render time.
-
-```
-ui.widget      widget:sidebar  layout:vertical  ...
-ui.layout_cfg  layout_cfg:sidebar  p_widget:sidebar  padding:1  gap:0
-```
-
-Children of `sidebar` stack vertically with 1-cell padding. Their `row`/`col` are
-computed, not specified.
-
-## Parameterized Commands
-
-Simple actions (navigate, quit) are enum values. Complex actions need parameters:
+A widget has a base style. But focused widgets look different from unfocused ones.
+Selected rows look different from unselected. Instead of hardcoding this:
 
 ```
-ui.command  command:sort_by_name     action:sort    p_widget:fields  arg:field
-ui.command  command:focus_tree       action:focus   p_widget:ns_tree arg:""
-ui.command  command:expand_dmmeta    action:open    p_widget:ns_tree arg:dmmeta
+ui.style       style:normal    fg:default  bg:default  bold:N  border:single
+ui.style       style:focused   fg:cyan     bg:default  bold:Y  border:single
+ui.style       style:selected  fg:black    bg:cyan     bold:N  border:none
+
+ui.style_slot  style_slot:tree.focused   p_widget:tree  state:focused   p_style:focused
+ui.style_slot  style_slot:tree.selected  p_widget:tree  state:selected  p_style:selected
 ```
 
-KeyMap can bind to a Command instead of a raw ActionType. The `CommandMsg` carries
-the command name and argument, and the handler resolves it.
+The renderer checks widget state, looks up the StyleSlot, applies the right colors.
+Add an `error` state? Define the style, add a StyleSlot. No code change.
+
+## Layout: Two Modes
+
+**Absolute**: widget says `row:5 col:10 w:40 h:10`. The renderer puts it there.
+Simple and predictable for terminal layouts.
+
+**Managed**: container says `layout:vertical`. Children use `ui.LayoutCfg` for
+flex weights, min/max sizes, padding, gaps. The engine computes positions.
+
+Both modes use the same Widget type. The LayoutCfg is a separate table —
+only widgets in managed containers need it.
 
 ## Portability: Terminal and Browser
 
-The same `ui.*` schema and `uimsg.*` protocol work on both platforms:
+The same schema, same messages, same engine run on both:
 
-### Terminal (C++ native)
 ```
-Input:    read(STDIN) → parse ANSI sequences → UiMsg
-Engine:   DispatchMsg → state update (AMC data structures)
-Render:   walk widgets → write ANSI escapes to stdout
-```
-
-### Browser (WASM)
-```
-Input:    DOM keydown/click → JS creates UiMsg → pass to WASM
-Engine:   DispatchMsg → state update (same AMC code, compiled to WASM)
-Render:   walk widgets → JS reads state → draw to Canvas or <pre>
-```
-
-The engine (DispatchMsg + handlers) is identical C++ on both platforms. Only the
-input translator and renderer are platform-specific, and they're thin.
-
-## Testing Strategy
-
-Because interactions are messages, testing is:
-
-1. **Construct a message stream**: `[NavigateMsg(dir=1), NavigateMsg(dir=1), ExpandMsg, ...]`
-2. **Feed messages to DispatchMsg**: engine processes them, updates state
-3. **Assert on state**: check which widget is focused, which row is selected, which nodes are expanded
-4. **No terminal needed**: tests run headlessly as unit tests
-
-The message log (`msg_log[]`) enables:
-- **Record**: capture a live session as a message stream
-- **Replay**: feed the stream back, verify identical state
-- **Regression**: saved message streams become regression tests
-- **Debug**: inspect what happened step by step
-
-## Example: OpenACR Schema Browser
-
-The `acr_tui` executable demonstrates the framework by browsing `dmmeta`:
-
-### UI Layout (data/ui/widget.ssim)
-```
-ui.widget  widget:title      type:label      text:"OpenACR Schema Browser"
-ui.widget  widget:ns_tree    type:tree       title:Namespaces     selection:single
-ui.widget  widget:fields     type:table      title:Fields         selection:single
-ui.widget  widget:status     type:statusbar  text:"q:quit j/k:nav Tab:focus Enter:expand"
+Terminal (C++)                          Browser (WASM)
+─────────────────                       ──────────────────
+read(stdin)                             DOM keydown event
+  → parse ANSI escape                    → JS event handler
+  → TranslateKey()                       → construct UiMsg
+  → UiMsg                                → pass to WASM
+  → DispatchMsg()  ◄── same C++ ──►     → DispatchMsg()
+  → state update                         → state update
+  → Render()                              → Render()
+  → ANSI to stdout                        → Canvas/DOM draw
 ```
 
-### Data Binding (data/ui/binding.ssim)
+The engine (middle box) is identical compiled code. Input translation and rendering
+are thin wrappers — ~100 lines each.
+
+We proved this works: the WASM demo at `wasm/build/index.html` runs AMC-generated
+C++ in the browser with live data sync. The UI framework extends this to full
+interactive applications.
+
+## What You Can Build With This
+
+**Today** (implemented):
+- Schema browsers (`acr_tui` browsing `dmmeta`)
+- Data explorers for any AMC namespace
+- CRUD interfaces with table/tree/form widgets
+- Terminal dashboards with live data
+
+**With minimal additions** (one ssim table each):
+- Linked views: selecting in tree filters the table
+- Modal dialogs and popups
+- Search/filter bars
+- Cell-level formatting (numbers right-aligned, booleans as checkboxes)
+- Mouse support (click to focus, select, expand)
+
+**The key property**: each addition is a new ssim table, not a rewrite.
+The existing widgets, bindings, and messages continue to work unchanged.
+
+## The Full Schema
+
+### ui namespace — 21 types
+
+**Structure**: Window, Widget, WidgetType (12 values), LayoutType (9 values)
+
+**Presentation**: Style, StyleSlot, WidgetState (6 values), Color (9), BorderStyle (5), Align (6), Column, LayoutCfg
+
+**Behavior**: Binding, BindingKind (5), BindingDir (3), KeyMap, ActionType (29 values), Command, TableCfg, TreeCfg, InputCfg, SelectionMode (3)
+
+### uimsg namespace — 13 types
+
+MsgHeader + 12 messages: KeyPress, Navigate, Focus, Scroll, Expand, Edit, Select, Insert, Delete, Quit, Refresh, Command
+
+### Widget fields
+
 ```
-ui.binding  binding:ns_tree   source_ctype:dmmeta.Ns     source_field:zd_ns    kind:tree
-ui.binding  binding:fields    source_ctype:dmmeta.Field  source_field:zd_field kind:collection
+widget      Smallstr50      Primary key
+p_window    ui.Window       Parent window (Pkey)
+p_parent    ui.Widget       Parent widget for nesting (Pkey)
+type        ui.WidgetType   Widget type (Pkey)
+layout      ui.LayoutType   Layout mode for children (Pkey, default: absolute)
+row, col    i32             Position (absolute mode)
+w, h        i32             Size
+zorder      i32             Overlap ordering
+visible     bool            Visibility (default: true)
+enabled     bool            Interaction enabled (default: true)
+focusable   bool            Can receive focus (default: false)
+selection   SelectionMode   Selection behavior (none/single/multi)
+p_style     ui.Style        Base style (Pkey)
+title       Smallstr100     Widget title
+text        Smallstr200     Static text content
 ```
-
-### Key Mapping (data/ui/key_map.ssim)
-```
-ui.key_map  key_map:global.q        key:q      action:quit
-ui.key_map  key_map:global.tab      key:Tab    action:focus_next
-ui.key_map  key_map:ns_tree.j       key:j      action:navigate_next    p_widget:ns_tree
-ui.key_map  key_map:ns_tree.enter   key:Enter  action:toggle_expand    p_widget:ns_tree
-```
-
-### What Happens
-
-1. `acr_tui` starts, loads `ui.*` and `dmmeta.*` ssim files via `finput`
-2. Renders: title bar, namespace tree (left), fields table (right), status bar
-3. User presses `j` → `TranslateKey('j')` → keymap matches `ns_tree.j`
-   → `NavigateMsg(widget:ns_tree, direction:1)` → `HandleNavigate()` → selected++
-4. User presses `Enter` → `ExpandMsg(widget:ns_tree)` → `HandleExpand()`
-   → expanded[idx] toggled → tree shows ctypes under namespace
-5. User presses `Tab` → `FocusMsg` → focus moves to fields table
-6. User presses `q` → `QuitMsg` → running=false → exit
-
-Every interaction is a message. Every state change is traceable.
-
-## Schema Summary
-
-### ui namespace (ssimdb) — 21 ctypes
-
-**Enums (10):**
-- WidgetType (12 values), LayoutType (9), BorderStyle (5), Color (9)
-- ActionType (29), SelectionMode (3), BindingKind (5), BindingDir (3)
-- WidgetState (6), Align (6)
-
-**Structs (11):**
-- Window, Style, Widget, Binding, Column
-- TableCfg, TreeCfg, InputCfg, KeyMap
-- StyleSlot, Command, LayoutCfg
-
-### uimsg namespace (protocol) — 13 ctypes
-
-- MsgHeader (type:u32 + length:u32)
-- 12 message types: KeyPress, Navigate, Focus, Scroll, Expand, Edit, Select, Insert, Delete, Quit, Refresh, Command
-
-## What This Can Describe Today
-
-- CRUD tools and admin panels
-- Schema browsers and inspectors
-- Tree/table browsers for any ssim data
-- Config editors with form layouts
-- Interactive data exploration tools
-- Real-time dashboards (via data binding to live sources)
-
-## What Needs Future Work
-
-| Gap | Solution | When |
-|-----|----------|------|
-| Modal dialogs | `ui.Dialog` ctype with modal:bool | When needed |
-| Submenus | `ui.MenuItem` with parent menu reference | When needed |
-| Dynamic visibility | `ui.VisibilityRule` with condition expression | When needed |
-| Computed text | `ui.Format` with template string + binding | When needed |
-| Validation | `ui.ValidationRule` per input widget | When needed |
-| Cell renderers | `ui.CellFormat` enum (text/number/bool/badge/bar) | When needed |
-| Linked selection | `ui.Filter` connecting widget selections | When needed |
-| Mouse events | `uimsg.MouseMsg` (row, col, button, action) | When needed |
-| Output messages | `uimsg.ScreenCellMsg` for remote rendering | When needed |
-| Async refresh | `uimsg.TimerMsg` with interval | When needed |
-
-Each is one ssim table away. The schema is designed for incremental growth.
 
 ## Design Principles
 
-1. **Data over code** — UI structure is ssim records, not C++ classes
-2. **Messages over callbacks** — interactions are typed messages, not function pointers
-3. **Pure handlers** — state updates have no side effects, no I/O
-4. **Schema-driven** — adding a widget type or action is an ssim edit, not a code change
-5. **Platform-agnostic engine** — same C++ compiles to native and WASM
-6. **Incremental** — add new tables when needed, never break existing ones
-7. **Testable** — message streams are the test interface
-8. **Replayable** — every session is a reproducible sequence of messages
+1. **Data, not code** — the UI is ssim records, the code is generic
+2. **Messages, not callbacks** — every interaction is a typed, loggable, replayable record
+3. **Pure handlers** — state updates have no side effects
+4. **One schema, many renderers** — terminal, browser, test harness
+5. **Grow by addition** — new tables extend, never break existing ones
