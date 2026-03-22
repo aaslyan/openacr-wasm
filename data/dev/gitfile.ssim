@@ -20,6 +20,7 @@ dev.gitfile  gitfile:bin/acr_dm
 dev.gitfile  gitfile:bin/acr_ed
 dev.gitfile  gitfile:bin/acr_in
 dev.gitfile  gitfile:bin/acr_my
+dev.gitfile  gitfile:bin/acr_tui
 dev.gitfile  gitfile:bin/ai
 dev.gitfile  gitfile:bin/alexei-setup-soft-links
 dev.gitfile  gitfile:bin/amc
@@ -179,6 +180,7 @@ dev.gitfile  gitfile:cpp/acr_ed/unittest.cpp
 dev.gitfile  gitfile:cpp/acr_in/acr_in.cpp
 dev.gitfile  gitfile:cpp/acr_in/data.cpp
 dev.gitfile  gitfile:cpp/acr_my/acr_my.cpp
+dev.gitfile  gitfile:cpp/acr_tui/acr_tui.cpp
 dev.gitfile  gitfile:cpp/amc/alias.cpp
 dev.gitfile  gitfile:cpp/amc/amc_gc.cpp
 dev.gitfile  gitfile:cpp/amc/amc_vis.cpp
@@ -377,6 +379,7 @@ dev.gitfile  gitfile:cpp/gen/acr_ed_gen.cpp
 dev.gitfile  gitfile:cpp/gen/acr_gen.cpp
 dev.gitfile  gitfile:cpp/gen/acr_in_gen.cpp
 dev.gitfile  gitfile:cpp/gen/acr_my_gen.cpp
+dev.gitfile  gitfile:cpp/gen/acr_tui_gen.cpp
 dev.gitfile  gitfile:cpp/gen/algo_gen.cpp
 dev.gitfile  gitfile:cpp/gen/algo_lib_gen.cpp
 dev.gitfile  gitfile:cpp/gen/amc_gc_gen.cpp
@@ -448,6 +451,8 @@ dev.gitfile  gitfile:cpp/gen/ssim2mysql_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ssimfilt_gen.cpp
 dev.gitfile  gitfile:cpp/gen/strconv_gen.cpp
 dev.gitfile  gitfile:cpp/gen/sv2ssim_gen.cpp
+dev.gitfile  gitfile:cpp/gen/ui_gen.cpp
+dev.gitfile  gitfile:cpp/gen/uimsg_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ws_gen.cpp
 dev.gitfile  gitfile:cpp/gen/wsdb_gen.cpp
 dev.gitfile  gitfile:cpp/jkv/jkv.cpp
@@ -781,6 +786,7 @@ dev.gitfile  gitfile:include/acr_compl.h
 dev.gitfile  gitfile:include/acr_dm.h
 dev.gitfile  gitfile:include/acr_ed.h
 dev.gitfile  gitfile:include/acr_in.h
+dev.gitfile  gitfile:include/acr_tui.h
 dev.gitfile  gitfile:include/algo.h
 dev.gitfile  gitfile:include/algo.inl.h
 dev.gitfile  gitfile:include/amc.h
@@ -819,6 +825,8 @@ dev.gitfile  gitfile:include/gen/acr_in_gen.h
 dev.gitfile  gitfile:include/gen/acr_in_gen.inl.h
 dev.gitfile  gitfile:include/gen/acr_my_gen.h
 dev.gitfile  gitfile:include/gen/acr_my_gen.inl.h
+dev.gitfile  gitfile:include/gen/acr_tui_gen.h
+dev.gitfile  gitfile:include/gen/acr_tui_gen.inl.h
 dev.gitfile  gitfile:include/gen/algo_gen.h
 dev.gitfile  gitfile:include/gen/algo_gen.inl.h
 dev.gitfile  gitfile:include/gen/algo_lib_gen.h
@@ -961,6 +969,10 @@ dev.gitfile  gitfile:include/gen/strconv_gen.h
 dev.gitfile  gitfile:include/gen/strconv_gen.inl.h
 dev.gitfile  gitfile:include/gen/sv2ssim_gen.h
 dev.gitfile  gitfile:include/gen/sv2ssim_gen.inl.h
+dev.gitfile  gitfile:include/gen/ui_gen.h
+dev.gitfile  gitfile:include/gen/ui_gen.inl.h
+dev.gitfile  gitfile:include/gen/uimsg_gen.h
+dev.gitfile  gitfile:include/gen/uimsg_gen.inl.h
 dev.gitfile  gitfile:include/gen/ws_gen.h
 dev.gitfile  gitfile:include/gen/ws_gen.inl.h
 dev.gitfile  gitfile:include/gen/wsdb_gen.h
@@ -1262,6 +1274,8 @@ dev.gitfile  gitfile:txt/exe/acr_in/README.md
 dev.gitfile  gitfile:txt/exe/acr_in/internals.md
 dev.gitfile  gitfile:txt/exe/acr_my/README.md
 dev.gitfile  gitfile:txt/exe/acr_my/internals.md
+dev.gitfile  gitfile:txt/exe/acr_tui/README.md
+dev.gitfile  gitfile:txt/exe/acr_tui/internals.md
 dev.gitfile  gitfile:txt/exe/amc/README.md
 dev.gitfile  gitfile:txt/exe/amc/enum.md
 dev.gitfile  gitfile:txt/exe/amc/exec.md
@@ -1421,6 +1435,7 @@ dev.gitfile  gitfile:txt/protocol/ietf/README.md
 dev.gitfile  gitfile:txt/protocol/js/README.md
 dev.gitfile  gitfile:txt/protocol/kafka/README.md
 dev.gitfile  gitfile:txt/protocol/report/README.md
+dev.gitfile  gitfile:txt/protocol/uimsg/README.md
 dev.gitfile  gitfile:txt/protocol/ws/README.md
 dev.gitfile  gitfile:txt/recipe/README.md
 dev.gitfile  gitfile:txt/script/README.md
@@ -1744,6 +1759,7 @@ dev.gitfile  gitfile:txt/ssimdb/sampdb/targdep.md
 dev.gitfile  gitfile:txt/ssimdb/sampdb/target.md
 dev.gitfile  gitfile:txt/ssimdb/sampdb/targrec.md
 dev.gitfile  gitfile:txt/ssimdb/sampdb/targsrc.md
+dev.gitfile  gitfile:txt/ssimdb/ui/README.md
 dev.gitfile  gitfile:txt/ssimdb/wsdb/README.md
 dev.gitfile  gitfile:txt/ssimdb/wsdb/status.md
 dev.gitfile  gitfile:txt/tut/README.md

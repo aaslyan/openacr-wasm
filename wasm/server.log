@@ -1,0 +1,13 @@
+samp_mdb WASM initialized on server
+Seeded 2 users
+Server running at http://localhost:9090
+Client connected
+Sent 6 records to client
+Client disconnected
+Client connected
+Sent 6 records to client
+Client connected
+Sent 6 records to client
+Insert from client: OK samp_mdb.User  user:Aslyan  email:ara.aslyan@gmail.com  role:CEO
+Insert from client: OK samp_mdb.User  user:hmkrtch  email:hm@hmkrtch  role:user
+Client disconnected

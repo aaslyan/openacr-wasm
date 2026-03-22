@@ -1169,3 +1169,16 @@ template<typename T> inline bool algo::DecodeNChars(algo::memptr &buf, int n, T 
     result = tmp;
     return ok;
 }
+
+// On wasm32, 'unsigned long' is 32-bit but distinct from u32 (unsigned int)
+// and u64 (unsigned long long), causing overload ambiguity.
+#ifdef __EMSCRIPTEN__
+namespace algo {
+    inline cstring& operator <<(cstring& str, const unsigned long& v) {
+        return str << (u64)v;
+    }
+    inline cstring& operator <<(cstring& str, const signed long& v) {
+        return str << (i64)v;
+    }
+}
+#endif

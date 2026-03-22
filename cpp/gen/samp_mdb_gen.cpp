@@ -2091,26 +2091,26 @@ void samp_mdb::FDb_Uninit() {
 const char* samp_mdb::value_ToCstr(const samp_mdb::FieldId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case samp_mdb_FieldId_comment      : ret = "comment";  break;
+        case samp_mdb_FieldId_p_task       : ret = "p_task";  break;
+        case samp_mdb_FieldId_p_user       : ret = "p_user";  break;
+        case samp_mdb_FieldId_text         : ret = "text";  break;
         case samp_mdb_FieldId_project      : ret = "project";  break;
         case samp_mdb_FieldId_description  : ret = "description";  break;
         case samp_mdb_FieldId_status       : ret = "status";  break;
         case samp_mdb_FieldId_zd_task      : ret = "zd_task";  break;
         case samp_mdb_FieldId_c_high_priority_task: ret = "c_high_priority_task";  break;
-        case samp_mdb_FieldId_user         : ret = "user";  break;
-        case samp_mdb_FieldId_email        : ret = "email";  break;
-        case samp_mdb_FieldId_role         : ret = "role";  break;
-        case samp_mdb_FieldId_task         : ret = "task";  break;
-        case samp_mdb_FieldId_title        : ret = "title";  break;
-        case samp_mdb_FieldId_priority     : ret = "priority";  break;
-        case samp_mdb_FieldId_p_project    : ret = "p_project";  break;
-        case samp_mdb_FieldId_p_user       : ret = "p_user";  break;
-        case samp_mdb_FieldId_comment      : ret = "comment";  break;
-        case samp_mdb_FieldId_p_task       : ret = "p_task";  break;
-        case samp_mdb_FieldId_text         : ret = "text";  break;
         case samp_mdb_FieldId_quote        : ret = "quote";  break;
         case samp_mdb_FieldId_symbol       : ret = "symbol";  break;
         case samp_mdb_FieldId_price        : ret = "price";  break;
         case samp_mdb_FieldId_ts           : ret = "ts";  break;
+        case samp_mdb_FieldId_task         : ret = "task";  break;
+        case samp_mdb_FieldId_title        : ret = "title";  break;
+        case samp_mdb_FieldId_priority     : ret = "priority";  break;
+        case samp_mdb_FieldId_p_project    : ret = "p_project";  break;
+        case samp_mdb_FieldId_user         : ret = "user";  break;
+        case samp_mdb_FieldId_email        : ret = "email";  break;
+        case samp_mdb_FieldId_role         : ret = "role";  break;
         case samp_mdb_FieldId_value        : ret = "value";  break;
     }
     return ret;

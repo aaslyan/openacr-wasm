@@ -450,6 +450,8 @@ namespace command { struct acr_in_proc; }
 namespace command { struct acr_my; }
 namespace command { struct acr_my_proc; }
 namespace command { struct acr_proc; }
+namespace command { struct acr_tui; }
+namespace command { struct acr_tui_proc; }
 namespace command { struct amc; }
 namespace command { struct amc_gc; }
 namespace command { struct amc_gc_proc; }
@@ -1828,6 +1830,89 @@ void                 acr_ToArgv(command::acr_proc& parent, algo::StringAry& args
 inline void          acr_proc_Init(command::acr_proc& parent);
 // func:command.acr_proc..Uninit
 void                 acr_proc_Uninit(command::acr_proc& parent) __attribute__((nothrow));
+
+// --- command.acr_tui
+// access: command.acr_tui_proc.acr_tui (Exec)
+struct acr_tui { // command.acr_tui
+    algo::cstring   in;   //   "data"  Input directory or filename, - for stdin
+    // func:command.acr_tui..Ctor
+    inline               acr_tui() __attribute__((nothrow));
+};
+
+// func:command.acr_tui..ReadFieldMaybe
+bool                 acr_tui_ReadFieldMaybe(command::acr_tui& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::acr_tui from attributes of ascii tuple TUPLE
+// func:command.acr_tui..ReadTupleMaybe
+bool                 acr_tui_ReadTupleMaybe(command::acr_tui &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:command.acr_tui..Init
+inline void          acr_tui_Init(command::acr_tui& parent);
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+// func:command.acr_tui..ToCmdline
+tempstr              acr_tui_ToCmdline(command::acr_tui& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.acr_tui.Argv  printfmt:Tuple
+// func:command.acr_tui..PrintArgv
+void                 acr_tui_PrintArgv(command::acr_tui& row, algo::cstring& str) __attribute__((nothrow));
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+// func:command.acr_tui..NArgs
+i32                  acr_tui_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
+
+// --- command.acr_tui_proc
+struct acr_tui_proc { // command.acr_tui_proc: Subprocess: Terminal UI browser for OpenACR schemas
+    algo::cstring      path;      //   "bin/acr_tui"  path for executable
+    command::acr_tui   cmd;       // command line for child process
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
+    pid_t              pid;       //   0  pid of running child process
+    i32                timeout;   //   0  optional timeout for child process
+    i32                status;    //   0  last exit status of child process
+    // func:command.acr_tui_proc..Ctor
+    inline               acr_tui_proc() __attribute__((nothrow));
+    // func:command.acr_tui_proc..Dtor
+    inline               ~acr_tui_proc() __attribute__((nothrow));
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+// func:command.acr_tui_proc.acr_tui.Start
+int                  acr_tui_Start(command::acr_tui_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+// func:command.acr_tui_proc.acr_tui.StartRead
+algo::Fildes         acr_tui_StartRead(command::acr_tui_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+// func:command.acr_tui_proc.acr_tui.Kill
+void                 acr_tui_Kill(command::acr_tui_proc& parent);
+// Wait for subprocess to return
+// func:command.acr_tui_proc.acr_tui.Wait
+void                 acr_tui_Wait(command::acr_tui_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+// func:command.acr_tui_proc.acr_tui.Exec
+int                  acr_tui_Exec(command::acr_tui_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+// func:command.acr_tui_proc.acr_tui.ExecX
+void                 acr_tui_ExecX(command::acr_tui_proc& parent);
+// Call execv()
+// Call execv with specified parameters
+// func:command.acr_tui_proc.acr_tui.Execv
+int                  acr_tui_Execv(command::acr_tui_proc& parent) __attribute__((nothrow));
+// func:command.acr_tui_proc.acr_tui.ToCmdline
+algo::tempstr        acr_tui_ToCmdline(command::acr_tui_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.acr_tui_proc.acr_tui.ToArgv
+void                 acr_tui_ToArgv(command::acr_tui_proc& parent, algo::StringAry& args) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:command.acr_tui_proc..Init
+inline void          acr_tui_proc_Init(command::acr_tui_proc& parent);
+// func:command.acr_tui_proc..Uninit
+void                 acr_tui_proc_Uninit(command::acr_tui_proc& parent) __attribute__((nothrow));
 
 // --- command.amc
 // access: command.amc_proc.amc (Exec)

@@ -1,0 +1,503 @@
+dev.license  license:GPL  comment:""
+dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
+  dmmeta.ns  ns:ui  nstype:ssimdb  license:GPL  comment:"Generic text UI framework"
+    dmmeta.ctype  ctype:ui.ActionType  comment:"User action type"
+      dmmeta.field  field:ui.ActionType.action_type  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/insert         value:insert         comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/delete         value:delete         comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/navigate_next  value:navigate_next  comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/navigate_prev  value:navigate_prev  comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/edit           value:edit           comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/toggle_expand  value:toggle_expand  comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/select         value:select         comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/scroll_up      value:scroll_up      comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/scroll_down    value:scroll_down    comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/focus_next     value:focus_next     comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/focus_prev     value:focus_prev     comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/quit           value:quit           comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/activate       value:activate       comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/cancel         value:cancel         comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/submit         value:submit         comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/open           value:open           comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/close          value:close          comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/copy           value:copy           comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/paste          value:paste          comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/refresh        value:refresh        comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/search         value:search         comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/page_up        value:page_up        comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/page_down     value:page_down     comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/home          value:home          comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/end           value:end           comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/sort          value:sort          comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/filter        value:filter        comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/expand_all    value:expand_all    comment:""
+        dmmeta.fconst  fconst:ui.ActionType.action_type/collapse_all  value:collapse_all  comment:""
+
+      dmmeta.cfmt  cfmt:ui.ActionType.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.ActionType  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.Binding  comment:"Connects widget to data source"
+      dmmeta.field  field:ui.Binding.binding       arg:algo.Smallstr50   reftype:Val   dflt:""              comment:""
+      dmmeta.field  field:ui.Binding.p_widget      arg:ui.Widget         reftype:Pkey  dflt:""              comment:"Widget this binding applies to"
+      dmmeta.field  field:ui.Binding.source_ctype  arg:algo.Smallstr100  reftype:Val   dflt:""              comment:"Direct source: ctype name (e.g. dmmeta.Ns)"
+      dmmeta.field  field:ui.Binding.source_field  arg:algo.Smallstr100  reftype:Val   dflt:""              comment:"Direct source: field or llist name (e.g. zd_user)"
+      dmmeta.field  field:ui.Binding.kind          arg:ui.BindingKind    reftype:Pkey  dflt:'"collection"'  comment:"Binding type: value, collection, tree, command, property"
+      dmmeta.field  field:ui.Binding.dir           arg:ui.BindingDir     reftype:Pkey  dflt:'"read"'        comment:"Direction: read, write, readwrite"
+      dmmeta.field  field:ui.Binding.p_data_path   arg:ui.DataPath       reftype:Pkey  dflt:""              comment:"Path source: DataPath for structural traversal"
+      dmmeta.field  field:ui.Binding.p_view        arg:ui.View           reftype:Pkey  dflt:""              comment:"View source: derived dataset"
+      dmmeta.field  field:ui.Binding.expr          arg:algo.Smallstr200  reftype:Val   dflt:""              comment:"Expression source: computed value"
+      dmmeta.cfmt  cfmt:ui.Binding.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.Binding  len:718  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.BindingDir  comment:"Binding direction"
+      dmmeta.field  field:ui.BindingDir.binding_dir  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.BindingDir.binding_dir/write      value:write      comment:""
+        dmmeta.fconst  fconst:ui.BindingDir.binding_dir/readwrite  value:readwrite  comment:""
+        dmmeta.fconst  fconst:ui.BindingDir.binding_dir/read       value:read       comment:""
+
+      dmmeta.cfmt  cfmt:ui.BindingDir.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.BindingDir  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.BindingKind  comment:"Type of data binding"
+      dmmeta.field  field:ui.BindingKind.binding_kind  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.BindingKind.binding_kind/collection  value:collection  comment:""
+        dmmeta.fconst  fconst:ui.BindingKind.binding_kind/tree        value:tree        comment:""
+        dmmeta.fconst  fconst:ui.BindingKind.binding_kind/command     value:command     comment:""
+        dmmeta.fconst  fconst:ui.BindingKind.binding_kind/property    value:property    comment:""
+        dmmeta.fconst  fconst:ui.BindingKind.binding_kind/value       value:value       comment:""
+
+      dmmeta.cfmt  cfmt:ui.BindingKind.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.BindingKind  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.BorderStyle  comment:"Border drawing style"
+      dmmeta.field  field:ui.BorderStyle.border_style  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.BorderStyle.border_style/none     value:none     comment:""
+        dmmeta.fconst  fconst:ui.BorderStyle.border_style/single   value:single   comment:""
+        dmmeta.fconst  fconst:ui.BorderStyle.border_style/double   value:double   comment:""
+        dmmeta.fconst  fconst:ui.BorderStyle.border_style/rounded  value:rounded  comment:""
+        dmmeta.fconst  fconst:ui.BorderStyle.border_style/ascii    value:ascii    comment:""
+
+      dmmeta.cfmt  cfmt:ui.BorderStyle.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.BorderStyle  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.Color  comment:"Terminal color"
+      dmmeta.field  field:ui.Color.color  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.Color.color/default  value:default  comment:""
+        dmmeta.fconst  fconst:ui.Color.color/black    value:black    comment:""
+        dmmeta.fconst  fconst:ui.Color.color/red      value:red      comment:""
+        dmmeta.fconst  fconst:ui.Color.color/green    value:green    comment:""
+        dmmeta.fconst  fconst:ui.Color.color/yellow   value:yellow   comment:""
+        dmmeta.fconst  fconst:ui.Color.color/blue     value:blue     comment:""
+        dmmeta.fconst  fconst:ui.Color.color/magenta  value:magenta  comment:""
+        dmmeta.fconst  fconst:ui.Color.color/cyan     value:cyan     comment:""
+        dmmeta.fconst  fconst:ui.Color.color/white    value:white    comment:""
+
+      dmmeta.cfmt  cfmt:ui.Color.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.Color  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.Column  comment:"Table column definition"
+      dmmeta.field  field:ui.Column.column    arg:algo.Smallstr50  reftype:Val   dflt:""        comment:""
+      dmmeta.field  field:ui.Column.p_widget  arg:ui.Widget        reftype:Pkey  dflt:""        comment:"Parent table widget"
+      dmmeta.field  field:ui.Column.field     arg:algo.Smallstr50  reftype:Val   dflt:""        comment:"Field name: ViewField.field when bound to View, raw source field when bound directly"
+      dmmeta.field  field:ui.Column.title     arg:algo.Smallstr50  reftype:Val   dflt:""        comment:"Column header title"
+      dmmeta.field  field:ui.Column.w         arg:i32              reftype:Val   dflt:10        comment:"Column width"
+      dmmeta.field  field:ui.Column.sortable  arg:bool             reftype:Val   dflt:false     comment:"Column is sortable"
+      dmmeta.field  field:ui.Column.hidden    arg:bool             reftype:Val   dflt:false     comment:"Column is hidden"
+      dmmeta.field  field:ui.Column.editable  arg:bool             reftype:Val   dflt:false     comment:"Cell is editable"
+      dmmeta.field  field:ui.Column.align     arg:ui.HAlign        reftype:Pkey  dflt:'"left"'  comment:"Horizontal cell alignment"
+      dmmeta.cfmt  cfmt:ui.Column.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.Column  len:268  alignment:4  padbytes:1  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.Command  comment:"Named command with optional argument"
+      dmmeta.field  field:ui.Command.command   arg:algo.Smallstr50   reftype:Val   dflt:""  comment:""
+      dmmeta.field  field:ui.Command.action    arg:ui.ActionType     reftype:Pkey  dflt:""  comment:"Action to perform"
+      dmmeta.field  field:ui.Command.p_widget  arg:ui.Widget         reftype:Pkey  dflt:""  comment:"Target widget"
+      dmmeta.field  field:ui.Command.arg       arg:algo.Smallstr200  reftype:Val   dflt:""  comment:"Command argument (column name, tab id, etc.)"
+      dmmeta.cfmt  cfmt:ui.Command.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.Command  len:358  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.ContextVar  comment:"Window-scoped state variable used by views and filters"
+      dmmeta.field  field:ui.ContextVar.context_var   arg:algo.Smallstr50   reftype:Val   dflt:""  comment:""
+      dmmeta.field  field:ui.ContextVar.p_window      arg:ui.Window         reftype:Pkey  dflt:""  comment:"Owning window"
+      dmmeta.field  field:ui.ContextVar.name          arg:algo.Smallstr50   reftype:Val   dflt:""  comment:"Variable name (e.g. selected_account)"
+      dmmeta.field  field:ui.ContextVar.datatype      arg:algo.Smallstr50   reftype:Val   dflt:""  comment:"Data type hint"
+      dmmeta.field  field:ui.ContextVar.default_expr  arg:algo.Smallstr200  reftype:Val   dflt:""  comment:"Default value expression"
+      dmmeta.field  field:ui.ContextVar.comment       arg:algo.Comment      reftype:Val   dflt:""  comment:Description
+      dmmeta.cfmt  cfmt:ui.ContextVar.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.ContextVar  len:562  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.DataPath  comment:"Named navigation path through relational data"
+      dmmeta.field  field:ui.DataPath.data_path  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+      dmmeta.field  field:ui.DataPath.comment    arg:algo.Comment     reftype:Val  dflt:""  comment:"Description of this path"
+      dmmeta.cfmt  cfmt:ui.DataPath.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.DataPath  len:204  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.DataStep  comment:"One level in a data navigation path"
+      dmmeta.field  field:ui.DataStep.data_step     arg:algo.Smallstr50   reftype:Val   dflt:""  comment:""
+      dmmeta.field  field:ui.DataStep.p_path        arg:ui.DataPath       reftype:Pkey  dflt:""  comment:"Parent data path"
+      dmmeta.field  field:ui.DataStep.level         arg:i32               reftype:Val   dflt:0   comment:"Navigation depth (0=root)"
+      dmmeta.field  field:ui.DataStep.source_ctype  arg:algo.Smallstr100  reftype:Val   dflt:""  comment:"Ctype to display at this level (ssimfile tag, e.g. dmmeta.ns)"
+      dmmeta.field  field:ui.DataStep.label_field   arg:algo.Smallstr50   reftype:Val   dflt:""  comment:"Tuple attribute to display as label"
+      dmmeta.field  field:ui.DataStep.detail_field  arg:algo.Smallstr50   reftype:Val   dflt:""  comment:"Tuple attribute to display as detail text"
+      dmmeta.field  field:ui.DataStep.link_field    arg:algo.Smallstr50   reftype:Val   dflt:""  comment:"Pathcomp expression for parent-child filtering (see doc/link-field-syntax.md)"
+      dmmeta.cfmt  cfmt:ui.DataStep.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.DataStep  len:368  alignment:4  padbytes:2  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.EventType  comment:"Widget event that can trigger a message"
+      dmmeta.field  field:ui.EventType.event_type  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/activate      value:activate      comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/select        value:select        comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/deselect      value:deselect      comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/submit        value:submit        comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/cancel        value:cancel        comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/change        value:change        comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/focus         value:focus         comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/blur          value:blur          comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/expand        value:expand        comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/collapse      value:collapse      comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/click         value:click         comment:""
+        dmmeta.fconst  fconst:ui.EventType.event_type/double_click  value:double_click  comment:""
+
+      dmmeta.cfmt  cfmt:ui.EventType.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.EventType  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.FilterSource  comment:"Origin of a view filter predicate"
+      dmmeta.field  field:ui.FilterSource.filter_source  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.FilterSource.filter_source/fixed    value:fixed    comment:""
+        dmmeta.fconst  fconst:ui.FilterSource.filter_source/context  value:context  comment:""
+        dmmeta.fconst  fconst:ui.FilterSource.filter_source/widget   value:widget   comment:""
+        dmmeta.fconst  fconst:ui.FilterSource.filter_source/runtime  value:runtime  comment:""
+
+      dmmeta.cfmt  cfmt:ui.FilterSource.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.FilterSource  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.HAlign  comment:"Horizontal alignment"
+      dmmeta.field  field:ui.HAlign.align  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.HAlign.align/left    value:left    comment:""
+        dmmeta.fconst  fconst:ui.HAlign.align/center  value:center  comment:""
+        dmmeta.fconst  fconst:ui.HAlign.align/right   value:right   comment:""
+
+      dmmeta.cfmt  cfmt:ui.HAlign.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.HAlign  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.InputCfg  comment:"Input widget configuration"
+      dmmeta.field  field:ui.InputCfg.input_cfg  arg:algo.Smallstr50  reftype:Val   dflt:""    comment:""
+      dmmeta.field  field:ui.InputCfg.p_widget   arg:ui.Widget        reftype:Pkey  dflt:""    comment:"Input widget"
+      dmmeta.field  field:ui.InputCfg.editable   arg:bool             reftype:Val   dflt:true  comment:"Field is editable"
+      dmmeta.field  field:ui.InputCfg.maxlen     arg:i32              reftype:Val   dflt:0     comment:"Max input length (0=unlimited)"
+      dmmeta.cfmt  cfmt:ui.InputCfg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.InputCfg  len:112  alignment:4  padbytes:3  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.JoinKind  comment:"Join type for view sources"
+      dmmeta.field  field:ui.JoinKind.join_kind  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.JoinKind.join_kind/base   value:base   comment:""
+        dmmeta.fconst  fconst:ui.JoinKind.join_kind/inner  value:inner  comment:""
+        dmmeta.fconst  fconst:ui.JoinKind.join_kind/left   value:left   comment:""
+        dmmeta.fconst  fconst:ui.JoinKind.join_kind/right  value:right  comment:""
+        dmmeta.fconst  fconst:ui.JoinKind.join_kind/full   value:full   comment:""
+        dmmeta.fconst  fconst:ui.JoinKind.join_kind/cross  value:cross  comment:""
+
+      dmmeta.cfmt  cfmt:ui.JoinKind.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.JoinKind  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.KeyMap  comment:"Key-to-action or key-to-command mapping"
+      dmmeta.field  field:ui.KeyMap.key_map    arg:algo.Smallstr50  reftype:Val   dflt:""  comment:""
+      dmmeta.field  field:ui.KeyMap.p_widget   arg:ui.Widget        reftype:Pkey  dflt:""  comment:"Widget scope (empty for global)"
+      dmmeta.field  field:ui.KeyMap.key        arg:algo.Smallstr20  reftype:Val   dflt:""  comment:"Key name (e.g. j, k, Tab, Enter, q)"
+      dmmeta.field  field:ui.KeyMap.action     arg:ui.ActionType    reftype:Pkey  dflt:""  comment:"Action to perform"
+      dmmeta.field  field:ui.KeyMap.p_command  arg:ui.Command       reftype:Pkey  dflt:""  comment:"Parameterized command (empty = use action directly)"
+      dmmeta.cfmt  cfmt:ui.KeyMap.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.KeyMap  len:230  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.LayoutCfg  comment:"Layout hints for managed (non-absolute) positioning"
+      dmmeta.field  field:ui.LayoutCfg.layout_cfg  arg:algo.Smallstr50  reftype:Val   dflt:""        comment:""
+      dmmeta.field  field:ui.LayoutCfg.p_widget    arg:ui.Widget        reftype:Pkey  dflt:""        comment:"Widget this layout applies to"
+      dmmeta.field  field:ui.LayoutCfg.min_w       arg:i32              reftype:Val   dflt:0         comment:"Minimum width (0=no minimum)"
+      dmmeta.field  field:ui.LayoutCfg.min_h       arg:i32              reftype:Val   dflt:0         comment:"Minimum height"
+      dmmeta.field  field:ui.LayoutCfg.max_w       arg:i32              reftype:Val   dflt:0         comment:"Maximum width (0=unlimited)"
+      dmmeta.field  field:ui.LayoutCfg.max_h       arg:i32              reftype:Val   dflt:0         comment:"Maximum height"
+      dmmeta.field  field:ui.LayoutCfg.flex        arg:i32              reftype:Val   dflt:0         comment:"Flex weight for proportional sizing"
+      dmmeta.field  field:ui.LayoutCfg.padding     arg:i32              reftype:Val   dflt:0         comment:"Inner padding"
+      dmmeta.field  field:ui.LayoutCfg.gap         arg:i32              reftype:Val   dflt:0         comment:"Gap between children"
+      dmmeta.field  field:ui.LayoutCfg.halign      arg:ui.HAlign        reftype:Pkey  dflt:'"left"'  comment:"Horizontal alignment within container"
+      dmmeta.field  field:ui.LayoutCfg.valign      arg:ui.VAlign        reftype:Pkey  dflt:'"top"'   comment:"Vertical alignment within container"
+      dmmeta.cfmt  cfmt:ui.LayoutCfg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.LayoutCfg  len:236  alignment:4  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.LayoutType  comment:"Widget layout mode"
+      dmmeta.field  field:ui.LayoutType.layout_type  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.LayoutType.layout_type/absolute    value:absolute    comment:""
+        dmmeta.fconst  fconst:ui.LayoutType.layout_type/vertical    value:vertical    comment:""
+        dmmeta.fconst  fconst:ui.LayoutType.layout_type/horizontal  value:horizontal  comment:""
+        dmmeta.fconst  fconst:ui.LayoutType.layout_type/grid        value:grid        comment:""
+        dmmeta.fconst  fconst:ui.LayoutType.layout_type/stack       value:stack       comment:""
+        dmmeta.fconst  fconst:ui.LayoutType.layout_type/dock        value:dock        comment:""
+        dmmeta.fconst  fconst:ui.LayoutType.layout_type/split       value:split       comment:""
+        dmmeta.fconst  fconst:ui.LayoutType.layout_type/form        value:form        comment:""
+        dmmeta.fconst  fconst:ui.LayoutType.layout_type/flow        value:flow        comment:""
+
+      dmmeta.cfmt  cfmt:ui.LayoutType.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.LayoutType  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.SelectionMode  comment:"Widget selection mode"
+      dmmeta.field  field:ui.SelectionMode.selection_mode  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.SelectionMode.selection_mode/none    value:none    comment:""
+        dmmeta.fconst  fconst:ui.SelectionMode.selection_mode/single  value:single  comment:""
+        dmmeta.fconst  fconst:ui.SelectionMode.selection_mode/multi   value:multi   comment:""
+
+      dmmeta.cfmt  cfmt:ui.SelectionMode.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.SelectionMode  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.SortDir  comment:"Sort direction"
+      dmmeta.field  field:ui.SortDir.sort_dir  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.SortDir.sort_dir/asc   value:asc   comment:""
+        dmmeta.fconst  fconst:ui.SortDir.sort_dir/desc  value:desc  comment:""
+
+      dmmeta.cfmt  cfmt:ui.SortDir.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.SortDir  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.Style  comment:"Visual style: colors, bold, underline, border"
+      dmmeta.field  field:ui.Style.style      arg:algo.Smallstr50  reftype:Val   dflt:""           comment:""
+      dmmeta.field  field:ui.Style.fg         arg:ui.Color         reftype:Pkey  dflt:'"default"'  comment:"Foreground color"
+      dmmeta.field  field:ui.Style.bg         arg:ui.Color         reftype:Pkey  dflt:'"default"'  comment:"Background color"
+      dmmeta.field  field:ui.Style.bold       arg:bool             reftype:Val   dflt:false        comment:"Bold text"
+      dmmeta.field  field:ui.Style.underline  arg:bool             reftype:Val   dflt:false        comment:"Underline text"
+      dmmeta.field  field:ui.Style.border     arg:ui.BorderStyle   reftype:Pkey  dflt:'"none"'     comment:"Border drawing style"
+      dmmeta.cfmt  cfmt:ui.Style.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.Style  len:210  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.StyleSlot  comment:"Maps widget state to style override"
+      dmmeta.field  field:ui.StyleSlot.style_slot  arg:algo.Smallstr50  reftype:Val   dflt:""  comment:""
+      dmmeta.field  field:ui.StyleSlot.p_widget    arg:ui.Widget        reftype:Pkey  dflt:""  comment:"Widget this applies to"
+      dmmeta.field  field:ui.StyleSlot.state       arg:ui.WidgetState   reftype:Pkey  dflt:""  comment:"Widget state this style applies to"
+      dmmeta.field  field:ui.StyleSlot.p_style     arg:ui.Style         reftype:Pkey  dflt:""  comment:"Style to apply in this state"
+      dmmeta.cfmt  cfmt:ui.StyleSlot.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.StyleSlot  len:208  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.TableCfg  comment:"Table widget configuration"
+      dmmeta.field  field:ui.TableCfg.table_cfg   arg:algo.Smallstr50  reftype:Val   dflt:""    comment:""
+      dmmeta.field  field:ui.TableCfg.p_widget    arg:ui.Widget        reftype:Pkey  dflt:""    comment:"Table widget"
+      dmmeta.field  field:ui.TableCfg.selectable  arg:bool             reftype:Val   dflt:true  comment:"Rows are selectable"
+      dmmeta.field  field:ui.TableCfg.header      arg:bool             reftype:Val   dflt:true  comment:"Show column headers"
+      dmmeta.cfmt  cfmt:ui.TableCfg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.TableCfg  len:106  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.TreeCfg  comment:"Tree widget config: child_field for simple hierarchy, p_data_path for generalized traversal (p_data_path wins if both set)"
+      dmmeta.field  field:ui.TreeCfg.tree_cfg          arg:algo.Smallstr50   reftype:Val   dflt:""     comment:""
+      dmmeta.field  field:ui.TreeCfg.p_widget          arg:ui.Widget         reftype:Pkey  dflt:""     comment:"Tree widget"
+      dmmeta.field  field:ui.TreeCfg.indent            arg:i32               reftype:Val   dflt:2      comment:"Indentation per level"
+      dmmeta.field  field:ui.TreeCfg.show_lines        arg:bool              reftype:Val   dflt:true   comment:"Draw tree connection lines"
+      dmmeta.field  field:ui.TreeCfg.child_field       arg:algo.Smallstr100  reftype:Val   dflt:""     comment:"Simple hierarchy: field on parent ctype that lists children (e.g. Project.zd_task)"
+      dmmeta.field  field:ui.TreeCfg.label_field       arg:algo.Smallstr50   reftype:Val   dflt:""     comment:"Field to display as node label"
+      dmmeta.field  field:ui.TreeCfg.expanded_default  arg:bool              reftype:Val   dflt:false  comment:"Nodes expanded by default"
+      dmmeta.field  field:ui.TreeCfg.p_data_path       arg:ui.DataPath       reftype:Pkey  dflt:""     comment:"Generalized traversal: DataPath with multi-level DataSteps (takes precedence over child_field)"
+      dmmeta.cfmt  cfmt:ui.TreeCfg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.TreeCfg  len:316  alignment:4  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.Trigger  comment:"Maps widget event to emitted message or command"
+      dmmeta.field  field:ui.Trigger.trigger    arg:algo.Smallstr50   reftype:Val   dflt:""  comment:""
+      dmmeta.field  field:ui.Trigger.p_widget   arg:ui.Widget         reftype:Pkey  dflt:""  comment:"Widget that emits this event"
+      dmmeta.field  field:ui.Trigger.event      arg:ui.EventType      reftype:Pkey  dflt:""  comment:"Widget event (activate, select, submit, etc.)"
+      dmmeta.field  field:ui.Trigger.p_command  arg:ui.Command        reftype:Pkey  dflt:""  comment:"Command to invoke (empty = emit generic message)"
+      dmmeta.field  field:ui.Trigger.msg_ctype  arg:algo.Smallstr100  reftype:Val   dflt:""  comment:"Message ctype to emit (e.g. uimsg.SelectMsg). Empty = use p_command"
+      dmmeta.field  field:ui.Trigger.arg_expr   arg:algo.Smallstr200  reftype:Val   dflt:""  comment:"Argument mapping expression (e.g. row_key=)"
+      dmmeta.cfmt  cfmt:ui.Trigger.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.Trigger  len:512  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.VAlign  comment:"Vertical alignment"
+      dmmeta.field  field:ui.VAlign.align  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.VAlign.align/top     value:top     comment:""
+        dmmeta.fconst  fconst:ui.VAlign.align/middle  value:middle  comment:""
+        dmmeta.fconst  fconst:ui.VAlign.align/bottom  value:bottom  comment:""
+
+      dmmeta.cfmt  cfmt:ui.VAlign.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.VAlign  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.View  comment:"Named presentation-ready derived dataset"
+      dmmeta.field  field:ui.View.view        arg:algo.Smallstr50   reftype:Val   dflt:""  comment:""
+      dmmeta.field  field:ui.View.p_window    arg:ui.Window         reftype:Pkey  dflt:""  comment:"Optional window scope (empty = global)"
+      dmmeta.field  field:ui.View.base_ctype  arg:algo.Smallstr100  reftype:Val   dflt:""  comment:"Primary logical source ctype"
+      dmmeta.field  field:ui.View.comment     arg:algo.Comment      reftype:Val   dflt:""  comment:Description
+      dmmeta.cfmt  cfmt:ui.View.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.View  len:358  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.ViewField  comment:"Projected field in a view"
+      dmmeta.field  field:ui.ViewField.view_field  arg:algo.Smallstr50   reftype:Val   dflt:""  comment:""
+      dmmeta.field  field:ui.ViewField.p_view      arg:ui.View           reftype:Pkey  dflt:""  comment:"Parent view"
+      dmmeta.field  field:ui.ViewField.field       arg:algo.Smallstr50   reftype:Val   dflt:""  comment:"Logical field name for binding"
+      dmmeta.field  field:ui.ViewField.expr        arg:algo.Smallstr200  reftype:Val   dflt:""  comment:"Source expression (e.g. Order.qty * Order.price)"
+      dmmeta.field  field:ui.ViewField.title       arg:algo.Smallstr50   reftype:Val   dflt:""  comment:"Display title"
+      dmmeta.field  field:ui.ViewField.datatype    arg:algo.Smallstr50   reftype:Val   dflt:""  comment:"Result data type hint"
+      dmmeta.cfmt  cfmt:ui.ViewField.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.ViewField  len:462  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.ViewFilter  comment:"Filter predicate on a view"
+      dmmeta.field  field:ui.ViewFilter.view_filter  arg:algo.Smallstr50   reftype:Val   dflt:""         comment:""
+      dmmeta.field  field:ui.ViewFilter.p_view       arg:ui.View           reftype:Pkey  dflt:""         comment:"Parent view"
+      dmmeta.field  field:ui.ViewFilter.expr         arg:algo.Smallstr200  reftype:Val   dflt:""         comment:"Filter expression (e.g. Order.status != closed)"
+      dmmeta.field  field:ui.ViewFilter.source       arg:ui.FilterSource   reftype:Pkey  dflt:'"fixed"'  comment:"Origin: fixed/context/widget/runtime"
+      dmmeta.field  field:ui.ViewFilter.enabled      arg:bool              reftype:Val   dflt:true       comment:"Filter is active"
+      dmmeta.field  field:ui.ViewFilter.priority     arg:i32               reftype:Val   dflt:0          comment:"Evaluation priority (lower = first)"
+      dmmeta.cfmt  cfmt:ui.ViewFilter.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.ViewFilter  len:364  alignment:4  padbytes:1  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.ViewSort  comment:"Sort ordering for a view"
+      dmmeta.field  field:ui.ViewSort.view_sort  arg:algo.Smallstr50   reftype:Val   dflt:""       comment:""
+      dmmeta.field  field:ui.ViewSort.p_view     arg:ui.View           reftype:Pkey  dflt:""       comment:"Parent view"
+      dmmeta.field  field:ui.ViewSort.expr       arg:algo.Smallstr200  reftype:Val   dflt:""       comment:"Sort expression (field name or computed)"
+      dmmeta.field  field:ui.ViewSort.dir        arg:ui.SortDir        reftype:Pkey  dflt:'"asc"'  comment:"Sort direction"
+      dmmeta.field  field:ui.ViewSort.priority   arg:i32               reftype:Val   dflt:0        comment:"Sort priority (lower = first)"
+      dmmeta.cfmt  cfmt:ui.ViewSort.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.ViewSort  len:364  alignment:4  padbytes:2  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.ViewSource  comment:"Data source participating in a view (base or join)"
+      dmmeta.field  field:ui.ViewSource.view_source   arg:algo.Smallstr50   reftype:Val   dflt:""        comment:""
+      dmmeta.field  field:ui.ViewSource.p_view        arg:ui.View           reftype:Pkey  dflt:""        comment:"Parent view"
+      dmmeta.field  field:ui.ViewSource.source_ctype  arg:algo.Smallstr100  reftype:Val   dflt:""        comment:"Source ctype for this join leg"
+      dmmeta.field  field:ui.ViewSource.alias         arg:algo.Smallstr50   reftype:Val   dflt:""        comment:"Alias for this source in expressions"
+      dmmeta.field  field:ui.ViewSource.join_kind     arg:ui.JoinKind       reftype:Pkey  dflt:'"base"'  comment:"Join type (exactly one must be base)"
+      dmmeta.field  field:ui.ViewSource.join_expr     arg:algo.Smallstr200  reftype:Val   dflt:""        comment:"Join condition expression"
+      dmmeta.cfmt  cfmt:ui.ViewSource.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.ViewSource  len:512  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.Widget  comment:"Universal widget: structure, placement, interaction"
+      dmmeta.field  field:ui.Widget.widget     arg:algo.Smallstr50   reftype:Val   dflt:""            comment:""
+      dmmeta.field  field:ui.Widget.p_window   arg:ui.Window         reftype:Pkey  dflt:""            comment:"Owning window"
+      dmmeta.field  field:ui.Widget.p_parent   arg:ui.Widget         reftype:Pkey  dflt:""            comment:"Parent widget (empty for top-level)"
+      dmmeta.field  field:ui.Widget.type       arg:ui.WidgetType     reftype:Pkey  dflt:""            comment:"Widget type (label, table, tree, etc.)"
+      dmmeta.field  field:ui.Widget.layout     arg:ui.LayoutType     reftype:Pkey  dflt:'"absolute"'  comment:"Layout mode for children (absolute, vertical, horizontal, grid, etc.)"
+      dmmeta.field  field:ui.Widget.row        arg:i32               reftype:Val   dflt:0             comment:"Row position (absolute layout)"
+      dmmeta.field  field:ui.Widget.col        arg:i32               reftype:Val   dflt:0             comment:"Column position (absolute layout)"
+      dmmeta.field  field:ui.Widget.w          arg:i32               reftype:Val   dflt:0             comment:"Width in columns"
+      dmmeta.field  field:ui.Widget.h          arg:i32               reftype:Val   dflt:0             comment:"Height in rows"
+      dmmeta.field  field:ui.Widget.zorder     arg:i32               reftype:Val   dflt:0             comment:"Z-order for overlapping widgets"
+      dmmeta.field  field:ui.Widget.visible    arg:bool              reftype:Val   dflt:true          comment:"Widget is visible"
+      dmmeta.field  field:ui.Widget.enabled    arg:bool              reftype:Val   dflt:true          comment:"Widget accepts interaction"
+      dmmeta.field  field:ui.Widget.selection  arg:ui.SelectionMode  reftype:Pkey  dflt:'"none"'      comment:"Selection behavior (none, single, multi)"
+      dmmeta.field  field:ui.Widget.p_style    arg:ui.Style          reftype:Pkey  dflt:""            comment:"Base style (empty = inherit from parent)"
+      dmmeta.field  field:ui.Widget.title      arg:algo.Smallstr100  reftype:Val   dflt:""            comment:"Widget title (panel header, tab label)"
+      dmmeta.field  field:ui.Widget.text       arg:algo.Smallstr200  reftype:Val   dflt:""            comment:"Static text content (label, statusbar)"
+      dmmeta.field  field:ui.Widget.focusable  arg:bool              reftype:Val   dflt:false         comment:"Widget can receive keyboard focus"
+      dmmeta.cfmt  cfmt:ui.Widget.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.Widget  len:692  alignment:4  padbytes:1  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.WidgetState  comment:"Widget visual state"
+      dmmeta.field  field:ui.WidgetState.widget_state  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.WidgetState.widget_state/focused   value:focused   comment:""
+        dmmeta.fconst  fconst:ui.WidgetState.widget_state/selected  value:selected  comment:""
+        dmmeta.fconst  fconst:ui.WidgetState.widget_state/disabled  value:disabled  comment:""
+        dmmeta.fconst  fconst:ui.WidgetState.widget_state/editing   value:editing   comment:""
+        dmmeta.fconst  fconst:ui.WidgetState.widget_state/error     value:error     comment:""
+
+      dmmeta.cfmt  cfmt:ui.WidgetState.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.WidgetState  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.WidgetType  comment:"Type of UI widget"
+      dmmeta.field  field:ui.WidgetType.widget_type  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/label        value:label        comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/table        value:table        comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/tree         value:tree         comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/input        value:input        comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/list         value:list         comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/panel        value:panel        comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/tabs         value:tabs         comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/statusbar    value:statusbar    comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/menu         value:menu         comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/separator    value:separator    comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/progressbar  value:progressbar  comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/canvas       value:canvas       comment:""
+        dmmeta.fconst  fconst:ui.WidgetType.widget_type/button       value:button       comment:""
+
+      dmmeta.cfmt  cfmt:ui.WidgetType.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.WidgetType  len:52  alignment:1  padbytes:0  plaindata:Y
+
+    dmmeta.ctype  ctype:ui.Window  comment:"Top-level terminal/browser window"
+      dmmeta.field  field:ui.Window.window  arg:algo.Smallstr50   reftype:Val  dflt:""  comment:""
+      dmmeta.field  field:ui.Window.title   arg:algo.Smallstr100  reftype:Val  dflt:""  comment:"Window title"
+      dmmeta.field  field:ui.Window.rows    arg:i32               reftype:Val  dflt:24  comment:"Terminal height in rows"
+      dmmeta.field  field:ui.Window.cols    arg:i32               reftype:Val  dflt:80  comment:"Terminal width in columns"
+      dmmeta.cfmt  cfmt:ui.Window.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+      dmmeta.ctypelen  ctype:ui.Window  len:164  alignment:4  padbytes:2  plaindata:Y
+
+    dmmeta.nscpp  ns:ui  comment:""
+    dmmeta.nsdb  ns:ui  comment:""
+      dmmeta.ssimfile  ssimfile:ui.action_type     ctype:ui.ActionType
+      dmmeta.ssimfile  ssimfile:ui.binding         ctype:ui.Binding
+      dmmeta.ssimfile  ssimfile:ui.binding_dir     ctype:ui.BindingDir
+      dmmeta.ssimfile  ssimfile:ui.binding_kind    ctype:ui.BindingKind
+      dmmeta.ssimfile  ssimfile:ui.border_style    ctype:ui.BorderStyle
+      dmmeta.ssimfile  ssimfile:ui.color           ctype:ui.Color
+      dmmeta.ssimfile  ssimfile:ui.column          ctype:ui.Column
+      dmmeta.ssimfile  ssimfile:ui.command         ctype:ui.Command
+      dmmeta.ssimfile  ssimfile:ui.context_var     ctype:ui.ContextVar
+      dmmeta.ssimfile  ssimfile:ui.data_path       ctype:ui.DataPath
+      dmmeta.ssimfile  ssimfile:ui.data_step       ctype:ui.DataStep
+      dmmeta.ssimfile  ssimfile:ui.event_type      ctype:ui.EventType
+      dmmeta.ssimfile  ssimfile:ui.filter_source   ctype:ui.FilterSource
+      dmmeta.ssimfile  ssimfile:ui.h_align         ctype:ui.HAlign
+      dmmeta.ssimfile  ssimfile:ui.input_cfg       ctype:ui.InputCfg
+      dmmeta.ssimfile  ssimfile:ui.join_kind       ctype:ui.JoinKind
+      dmmeta.ssimfile  ssimfile:ui.key_map         ctype:ui.KeyMap
+      dmmeta.ssimfile  ssimfile:ui.layout_cfg      ctype:ui.LayoutCfg
+      dmmeta.ssimfile  ssimfile:ui.layout_type     ctype:ui.LayoutType
+      dmmeta.ssimfile  ssimfile:ui.selection_mode  ctype:ui.SelectionMode
+      dmmeta.ssimfile  ssimfile:ui.sort_dir        ctype:ui.SortDir
+      dmmeta.ssimfile  ssimfile:ui.style           ctype:ui.Style
+      dmmeta.ssimfile  ssimfile:ui.style_slot      ctype:ui.StyleSlot
+      dmmeta.ssimfile  ssimfile:ui.table_cfg       ctype:ui.TableCfg
+      dmmeta.ssimfile  ssimfile:ui.tree_cfg        ctype:ui.TreeCfg
+      dmmeta.ssimfile  ssimfile:ui.trigger       ctype:ui.Trigger
+      dmmeta.ssimfile  ssimfile:ui.v_align       ctype:ui.VAlign
+      dmmeta.ssimfile  ssimfile:ui.view          ctype:ui.View
+      dmmeta.ssimfile  ssimfile:ui.view_field    ctype:ui.ViewField
+      dmmeta.ssimfile  ssimfile:ui.view_filter   ctype:ui.ViewFilter
+      dmmeta.ssimfile  ssimfile:ui.view_sort     ctype:ui.ViewSort
+      dmmeta.ssimfile  ssimfile:ui.view_source   ctype:ui.ViewSource
+      dmmeta.ssimfile  ssimfile:ui.widget        ctype:ui.Widget
+      dmmeta.ssimfile  ssimfile:ui.widget_state  ctype:ui.WidgetState
+      dmmeta.ssimfile  ssimfile:ui.widget_type   ctype:ui.WidgetType
+      dmmeta.ssimfile  ssimfile:ui.window        ctype:ui.Window
+
+dmmeta.field  field:acr_tui.FBinding.base     arg:ui.Binding     reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FColumn.base      arg:ui.Column      reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FCommand.base     arg:ui.Command     reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FContextVar.base  arg:ui.ContextVar  reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FDataPath.base    arg:ui.DataPath    reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FDataStep.base    arg:ui.DataStep    reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FInputCfg.base    arg:ui.InputCfg    reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FKeyMap.base      arg:ui.KeyMap      reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FLayoutCfg.base   arg:ui.LayoutCfg   reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FStyle.base       arg:ui.Style       reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FStyleSlot.base   arg:ui.StyleSlot   reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FTableCfg.base    arg:ui.TableCfg    reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FTreeCfg.base     arg:ui.TreeCfg     reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FTrigger.base     arg:ui.Trigger     reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FView.base        arg:ui.View        reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FViewField.base   arg:ui.ViewField   reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FViewFilter.base  arg:ui.ViewFilter  reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FViewSort.base    arg:ui.ViewSort    reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FViewSource.base  arg:ui.ViewSource  reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FWidget.base      arg:ui.Widget      reftype:Base  dflt:""  comment:""
+dmmeta.field  field:acr_tui.FWindow.base      arg:ui.Window      reftype:Base  dflt:""  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_binding      hashfld:ui.Binding.binding         unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_column       hashfld:ui.Column.column           unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_command      hashfld:ui.Command.command         unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_context_var  hashfld:ui.ContextVar.context_var  unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_data_path    hashfld:ui.DataPath.data_path      unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_data_step    hashfld:ui.DataStep.data_step      unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_input_cfg    hashfld:ui.InputCfg.input_cfg      unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_key_map      hashfld:ui.KeyMap.key_map          unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_layout_cfg   hashfld:ui.LayoutCfg.layout_cfg    unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_style        hashfld:ui.Style.style             unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_style_slot   hashfld:ui.StyleSlot.style_slot    unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_table_cfg    hashfld:ui.TableCfg.table_cfg      unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_tree_cfg     hashfld:ui.TreeCfg.tree_cfg        unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_trigger      hashfld:ui.Trigger.trigger         unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_view         hashfld:ui.View.view               unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_view_field   hashfld:ui.ViewField.view_field    unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_view_filter  hashfld:ui.ViewFilter.view_filter  unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_view_sort    hashfld:ui.ViewSort.view_sort      unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_view_source  hashfld:ui.ViewSource.view_source  unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_widget       hashfld:ui.Widget.widget           unique:Y  comment:""
+dmmeta.thash  field:acr_tui.FDb.ind_window       hashfld:ui.Window.window           unique:Y  comment:""
+report.acr  n_select:450  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0

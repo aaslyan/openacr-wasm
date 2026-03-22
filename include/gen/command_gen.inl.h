@@ -583,6 +583,36 @@ inline  command::acr_proc::~acr_proc() {
     command::acr_proc_Uninit(*this);
 }
 
+// --- command.acr_tui..Init
+// Set all fields to initial values.
+inline void command::acr_tui_Init(command::acr_tui& parent) {
+    parent.in = algo::strptr("data");
+}
+
+// --- command.acr_tui..Ctor
+inline  command::acr_tui::acr_tui() {
+    command::acr_tui_Init(*this);
+}
+
+// --- command.acr_tui_proc..Init
+// Set all fields to initial values.
+inline void command::acr_tui_proc_Init(command::acr_tui_proc& parent) {
+    parent.path = algo::strptr("bin/acr_tui");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+
+// --- command.acr_tui_proc..Ctor
+inline  command::acr_tui_proc::acr_tui_proc() {
+    command::acr_tui_proc_Init(*this);
+}
+
+// --- command.acr_tui_proc..Dtor
+inline  command::acr_tui_proc::~acr_tui_proc() {
+    command::acr_tui_proc_Uninit(*this);
+}
+
 // --- command.amc..Ctor
 inline  command::amc::amc() {
     command::amc_Init(*this);

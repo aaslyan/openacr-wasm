@@ -87,6 +87,7 @@ const char *dmmeta_Ns_ns_acr_dm      = "acr_dm";
 const char *dmmeta_Ns_ns_acr_ed      = "acr_ed";
 const char *dmmeta_Ns_ns_acr_in      = "acr_in";
 const char *dmmeta_Ns_ns_acr_my      = "acr_my";
+const char *dmmeta_Ns_ns_acr_tui     = "acr_tui";
 const char *dmmeta_Ns_ns_algo        = "algo";
 const char *dmmeta_Ns_ns_algo_lib    = "algo_lib";
 const char *dmmeta_Ns_ns_amc         = "amc";
@@ -149,13 +150,15 @@ const char *dmmeta_Ns_ns_mysql2ssim   = "mysql2ssim";
 const char *dmmeta_Ns_ns_orgfile      = "orgfile";
 const char *dmmeta_Ns_ns_report       = "report";
 const char *dmmeta_Ns_ns_samp_make    = "samp_make";
-const char *dmmeta_Ns_ns_samp_meng    = "samp_meng";
-const char *dmmeta_Ns_ns_samp_regx    = "samp_regx";
-const char *dmmeta_Ns_ns_sampdb       = "sampdb";
-const char *dmmeta_Ns_ns_sandbox      = "sandbox";
-const char *dmmeta_Ns_ns_src_func     = "src_func";
-const char *dmmeta_Ns_ns_src_hdr      = "src_hdr";
-const char *dmmeta_Ns_ns_src_lim      = "src_lim";
+const char *dmmeta_Ns_ns_samp_mdb     = "samp_mdb";
+
+const char *dmmeta_Ns_ns_samp_meng   = "samp_meng";
+const char *dmmeta_Ns_ns_samp_regx   = "samp_regx";
+const char *dmmeta_Ns_ns_sampdb      = "sampdb";
+const char *dmmeta_Ns_ns_sandbox     = "sandbox";
+const char *dmmeta_Ns_ns_src_func    = "src_func";
+const char *dmmeta_Ns_ns_src_hdr     = "src_hdr";
+const char *dmmeta_Ns_ns_src_lim     = "src_lim";
 
 const char *dmmeta_Ns_ns_ssim2csv     = "ssim2csv";
 const char *dmmeta_Ns_ns_ssim2mysql   = "ssim2mysql";
@@ -164,9 +167,10 @@ const char *dmmeta_Ns_ns_ssimfilt     = "ssimfilt";
 const char *dmmeta_Ns_ns_strconv   = "strconv";
 const char *dmmeta_Ns_ns_sv2ssim   = "sv2ssim";
 
-const char *dmmeta_Ns_ns_ws         = "ws";
-const char *dmmeta_Ns_ns_wsdb       = "wsdb";
-const char *dmmeta_Ns_ns_samp_mdb   = "samp_mdb";
+const char *dmmeta_Ns_ns_ui      = "ui";
+const char *dmmeta_Ns_ns_uimsg   = "uimsg";
+const char *dmmeta_Ns_ns_ws      = "ws";
+const char *dmmeta_Ns_ns_wsdb    = "wsdb";
 
 // compile-time string constants for dmmeta.Nstype.nstype
 const char *dmmeta_Nstype_nstype_exe   = "exe";
@@ -482,20 +486,61 @@ const char *dmmeta_Ssimfile_ssimfile_gclidb_milestone       = "gclidb.milestone"
 const char *dmmeta_Ssimfile_ssimfile_gclidb_mr              = "gclidb.mr";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_mrjob           = "gclidb.mrjob";
 
-const char *dmmeta_Ssimfile_ssimfile_gclidb_mrnote    = "gclidb.mrnote";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_project   = "gclidb.project";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_user      = "gclidb.user";
-const char *dmmeta_Ssimfile_ssimfile_httpdb_content   = "httpdb.content";
-const char *dmmeta_Ssimfile_ssimfile_httpdb_header    = "httpdb.header";
-const char *dmmeta_Ssimfile_ssimfile_httpdb_method    = "httpdb.method";
-const char *dmmeta_Ssimfile_ssimfile_httpdb_status    = "httpdb.status";
-const char *dmmeta_Ssimfile_ssimfile_httpdb_version   = "httpdb.version";
-const char *dmmeta_Ssimfile_ssimfile_sampdb_gitfile   = "sampdb.gitfile";
-const char *dmmeta_Ssimfile_ssimfile_sampdb_targdep   = "sampdb.targdep";
-const char *dmmeta_Ssimfile_ssimfile_sampdb_target    = "sampdb.target";
-const char *dmmeta_Ssimfile_ssimfile_sampdb_targrec   = "sampdb.targrec";
-const char *dmmeta_Ssimfile_ssimfile_sampdb_targsrc   = "sampdb.targsrc";
-const char *dmmeta_Ssimfile_ssimfile_wsdb_status      = "wsdb.status";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_mrnote     = "gclidb.mrnote";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_project    = "gclidb.project";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_user       = "gclidb.user";
+const char *dmmeta_Ssimfile_ssimfile_httpdb_content    = "httpdb.content";
+const char *dmmeta_Ssimfile_ssimfile_httpdb_header     = "httpdb.header";
+const char *dmmeta_Ssimfile_ssimfile_httpdb_method     = "httpdb.method";
+const char *dmmeta_Ssimfile_ssimfile_httpdb_status     = "httpdb.status";
+const char *dmmeta_Ssimfile_ssimfile_httpdb_version    = "httpdb.version";
+const char *dmmeta_Ssimfile_ssimfile_sampdb_gitfile    = "sampdb.gitfile";
+const char *dmmeta_Ssimfile_ssimfile_sampdb_targdep    = "sampdb.targdep";
+const char *dmmeta_Ssimfile_ssimfile_sampdb_target     = "sampdb.target";
+const char *dmmeta_Ssimfile_ssimfile_sampdb_targrec    = "sampdb.targrec";
+const char *dmmeta_Ssimfile_ssimfile_sampdb_targsrc    = "sampdb.targsrc";
+const char *dmmeta_Ssimfile_ssimfile_ui_action_type    = "ui.action_type";
+const char *dmmeta_Ssimfile_ssimfile_ui_binding        = "ui.binding";
+const char *dmmeta_Ssimfile_ssimfile_ui_binding_dir    = "ui.binding_dir";
+const char *dmmeta_Ssimfile_ssimfile_ui_binding_kind   = "ui.binding_kind";
+const char *dmmeta_Ssimfile_ssimfile_ui_border_style   = "ui.border_style";
+
+const char *dmmeta_Ssimfile_ssimfile_ui_color           = "ui.color";
+const char *dmmeta_Ssimfile_ssimfile_ui_column          = "ui.column";
+const char *dmmeta_Ssimfile_ssimfile_ui_command         = "ui.command";
+const char *dmmeta_Ssimfile_ssimfile_ui_context_var     = "ui.context_var";
+const char *dmmeta_Ssimfile_ssimfile_ui_data_path       = "ui.data_path";
+const char *dmmeta_Ssimfile_ssimfile_ui_data_step       = "ui.data_step";
+const char *dmmeta_Ssimfile_ssimfile_ui_event_type      = "ui.event_type";
+const char *dmmeta_Ssimfile_ssimfile_ui_filter_source   = "ui.filter_source";
+const char *dmmeta_Ssimfile_ssimfile_ui_h_align         = "ui.h_align";
+const char *dmmeta_Ssimfile_ssimfile_ui_input_cfg       = "ui.input_cfg";
+
+const char *dmmeta_Ssimfile_ssimfile_ui_join_kind        = "ui.join_kind";
+const char *dmmeta_Ssimfile_ssimfile_ui_key_map          = "ui.key_map";
+const char *dmmeta_Ssimfile_ssimfile_ui_layout_cfg       = "ui.layout_cfg";
+const char *dmmeta_Ssimfile_ssimfile_ui_layout_type      = "ui.layout_type";
+const char *dmmeta_Ssimfile_ssimfile_ui_selection_mode   = "ui.selection_mode";
+const char *dmmeta_Ssimfile_ssimfile_ui_sort_dir         = "ui.sort_dir";
+const char *dmmeta_Ssimfile_ssimfile_ui_style            = "ui.style";
+const char *dmmeta_Ssimfile_ssimfile_ui_style_slot       = "ui.style_slot";
+const char *dmmeta_Ssimfile_ssimfile_ui_table_cfg        = "ui.table_cfg";
+const char *dmmeta_Ssimfile_ssimfile_ui_tree_cfg         = "ui.tree_cfg";
+
+const char *dmmeta_Ssimfile_ssimfile_ui_trigger      = "ui.trigger";
+const char *dmmeta_Ssimfile_ssimfile_ui_v_align      = "ui.v_align";
+const char *dmmeta_Ssimfile_ssimfile_ui_view         = "ui.view";
+const char *dmmeta_Ssimfile_ssimfile_ui_view_field   = "ui.view_field";
+
+const char *dmmeta_Ssimfile_ssimfile_ui_view_filter   = "ui.view_filter";
+const char *dmmeta_Ssimfile_ssimfile_ui_view_sort     = "ui.view_sort";
+const char *dmmeta_Ssimfile_ssimfile_ui_view_source   = "ui.view_source";
+
+const char *dmmeta_Ssimfile_ssimfile_ui_widget         = "ui.widget";
+const char *dmmeta_Ssimfile_ssimfile_ui_widget_state   = "ui.widget_state";
+const char *dmmeta_Ssimfile_ssimfile_ui_widget_type    = "ui.widget_type";
+const char *dmmeta_Ssimfile_ssimfile_ui_window         = "ui.window";
+const char *dmmeta_Ssimfile_ssimfile_wsdb_status       = "wsdb.status";
 
 // compile-time string constants for dmmeta.Steptype.steptype
 const char *dmmeta_Steptype_steptype_Callback       = "Callback";

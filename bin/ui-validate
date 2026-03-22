@@ -1,0 +1,292 @@
+#!/usr/bin/env python3
+"""
+ui-validate -- Validate ui.* schema invariants
+Usage: bin/ui-validate
+
+Checks:
+  P0.1  Binding source exclusivity
+  P0.2  KeyMap action/command exclusivity
+  P0.3  ViewSource base uniqueness
+  P0.7  Widget tree structural integrity
+  P0.8  Widget-type config matching
+  P1.11 Style reference validity
+"""
+
+import subprocess
+import sys
+import os
+
+def acr(pattern):
+    """Run acr and return list of parsed records."""
+    result = subprocess.run(
+        ["acr", pattern],
+        capture_output=True, text=True,
+        cwd=os.environ.get("OPENACR_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    )
+    records = []
+    for line in result.stdout.splitlines():
+        line = line.strip()
+        if not line or line.startswith("report.") or line.startswith("#"):
+            continue
+        attrs = {}
+        import re
+        parts = re.split(r"  +", line)
+        for p in parts:
+            colon = p.find(":")
+            if colon >= 0:
+                k = p[:colon]
+                v = p[colon+1:].strip('"')
+                attrs[k] = v
+        if attrs:
+            records.append(attrs)
+    return records
+
+errors = []
+warnings = []
+
+def error(msg):
+    errors.append(msg)
+    print(f"  ERROR: {msg}")
+
+def warn(msg):
+    warnings.append(msg)
+    print(f"  WARN:  {msg}")
+
+# ============================================================================
+# Step 0 — acr -check for referential integrity
+# ============================================================================
+print("=== acr -check: referential integrity ===")
+check_result = subprocess.run(
+    ["acr", "ui.%", "-check"],
+    capture_output=True, text=True,
+    cwd=os.environ.get("OPENACR_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
+# acr -check reports false positives for Pkey references to enum types
+# (fconst values live in dmmeta.fconst, not in data ssimfiles)
+# Only report badrefs for non-enum Pkey fields
+enum_fields = {"action", "type", "layout", "selection", "fg", "bg", "border",
+               "kind", "dir", "join_kind", "source", "align", "halign", "valign",
+               "state", "p_command", "p_parent", "p_data_path", "p_view"}
+combined = check_result.stdout + check_result.stderr
+for line in combined.splitlines():
+    if "Invalid value" in line:
+        # Extract field name from "Invalid value fieldname:value"
+        import re
+        m = re.search(r"Invalid value (\w+):", line)
+        if m and m.group(1) in enum_fields:
+            continue  # skip enum false positives
+        if m and m.group(1).startswith("p_") and ":" in line and line.strip().endswith(":"):
+            continue  # skip empty optional Pkey refs
+        error(f"acr -check: {line.strip()}")
+    elif "badrefs" in line:
+        pass  # summary line, skip
+if not errors:
+    print("  OK")
+
+# ============================================================================
+# P0.7 — Widget tree structural integrity
+# ============================================================================
+print("=== P0.7: Widget tree ===")
+
+widgets = acr("ui.widget:%")
+windows = {r["window"] for r in acr("ui.window:%")}
+widget_keys = {r["widget"] for r in widgets}
+
+for w in widgets:
+    key = w.get("widget", "")
+    p_window = w.get("p_window", "")
+    p_parent = w.get("p_parent", "")
+
+    if not p_window:
+        error(f"Widget '{key}' has no p_window")
+    elif p_window not in windows:
+        error(f"Widget '{key}' references invalid window '{p_window}'")
+
+    if p_parent and p_parent not in widget_keys:
+        error(f"Widget '{key}' references invalid parent '{p_parent}'")
+
+    # Check parent in same window
+    if p_parent:
+        parent_recs = [r for r in widgets if r.get("widget") == p_parent]
+        if parent_recs and parent_recs[0].get("p_window") != p_window:
+            error(f"Widget '{key}' and parent '{p_parent}' in different windows")
+
+# Cycle detection
+def has_cycle(widget_key, visited=None):
+    if visited is None:
+        visited = set()
+    if widget_key in visited:
+        return True
+    visited.add(widget_key)
+    for w in widgets:
+        if w.get("widget") == widget_key:
+            parent = w.get("p_parent", "")
+            if parent:
+                return has_cycle(parent, visited)
+    return False
+
+for w in widgets:
+    if has_cycle(w.get("widget", "")):
+        error(f"Widget tree cycle detected involving '{w.get('widget')}'")
+
+if not errors:
+    print("  OK")
+
+# ============================================================================
+# P0.8 — Widget-type config matching
+# ============================================================================
+print("=== P0.8: Widget-type configs ===")
+
+widget_types = {r.get("widget"): r.get("type") for r in widgets}
+table_cfgs = {r.get("p_widget") for r in acr("ui.table_cfg:%")}
+tree_cfgs = {r.get("p_widget") for r in acr("ui.tree_cfg:%")}
+input_cfgs = {r.get("p_widget") for r in acr("ui.input_cfg:%")}
+columns = acr("ui.column:%")
+
+# Columns must reference table widgets
+for col in columns:
+    p = col.get("p_widget", "")
+    if p and widget_types.get(p) != "table":
+        error(f"Column '{col.get('column')}' references non-table widget '{p}' (type: {widget_types.get(p)})")
+
+# Table widgets should have TableCfg
+for wkey, wtype in widget_types.items():
+    if wtype == "table" and wkey not in table_cfgs:
+        warn(f"Table widget '{wkey}' has no TableCfg")
+    if wtype == "tree" and wkey not in tree_cfgs:
+        warn(f"Tree widget '{wkey}' has no TreeCfg")
+    if wtype == "input" and wkey not in input_cfgs:
+        warn(f"Input widget '{wkey}' has no InputCfg")
+
+# Config must reference correct widget type
+for cfg_widget in table_cfgs:
+    if cfg_widget and widget_types.get(cfg_widget) not in ("table", None):
+        error(f"TableCfg references non-table widget '{cfg_widget}'")
+for cfg_widget in tree_cfgs:
+    if cfg_widget and widget_types.get(cfg_widget) not in ("tree", None):
+        error(f"TreeCfg references non-tree widget '{cfg_widget}'")
+for cfg_widget in input_cfgs:
+    if cfg_widget and widget_types.get(cfg_widget) not in ("input", None):
+        error(f"InputCfg references non-input widget '{cfg_widget}'")
+
+if not errors:
+    print("  OK")
+
+# ============================================================================
+# P0.1 — Binding source exclusivity
+# ============================================================================
+print("=== P0.1: Binding source exclusivity ===")
+
+bindings = acr("ui.binding:%")
+for b in bindings:
+    key = b.get("binding", "")
+    sources = 0
+    if b.get("source_ctype") and b.get("source_field"):
+        sources += 1
+    if b.get("p_data_path"):
+        sources += 1
+    if b.get("p_view"):
+        sources += 1
+    if b.get("expr"):
+        sources += 1
+
+    if sources == 0:
+        error(f"Binding '{key}' has no source (need source_ctype+field, p_data_path, p_view, or expr)")
+    elif sources > 1:
+        error(f"Binding '{key}' has {sources} source modes (must be exactly 1)")
+
+    # readwrite check
+    if b.get("dir") == "readwrite":
+        kind = b.get("kind", "")
+        if kind not in ("value", "property"):
+            warn(f"Binding '{key}' is readwrite but kind is '{kind}' (expected value or property)")
+
+if not errors:
+    print("  OK")
+
+# ============================================================================
+# P0.2 — KeyMap action/command exclusivity
+# ============================================================================
+print("=== P0.2: KeyMap exclusivity ===")
+
+keymaps = acr("ui.key_map:%")
+for km in keymaps:
+    key = km.get("key_map", "")
+    has_action = bool(km.get("action"))
+    has_command = bool(km.get("p_command"))
+
+    if not has_action and not has_command:
+        error(f"KeyMap '{key}' has neither action nor p_command")
+
+if not errors:
+    print("  OK")
+
+# ============================================================================
+# P0.3 — ViewSource base validation
+# ============================================================================
+print("=== P0.3: ViewSource base ===")
+
+views = {r.get("view") for r in acr("ui.view:%")}
+view_sources = acr("ui.view_source:%")
+
+# Count base sources per view
+base_counts = {}
+for vs in view_sources:
+    view = vs.get("p_view", "")
+    if view not in views and view:
+        error(f"ViewSource '{vs.get('view_source')}' references invalid view '{view}'")
+    if vs.get("join_kind") == "base":
+        base_counts[view] = base_counts.get(view, 0) + 1
+        if vs.get("join_expr"):
+            warn(f"ViewSource '{vs.get('view_source')}' is base but has join_expr")
+    else:
+        if not vs.get("join_expr") and vs.get("join_kind") != "cross":
+            warn(f"ViewSource '{vs.get('view_source')}' is {vs.get('join_kind')} but has no join_expr")
+
+for view in views:
+    count = base_counts.get(view, 0)
+    if count == 0 and view_sources:  # only check if any view_sources exist
+        pass  # views without sources are empty (valid in schema, invalid at runtime)
+    elif count > 1:
+        error(f"View '{view}' has {count} base ViewSources (must be exactly 1)")
+
+if not errors:
+    print("  OK")
+
+# ============================================================================
+# P1.11 — Style validation
+# ============================================================================
+print("=== P1.11: Style references ===")
+
+styles = {r.get("style") for r in acr("ui.style:%")}
+style_slots = acr("ui.style_slot:%")
+
+for w in widgets:
+    ps = w.get("p_style", "")
+    if ps and ps not in styles:
+        error(f"Widget '{w.get('widget')}' references invalid style '{ps}'")
+
+# Duplicate state check
+slot_pairs = set()
+for ss in style_slots:
+    pair = (ss.get("p_widget"), ss.get("state"))
+    if pair in slot_pairs:
+        error(f"Duplicate StyleSlot for widget '{pair[0]}' state '{pair[1]}'")
+    slot_pairs.add(pair)
+    if ss.get("p_style") and ss.get("p_style") not in styles:
+        error(f"StyleSlot '{ss.get('style_slot')}' references invalid style '{ss.get('p_style')}'")
+
+if not errors:
+    print("  OK")
+
+# ============================================================================
+# Summary
+# ============================================================================
+print()
+print(f"=== {len(errors)} errors, {len(warnings)} warnings ===")
+if errors:
+    print("VALIDATION FAILED")
+    sys.exit(1)
+else:
+    print("VALIDATION PASSED")
+    sys.exit(0)

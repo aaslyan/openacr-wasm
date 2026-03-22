@@ -30,26 +30,26 @@
 // --- samp_mdb_FieldIdEnum
 
 enum samp_mdb_FieldIdEnum {                        // samp_mdb.FieldId.value
-     samp_mdb_FieldId_project                = 0
-    ,samp_mdb_FieldId_description            = 1
-    ,samp_mdb_FieldId_status                 = 2
-    ,samp_mdb_FieldId_zd_task                = 3
-    ,samp_mdb_FieldId_c_high_priority_task   = 4
-    ,samp_mdb_FieldId_user                   = 5
-    ,samp_mdb_FieldId_email                  = 6
-    ,samp_mdb_FieldId_role                   = 7
-    ,samp_mdb_FieldId_task                   = 8
-    ,samp_mdb_FieldId_title                  = 9
-    ,samp_mdb_FieldId_priority               = 10
-    ,samp_mdb_FieldId_p_project              = 11
-    ,samp_mdb_FieldId_p_user                 = 12
-    ,samp_mdb_FieldId_comment                = 13
-    ,samp_mdb_FieldId_p_task                 = 14
-    ,samp_mdb_FieldId_text                   = 15
-    ,samp_mdb_FieldId_quote                  = 16
-    ,samp_mdb_FieldId_symbol                 = 17
-    ,samp_mdb_FieldId_price                  = 18
-    ,samp_mdb_FieldId_ts                     = 19
+     samp_mdb_FieldId_comment                = 0
+    ,samp_mdb_FieldId_p_task                 = 1
+    ,samp_mdb_FieldId_p_user                 = 2
+    ,samp_mdb_FieldId_text                   = 3
+    ,samp_mdb_FieldId_project                = 4
+    ,samp_mdb_FieldId_description            = 5
+    ,samp_mdb_FieldId_status                 = 6
+    ,samp_mdb_FieldId_zd_task                = 7
+    ,samp_mdb_FieldId_c_high_priority_task   = 8
+    ,samp_mdb_FieldId_quote                  = 9
+    ,samp_mdb_FieldId_symbol                 = 10
+    ,samp_mdb_FieldId_price                  = 11
+    ,samp_mdb_FieldId_ts                     = 12
+    ,samp_mdb_FieldId_task                   = 13
+    ,samp_mdb_FieldId_title                  = 14
+    ,samp_mdb_FieldId_priority               = 15
+    ,samp_mdb_FieldId_p_project              = 16
+    ,samp_mdb_FieldId_user                   = 17
+    ,samp_mdb_FieldId_email                  = 18
+    ,samp_mdb_FieldId_role                   = 19
     ,samp_mdb_FieldId_value                  = 20
 };
 
@@ -1089,8 +1089,8 @@ void                 Quote_Print(samp_mdb::Quote& row, algo::cstring& str) __att
 // global access: bh_task (Bheap, sort field priority)
 // global access: zd_task_priority (Llist, sort field priority)
 // access: samp_mdb.Project.zd_task (Llist)
-// access: samp_mdb.User.zd_task (Llist)
 // access: samp_mdb.Project.c_high_priority_task (Ptrary)
+// access: samp_mdb.User.zd_task (Llist)
 struct Task { // samp_mdb.Task: Task assigned to a user within a project
     samp_mdb::Task*     task_next;               // Pointer to next free element int tpool
     samp_mdb::Task*     ind_task_next;           // hash next

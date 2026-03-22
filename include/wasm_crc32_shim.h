@@ -55,3 +55,4 @@ static inline uint32_t _mm_crc32_u64(uint32_t prev, uint64_t val) {
 #define WASM_CRC32_SHIM_DEFINED
 
 #endif // __SSE4_2__
+
