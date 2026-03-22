@@ -5,8 +5,8 @@
 // Exceptions: yes
 // Source: cpp/acr_tui/acr_tui.cpp
 //
-// Message-driven TUI with DataPath navigation
-// Drill in with Enter/Right/l, go back with Esc/Left/h
+// Generic data-driven TUI browser
+// Loads all ssim data as tuples, navigates via DataPath, renders from ui.* schema
 
 #include "include/algo.h"
 #include "include/acr_tui.h"
@@ -14,23 +14,126 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <signal.h>
+#include <dirent.h>
 
 // ============================================================================
-// Message types
+// Generic record store — holds all loaded ssim data as tuples
 // ============================================================================
 
-enum UiMsgType : u32 {
-    UIMSG_NAVIGATE  = 2,
-    UIMSG_ACTIVATE  = 13,  // drill in
-    UIMSG_CANCEL    = 14,  // go back
-    UIMSG_QUIT      = 10,
+struct GRec {
+    algo::cstring ctype_tag;   // e.g. "dmmeta.ns", "dmmeta.ctype"
+    algo::cstring pkey;        // primary key value
+    algo::Tuple   tuple;       // parsed attributes
+    GRec* next;                // linked list per ctype
 };
 
-struct UiMsg {
-    u32 type;
-    i32 direction;
-    UiMsg() : type(0), direction(0) {}
+static const int MAX_CTYPES = 256;
+static const int MAX_RECS = 100000;
+static GRec g_recs[MAX_RECS];
+static int g_nrecs = 0;
+
+// Index: ctype_tag -> linked list of records
+struct CTypeIndex {
+    algo::cstring tag;
+    GRec* head;
+    GRec* tail;
+    int count;
 };
+static CTypeIndex g_ctypes[MAX_CTYPES];
+static int g_nctypes = 0;
+
+static CTypeIndex* FindCType(algo::strptr tag) {
+    for (int i = 0; i < g_nctypes; i++) {
+        if (algo::strptr(g_ctypes[i].tag) == tag) return &g_ctypes[i];
+    }
+    return NULL;
+}
+
+static CTypeIndex* GetOrCreateCType(algo::strptr tag) {
+    CTypeIndex* ct = FindCType(tag);
+    if (!ct && g_nctypes < MAX_CTYPES) {
+        ct = &g_ctypes[g_nctypes++];
+        ct->tag = tag;
+        ct->head = ct->tail = NULL;
+        ct->count = 0;
+    }
+    return ct;
+}
+
+static void LoadRecord(algo::strptr line) {
+    if (g_nrecs >= MAX_RECS) return;
+    line = algo::Trimmed(line);
+    if (!ch_N(line) || line.elems[0] == '#') return;
+
+    algo::Tuple tuple;
+    if (!algo::Tuple_ReadStrptrMaybe(tuple, line)) return;
+
+    algo::strptr tag = tuple.head.value;
+    if (!ch_N(tag)) return;
+
+    GRec* rec = &g_recs[g_nrecs++];
+    rec->ctype_tag = tag;
+    rec->tuple = tuple;
+    rec->next = NULL;
+
+    // Primary key is first attribute value
+    if (tuple.attrs_n > 0) {
+        rec->pkey = tuple.attrs_elems[0].value;
+    }
+
+    CTypeIndex* ct = GetOrCreateCType(tag);
+    if (ct) {
+        if (ct->tail) { ct->tail->next = rec; ct->tail = rec; }
+        else { ct->head = ct->tail = rec; }
+        ct->count++;
+    }
+}
+
+static void LoadSsimFile(algo::strptr path) {
+    tempstr content = algo::FileToString(path, algo::FileFlags());
+    algo::StringIter iter(content);
+    while (!iter.EofQ()) {
+        algo::strptr line = algo::GetLine(iter);
+        LoadRecord(line);
+    }
+}
+
+static void LoadAllData(algo::strptr datadir) {
+    // Scan data/ for subdirectories, each subdir has ssim files
+    DIR* dir = opendir(datadir.elems ? (char*)algo::Zeroterm(tempstr(datadir)) : "data");
+    if (!dir) return;
+    struct dirent* ent;
+    while ((ent = readdir(dir)) != NULL) {
+        if (ent->d_name[0] == '.') continue;
+        algo::cstring subdir;
+        subdir << datadir << "/" << ent->d_name;
+        DIR* sub = opendir((char*)algo::Zeroterm(tempstr(subdir)));
+        if (!sub) continue;
+        struct dirent* sent;
+        while ((sent = readdir(sub)) != NULL) {
+            algo::strptr fname(sent->d_name);
+            if (algo::EndsWithQ(fname, ".ssim")) {
+                algo::cstring filepath;
+                filepath << subdir << "/" << fname;
+                LoadSsimFile(filepath);
+            }
+        }
+        closedir(sub);
+    }
+    closedir(dir);
+}
+
+// Extract an attribute value by name from a tuple
+static algo::strptr TupleGetAttr(const algo::Tuple& t, algo::strptr name) {
+    for (u32 i = 0; i < t.attrs_n; i++) {
+        if (algo::strptr(t.attrs_elems[i].name) == name) {
+            return algo::strptr(t.attrs_elems[i].value);
+        }
+    }
+    // Also check head (the type tag's value is the pkey)
+    if (algo::strptr(t.head.name) == name) return algo::strptr(t.head.value);
+    return algo::strptr();
+}
 
 // ============================================================================
 // Terminal I/O
@@ -53,37 +156,50 @@ static void PutStr(int row, int col, algo::strptr s, int maxw) {
     }
 }
 
+// Style from ui.Style records
+static void ApplyStyleByName(algo::strptr style_name) {
+    acr_tui::FStyle* style = acr_tui::ind_style_Find(style_name);
+    if (!style) return;
+    algo::cstring s;
+    if (style->bold) s << "\x1b[1m";
+    algo::strptr fg = style->fg;
+    if (fg == "black") s << "\x1b[30m"; else if (fg == "red") s << "\x1b[31m";
+    else if (fg == "green") s << "\x1b[32m"; else if (fg == "yellow") s << "\x1b[33m";
+    else if (fg == "blue") s << "\x1b[34m"; else if (fg == "magenta") s << "\x1b[35m";
+    else if (fg == "cyan") s << "\x1b[36m"; else if (fg == "white") s << "\x1b[37m";
+    algo::strptr bg = style->bg;
+    if (bg == "black") s << "\x1b[40m"; else if (bg == "red") s << "\x1b[41m";
+    else if (bg == "green") s << "\x1b[42m"; else if (bg == "yellow") s << "\x1b[43m";
+    else if (bg == "blue") s << "\x1b[44m"; else if (bg == "magenta") s << "\x1b[45m";
+    else if (bg == "cyan") s << "\x1b[46m"; else if (bg == "white") s << "\x1b[47m";
+    term_write(s.ch_elems, s.ch_n);
+}
+
 static struct termios orig_termios;
 static int term_rows = 24, term_cols = 80;
 static volatile bool need_resize = false;
 
 static void HandleSigwinch(int) { need_resize = true; }
-
 static void UpdateTermSize() {
     struct winsize ws;
     if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == 0) {
-        term_rows = ws.ws_row;
-        term_cols = ws.ws_col;
+        term_rows = ws.ws_row; term_cols = ws.ws_col;
     }
     need_resize = false;
 }
-
 static void DisableRawMode() {
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
-    term_str("\x1b[?25h");  // show cursor
-    ClearScreen();
+    term_str("\x1b[?25h"); ClearScreen();
 }
-
 static void EnableRawMode() {
     tcgetattr(STDIN_FILENO, &orig_termios);
     atexit(DisableRawMode);
     struct termios raw = orig_termios;
     raw.c_lflag &= ~(ECHO | ICANON | ISIG);
     raw.c_iflag &= ~(IXON);
-    raw.c_cc[VMIN] = 1;
-    raw.c_cc[VTIME] = 0;
+    raw.c_cc[VMIN] = 1; raw.c_cc[VTIME] = 0;
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
-    term_str("\x1b[?25l");  // hide cursor
+    term_str("\x1b[?25l");
     signal(SIGWINCH, HandleSigwinch);
     UpdateTermSize();
 }
@@ -95,154 +211,134 @@ static void EnableRawMode() {
 static int current_level = 0;
 static int selected_row = 0;
 static int scroll_offset = 0;
-static algo::Smallstr100 breadcrumb[8];  // selected key at each level
-static int msg_count = 0;
+static algo::Smallstr100 breadcrumb[16];
 static bool running = true;
 
 // ============================================================================
-// Data access — get items at current level filtered by parent key
+// Get items at current DataStep level, filtered by parent
 // ============================================================================
 
-struct ListItem {
+struct ViewItem {
     algo::cstring label;
     algo::cstring detail;
-    algo::cstring key;       // primary key for drill-in
-    bool has_children;       // can drill deeper
+    algo::cstring key;
+    bool has_children;
 };
 
-static int GetItems(ListItem* items, int max_items) {
-    int n = 0;
+static ViewItem g_items[8192];
+static int g_nitems = 0;
 
-    // Find current step
+static void RefreshItems() {
+    g_nitems = 0;
+
+    // Find current DataStep
     acr_tui::FDataStep* step = NULL;
     ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
         if (ds.level == current_level) { step = &ds; break; }
     }ind_end;
-    if (!step) return 0;
+    if (!step) return;
 
-    // Find next step (to know if drill-in is possible)
+    // Check if there's a next level (determines has_children)
     bool has_next = false;
     ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
         if (ds.level == current_level + 1) { has_next = true; break; }
     }ind_end;
 
+    // Parent key for filtering
     algo::strptr parent_key;
     if (current_level > 0) parent_key = algo::strptr(breadcrumb[current_level - 1]);
 
-    // Iterate the appropriate data based on source_ctype
-    if (step->source_ctype == "dmmeta.Ns") {
-        ind_beg(acr_tui::_db_ns_curs, ns, acr_tui::_db) {
-            if (n >= max_items) break;
-            items[n].label = ns.ns;
-            items[n].detail = ns.comment;
-            items[n].key = ns.ns;
-            items[n].has_children = has_next;
-            n++;
-        }ind_end;
-    } else if (step->source_ctype == "dmmeta.Ctype") {
-        ind_beg(acr_tui::_db_ctype_curs, ct, acr_tui::_db) {
-            if (n >= max_items) break;
-            // Filter by parent namespace
-            algo::strptr ct_ns = algo::Pathcomp(ct.ctype, ".LL");
-            if (ch_N(parent_key) > 0 && ct_ns != parent_key) continue;
-            algo::strptr ct_name = algo::Pathcomp(ct.ctype, ".LR");
-            items[n].label = ct_name;
-            items[n].detail = ct.comment;
-            items[n].key = ct.ctype;
-            items[n].has_children = has_next;
-            n++;
-        }ind_end;
-    } else if (step->source_ctype == "dmmeta.Field") {
-        ind_beg(acr_tui::_db_field_curs, fld, acr_tui::_db) {
-            if (n >= max_items) break;
-            algo::strptr fld_parent = algo::Pathcomp(fld.field, ".LL");
-            if (ch_N(parent_key) > 0 && fld_parent != parent_key) continue;
-            algo::strptr fld_name = algo::Pathcomp(fld.field, ".LR");
-            algo::cstring detail;
-            detail << fld.arg << "  " << fld.reftype;
-            { algo::cstring dflt_str; algo::CppExpr_Print(fld.dflt, dflt_str);
-              if (ch_N(dflt_str)) detail << "  dflt:" << dflt_str; }
-            items[n].label = fld_name;
-            items[n].detail = detail;
-            items[n].key = fld.field;
-            items[n].has_children = has_next;
-            n++;
-        }ind_end;
-    } else if (step->source_ctype == "dmmeta.Fconst") {
-        ind_beg(acr_tui::_db_fconst_curs, fc, acr_tui::_db) {
-            if (n >= max_items) break;
-            algo::strptr fc_parent = algo::Pathcomp(fc.fconst, "/LL");
-            if (ch_N(parent_key) > 0 && fc_parent != parent_key) continue;
-            algo::strptr fc_name = algo::Pathcomp(fc.fconst, "/LR");
-            items[n].label = fc_name;
-            { algo::cstring val; algo::CppExpr_Print(fc.value, val); items[n].detail = val; }
-            items[n].key = fc.fconst;
-            items[n].has_children = false;
-            n++;
-        }ind_end;
+    // Find records matching source_ctype
+    CTypeIndex* ct = FindCType(step->source_ctype);
+    if (!ct) return;
+
+    algo::strptr link = step->link_field;  // e.g. ".LL" or "/LL"
+    algo::strptr label_name = step->label_field;
+    algo::strptr detail_name = step->detail_field;
+
+    for (GRec* rec = ct->head; rec && g_nitems < 8192; rec = rec->next) {
+        // Apply filter: extract pathcomp from pkey, match parent
+        if (ch_N(link) && ch_N(parent_key)) {
+            algo::strptr pkey = rec->pkey;
+            algo::strptr prefix = algo::Pathcomp(pkey, link);
+            if (prefix != parent_key) continue;
+        }
+
+        ViewItem& item = g_items[g_nitems];
+        // Extract label from tuple attributes
+        item.label = TupleGetAttr(rec->tuple, label_name);
+        // If label is empty, use pkey
+        if (!ch_N(item.label)) item.label = rec->pkey;
+        // For deeper levels, show just the local part (strip parent prefix)
+        if (ch_N(link) && ch_N(parent_key)) {
+            (void)item.label;
+            // Strip prefix using the link pathcomp's complement
+            // e.g. if link is ".LL", show ".LR" part
+            if (link == ".LL") {
+                algo::strptr local = algo::Pathcomp(rec->pkey, ".LR");
+                if (ch_N(local)) item.label = local;
+            } else if (link == "/LL") {
+                algo::strptr local = algo::Pathcomp(rec->pkey, "/LR");
+                if (ch_N(local)) item.label = local;
+            }
+        }
+
+        item.detail = TupleGetAttr(rec->tuple, detail_name);
+        item.key = rec->pkey;
+        item.has_children = has_next;
+        g_nitems++;
     }
-    return n;
 }
 
 // ============================================================================
 // Message dispatch
 // ============================================================================
 
-static ListItem g_items[4096];
-static int g_nitems = 0;
-
-static void HandleNavigate(const UiMsg& msg) {
-    if (msg.direction > 0 && selected_row < g_nitems - 1) {
-        selected_row++;
-    } else if (msg.direction < 0 && selected_row > 0) {
-        selected_row--;
-    }
-    // Scroll viewport
-    int visible = term_rows - 5;
-    if (selected_row < scroll_offset) scroll_offset = selected_row;
-    if (selected_row >= scroll_offset + visible) scroll_offset = selected_row - visible + 1;
-}
-
-static void HandleActivate(const UiMsg&) {
-    if (selected_row < g_nitems && g_items[selected_row].has_children) {
-        breadcrumb[current_level] = algo::strptr(g_items[selected_row].key);
-        current_level++;
-        selected_row = 0;
-        scroll_offset = 0;
-    }
-}
-
-static void HandleCancel(const UiMsg&) {
-    if (current_level > 0) {
-        current_level--;
-        selected_row = 0;
-        scroll_offset = 0;
-    }
-}
+enum { MSG_NAVIGATE = 1, MSG_ACTIVATE = 2, MSG_CANCEL = 3, MSG_QUIT = 4 };
+struct UiMsg { u32 type; i32 direction; };
 
 static void DispatchMsg(const UiMsg& msg) {
-    msg_count++;
     switch (msg.type) {
-        case UIMSG_QUIT:     running = false; break;
-        case UIMSG_NAVIGATE: HandleNavigate(msg); break;
-        case UIMSG_ACTIVATE: HandleActivate(msg); break;
-        case UIMSG_CANCEL:   HandleCancel(msg); break;
-        default: break;
+        case MSG_QUIT: running = false; break;
+        case MSG_NAVIGATE: {
+            int new_sel = selected_row + msg.direction;
+            if (new_sel >= 0 && new_sel < g_nitems) selected_row = new_sel;
+            int visible = term_rows - 5;
+            if (selected_row < scroll_offset) scroll_offset = selected_row;
+            if (selected_row >= scroll_offset + visible) scroll_offset = selected_row - visible + 1;
+            break;
+        }
+        case MSG_ACTIVATE:
+            if (selected_row < g_nitems && g_items[selected_row].has_children) {
+                breadcrumb[current_level] = algo::strptr(g_items[selected_row].key);
+                current_level++;
+                selected_row = 0;
+                scroll_offset = 0;
+                RefreshItems();
+            }
+            break;
+        case MSG_CANCEL:
+            if (current_level > 0) {
+                current_level--;
+                selected_row = 0;
+                scroll_offset = 0;
+                RefreshItems();
+            }
+            break;
     }
 }
 
 // ============================================================================
-// Input: read key (handles escape sequences for arrows)
+// Input: read key, translate via keymap
 // ============================================================================
 
 static UiMsg ReadInput() {
-    UiMsg msg;
+    UiMsg msg = {0, 0};
     char ch;
-    if (read(STDIN_FILENO, &ch, 1) != 1) { msg.type = UIMSG_QUIT; return msg; }
+    if (read(STDIN_FILENO, &ch, 1) != 1) { msg.type = MSG_QUIT; return msg; }
 
     algo::Smallstr20 key_name;
     if (ch == 27) {
-        // Escape sequence or bare Esc
         char seq[2];
         if (read(STDIN_FILENO, &seq[0], 1) == 1 && seq[0] == '[') {
             if (read(STDIN_FILENO, &seq[1], 1) == 1) {
@@ -253,26 +349,24 @@ static UiMsg ReadInput() {
             }
         }
         if (!ch_N(key_name)) key_name = "Esc";
-    } else if (ch == '\r' || ch == '\n') {
-        key_name = "Enter";
-    } else if (ch == '\t') {
-        key_name = "Tab";
-    } else if (ch == 3) {  // ctrl-c
-        msg.type = UIMSG_QUIT;
-        return msg;
-    } else {
-        ch_Add(key_name, ch);
-    }
+    } else if (ch == '\r' || ch == '\n') key_name = "Enter";
+    else if (ch == '\t') key_name = "Tab";
+    else if (ch == 3) { msg.type = MSG_QUIT; return msg; }
+    else ch_Add(key_name, ch);
 
-    // Match against keymaps
+    // Match keymaps from ui.key_map
     ind_beg(acr_tui::_db_key_map_curs, km, acr_tui::_db) {
         if (km.key != key_name) continue;
-        if (ch_N(km.p_widget) > 0 && algo::strptr(km.p_widget) != "browser") continue;
-        if (km.action == "quit")          msg.type = UIMSG_QUIT;
-        else if (km.action == "navigate_next") { msg.type = UIMSG_NAVIGATE; msg.direction = 1; }
-        else if (km.action == "navigate_prev") { msg.type = UIMSG_NAVIGATE; msg.direction = -1; }
-        else if (km.action == "activate") msg.type = UIMSG_ACTIVATE;
-        else if (km.action == "cancel")   msg.type = UIMSG_CANCEL;
+        // p_widget scope check (empty = global)
+        if (ch_N(km.p_widget) > 0) {
+            // For now, all keys apply to the browser widget
+        }
+        algo::strptr action = km.action;
+        if (action == "quit")           msg.type = MSG_QUIT;
+        else if (action == "navigate_next") { msg.type = MSG_NAVIGATE; msg.direction = 1; }
+        else if (action == "navigate_prev") { msg.type = MSG_NAVIGATE; msg.direction = -1; }
+        else if (action == "activate")  msg.type = MSG_ACTIVATE;
+        else if (action == "cancel")    msg.type = MSG_CANCEL;
         break;
     }ind_end;
 
@@ -280,100 +374,113 @@ static UiMsg ReadInput() {
 }
 
 // ============================================================================
-// Renderer
+// Renderer — reads widget definitions from ui.* schema
 // ============================================================================
 
 static void Render() {
     if (need_resize) UpdateTermSize();
-
-    g_nitems = GetItems(g_items, 4096);
-
-    ClearScreen();
     int W = term_cols;
 
-    // Title bar
-    term_str("\x1b[1m\x1b[36m");
-    algo::cstring title;
-    title << "OpenACR Schema Browser";
-    PutStr(0, 0, title, W);
-    ResetColor();
+    ClearScreen();
 
-    // Breadcrumb
+    // Find title widget and render it
+    ind_beg(acr_tui::_db_widget_curs, w, acr_tui::_db) {
+        if (w.type == "label" && w.visible) {
+            ApplyStyleByName(w.p_style);
+            PutStr(w.row, w.col, w.text, W);
+            ResetColor();
+        }
+    }ind_end;
+
+    // Breadcrumb bar (row 1)
     algo::cstring crumb;
-    crumb << " ";
+    // Show data path name
+    ind_beg(acr_tui::_db_data_path_curs, dp, acr_tui::_db) {
+        crumb << " " << dp.data_path;
+        break;
+    }ind_end;
     for (int i = 0; i < current_level; i++) {
-        if (i > 0) crumb << " \xe2\x96\xb8 ";
-        crumb << breadcrumb[i];
+        crumb << " \xe2\x96\xb8 " << breadcrumb[i];
     }
+    // Show current step's source ctype
+    ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+        if (ds.level == current_level) {
+            crumb << " \xe2\x96\xb8 [" << ds.source_ctype << "]";
+            break;
+        }
+    }ind_end;
     term_str("\x1b[33m");
     PutStr(1, 0, crumb, W);
     ResetColor();
 
-    // Border
+    // Separator
     term_str("\x1b[34m");
     MoveTo(2, 0);
     for (int i = 0; i < W; i++) term_str("\xe2\x94\x80");
     ResetColor();
 
-    // Items
+    // Items — use selected style from ui.style_slot or fallback
     int visible = term_rows - 5;
     for (int i = 0; i < visible && (scroll_offset + i) < g_nitems; i++) {
         int idx = scroll_offset + i;
-        ListItem& item = g_items[idx];
+        ViewItem& item = g_items[idx];
         bool sel = idx == selected_row;
 
-        if (sel) term_str("\x1b[30m\x1b[46m");
-
-        // Arrow indicator for drillable items
-        algo::cstring line;
-        if (item.has_children) {
-            line << " \xe2\x96\xb8 ";
-        } else {
-            line << "   ";
+        if (sel) {
+            // Try to find "selected" style
+            ApplyStyleByName("selected");
         }
+
+        algo::cstring line;
+        if (item.has_children) line << " \xe2\x96\xb8 ";
+        else line << "   ";
         line << item.label;
+
         if (ch_N(item.detail)) {
-            // Pad label to fixed width then show detail
-            int label_w = 30;
-            while (ch_N(line) < label_w) line << " ";
-            term_str(sel ? "" : "\x1b[90m");  // dim for detail
+            int pad = 35;
+            while (ch_N(line) < pad) line << " ";
+            if (!sel) term_str("\x1b[90m");
             line << item.detail;
         }
+
         PutStr(3 + i, 0, line, W);
         ResetColor();
     }
 
-    // Scroll indicator
-    if (g_nitems > visible) {
-        int bar_h = visible > 0 ? (visible * visible / g_nitems) : 1;
+    // Scroll bar
+    if (g_nitems > visible && visible > 0) {
+        int bar_h = (visible * visible) / g_nitems;
         if (bar_h < 1) bar_h = 1;
-        int bar_pos = visible > 0 ? (scroll_offset * visible / g_nitems) : 0;
+        int bar_pos = (scroll_offset * visible) / g_nitems;
         term_str("\x1b[90m");
         for (int i = 0; i < visible; i++) {
             MoveTo(3 + i, W - 1);
-            if (i >= bar_pos && i < bar_pos + bar_h) term_str("\xe2\x96\x88");
-            else term_str("\xe2\x94\x82");
+            term_str((i >= bar_pos && i < bar_pos + bar_h) ? "\xe2\x96\x88" : "\xe2\x94\x82");
         }
         ResetColor();
     }
 
-    // Bottom border
+    // Bottom separator
     term_str("\x1b[34m");
     MoveTo(term_rows - 2, 0);
     for (int i = 0; i < W; i++) term_str("\xe2\x94\x80");
     ResetColor();
 
-    // Status bar
-    term_str("\x1b[37m\x1b[44m");
-    algo::cstring status;
-    status << " \xe2\x86\x91\xe2\x86\x93:navigate  "
-           << "Enter/\xe2\x86\x92:open  "
-           << "Esc/\xe2\x86\x90:back  "
-           << "q:quit  "
-           << g_nitems << " items  "
-           << "level:" << current_level;
-    PutStr(term_rows - 1, 0, status, W);
-    ResetColor();
+    // Status bar — from statusbar widget
+    ind_beg(acr_tui::_db_widget_curs, w, acr_tui::_db) {
+        if (w.type == "statusbar" && w.visible) {
+            ApplyStyleByName(w.p_style);
+            algo::cstring status;
+            status << " \xe2\x86\x91\xe2\x86\x93:navigate  "
+                   << "Enter/\xe2\x86\x92:open  "
+                   << "Esc/\xe2\x86\x90:back  "
+                   << "q:quit  "
+                   << g_nitems << " items  "
+                   << "loaded:" << g_nrecs;
+            PutStr(term_rows - 1, 0, status, W);
+            ResetColor();
+        }
+    }ind_end;
 }
 
 // ============================================================================
@@ -381,6 +488,13 @@ static void Render() {
 // ============================================================================
 
 void acr_tui::Main() {
+    // Load all ssim data generically from data/ directory
+    LoadAllData("data");
+
+    // ui.* tables are already loaded via finput by FDb_Init
+    // Refresh items for level 0
+    RefreshItems();
+
     EnableRawMode();
 
     while (running) {
