@@ -219,6 +219,12 @@ static int n_paths = 0;
 static bool choosing_branch = false;
 static algo::Smallstr50 active_step;  // which DataStep we're viewing data from
 
+// View modes
+enum ViewMode { VIEW_LIST = 0, VIEW_GRAPH = 1, VIEW_RAW = 2 };
+static ViewMode view_mode = VIEW_LIST;
+static algo::cstring graph_output;  // cached amc_vis output
+static int graph_scroll = 0;
+
 // Collected branch choices at current level
 struct BranchChoice {
     algo::Smallstr50 step_key;
@@ -363,10 +369,88 @@ static void RefreshItems() {
 }
 
 // ============================================================================
+// External tool view: pipe to amc_vis / acr and capture output
+// ============================================================================
+
+static void RunExternalView() {
+    graph_output = algo::cstring();
+    graph_scroll = 0;
+
+    // Determine what to visualize based on current selection
+    algo::cstring cmd;
+    if (view_mode == VIEW_GRAPH) {
+        // amc_vis: need a ctype name
+        // If we're viewing ctypes, use the selected one
+        // If viewing fields, use the parent ctype
+        algo::strptr key;
+        if (selected_row < g_nitems) key = algo::strptr(g_items[selected_row].key);
+
+        // Find which DataStep we're on to determine context
+        acr_tui::FDataStep* step = NULL;
+        if (ch_N(active_step)) {
+            ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+                if (ds.data_step == active_step) { step = &ds; break; }
+            }ind_end;
+        }
+
+        algo::cstring ctype_arg;
+        if (step && step->source_ctype == "dmmeta.ctype" && ch_N(key)) {
+            // We're on a ctype list — use the selected ctype directly
+            // key is like "dmmeta.Ns", need to convert to exe-qualified form
+            // amc_vis wants ctype like "acr.FCtype" — but also works with plain ctype
+            ctype_arg = key;
+        } else if (step && step->source_ctype == "dmmeta.field" && ch_N(key)) {
+            // We're on a field list — use parent ctype
+            algo::strptr parent = algo::Pathcomp(key, ".RL");
+            if (ch_N(parent)) ctype_arg = parent;
+        } else if (step && step->source_ctype == "dmmeta.ns" && ch_N(key)) {
+            // Namespace level — show all ctypes for this ns
+            ctype_arg << key << ".%";
+        } else if (ch_N(key)) {
+            ctype_arg = key;
+        }
+
+        if (ch_N(ctype_arg)) {
+            cmd << "amc_vis " << ctype_arg << " -xref 2>&1";
+        }
+    } else if (view_mode == VIEW_RAW) {
+        // acr -t: show ssim tree of selected record
+        algo::strptr key;
+        if (selected_row < g_nitems) key = algo::strptr(g_items[selected_row].key);
+        acr_tui::FDataStep* step = NULL;
+        if (ch_N(active_step)) {
+            ind_beg(acr_tui::_db_data_step_curs, ds, acr_tui::_db) {
+                if (ds.data_step == active_step) { step = &ds; break; }
+            }ind_end;
+        }
+        if (step && ch_N(key)) {
+            cmd << "acr -t " << step->source_ctype << ":" << key << " 2>&1";
+        }
+    }
+
+    if (!ch_N(cmd)) {
+        graph_output = "No visualization available for current selection";
+        return;
+    }
+
+    // Run command and capture output
+    FILE* pipe = popen((char*)algo::Zeroterm(tempstr(cmd)), "r");
+    if (!pipe) {
+        graph_output = "Failed to run command";
+        return;
+    }
+    char buf[4096];
+    while (fgets(buf, sizeof(buf), pipe)) {
+        graph_output << buf;
+    }
+    pclose(pipe);
+}
+
+// ============================================================================
 // Message dispatch
 // ============================================================================
 
-enum { MSG_NAVIGATE = 1, MSG_ACTIVATE = 2, MSG_CANCEL = 3, MSG_QUIT = 4, MSG_SWITCH_PATH = 5 };
+enum { MSG_NAVIGATE = 1, MSG_ACTIVATE = 2, MSG_CANCEL = 3, MSG_QUIT = 4, MSG_SWITCH_PATH = 5, MSG_TOGGLE_VIEW = 6 };
 struct UiMsg { u32 type; i32 direction; i32 path_idx; UiMsg() : type(0), direction(0), path_idx(0) {} };
 
 static void DispatchMsg(const UiMsg& msg) {
@@ -459,6 +543,17 @@ static void DispatchMsg(const UiMsg& msg) {
                 RefreshItems();
             }
             break;
+        case MSG_TOGGLE_VIEW:
+            if (view_mode == VIEW_LIST) {
+                view_mode = VIEW_GRAPH;
+                RunExternalView();
+            } else if (view_mode == VIEW_GRAPH) {
+                view_mode = VIEW_RAW;
+                RunExternalView();
+            } else {
+                view_mode = VIEW_LIST;
+            }
+            break;
     }
 }
 
@@ -487,6 +582,24 @@ static UiMsg ReadInput() {
     else if (ch == '\t') key_name = "Tab";
     else if (ch == 3) { msg.type = MSG_QUIT; return msg; }
     else ch_Add(key_name, ch);
+
+    // View toggle: v cycles list → graph → raw → list
+    if (ch == 'v') {
+        msg.type = MSG_TOGGLE_VIEW;
+        return msg;
+    }
+
+    // In graph/raw view, j/k/arrows scroll, Esc goes back to list
+    if (view_mode != VIEW_LIST) {
+        if (key_name == "j" || key_name == "Down") { graph_scroll++; return msg; }
+        if (key_name == "k" || key_name == "Up") { if (graph_scroll > 0) graph_scroll--; return msg; }
+        if (key_name == "Esc" || key_name == "Left" || key_name == "h") {
+            view_mode = VIEW_LIST;
+            return msg;
+        }
+        if (key_name == "q") { msg.type = MSG_QUIT; return msg; }
+        return msg;  // swallow other keys in view mode
+    }
 
     // Path switching: 1-9 switches DataPath
     if (ch >= '1' && ch <= '9') {
@@ -562,45 +675,57 @@ static void Render() {
     for (int i = 0; i < W; i++) term_str("\xe2\x94\x80");
     ResetColor();
 
-    // Items — use selected style from ui.style_slot or fallback
     int visible = term_rows - 5;
-    for (int i = 0; i < visible && (scroll_offset + i) < g_nitems; i++) {
-        int idx = scroll_offset + i;
-        ViewItem& item = g_items[idx];
-        bool sel = idx == selected_row;
 
-        if (sel) {
-            // Try to find "selected" style
-            ApplyStyleByName("selected");
+    if (view_mode == VIEW_LIST) {
+        // List view — current behavior
+        for (int i = 0; i < visible && (scroll_offset + i) < g_nitems; i++) {
+            int idx = scroll_offset + i;
+            ViewItem& item = g_items[idx];
+            bool sel = idx == selected_row;
+            if (sel) ApplyStyleByName("selected");
+
+            algo::cstring line;
+            if (item.has_children) line << " \xe2\x96\xb8 ";
+            else line << "   ";
+            line << item.label;
+            if (ch_N(item.detail)) {
+                int pad = 35;
+                while (ch_N(line) < pad) line << " ";
+                if (!sel) term_str("\x1b[90m");
+                line << item.detail;
+            }
+            PutStr(3 + i, 0, line, W);
+            ResetColor();
         }
 
-        algo::cstring line;
-        if (item.has_children) line << " \xe2\x96\xb8 ";
-        else line << "   ";
-        line << item.label;
-
-        if (ch_N(item.detail)) {
-            int pad = 35;
-            while (ch_N(line) < pad) line << " ";
-            if (!sel) term_str("\x1b[90m");
-            line << item.detail;
+        // Scroll bar
+        if (g_nitems > visible && visible > 0) {
+            int bar_h = (visible * visible) / g_nitems;
+            if (bar_h < 1) bar_h = 1;
+            int bar_pos = (scroll_offset * visible) / g_nitems;
+            term_str("\x1b[90m");
+            for (int i = 0; i < visible; i++) {
+                MoveTo(3 + i, W - 1);
+                term_str((i >= bar_pos && i < bar_pos + bar_h) ? "\xe2\x96\x88" : "\xe2\x94\x82");
+            }
+            ResetColor();
         }
-
-        PutStr(3 + i, 0, line, W);
-        ResetColor();
-    }
-
-    // Scroll bar
-    if (g_nitems > visible && visible > 0) {
-        int bar_h = (visible * visible) / g_nitems;
-        if (bar_h < 1) bar_h = 1;
-        int bar_pos = (scroll_offset * visible) / g_nitems;
-        term_str("\x1b[90m");
-        for (int i = 0; i < visible; i++) {
-            MoveTo(3 + i, W - 1);
-            term_str((i >= bar_pos && i < bar_pos + bar_h) ? "\xe2\x96\x88" : "\xe2\x94\x82");
+    } else {
+        // Graph or Raw view — display captured external tool output
+        algo::StringIter iter(graph_output);
+        int line_num = 0;
+        int row = 0;
+        while (!iter.EofQ() && row < visible) {
+            algo::strptr line = algo::GetLine(iter);
+            if (line_num >= graph_scroll) {
+                term_str("\x1b[36m");
+                PutStr(3 + row, 0, line, W);
+                ResetColor();
+                row++;
+            }
+            line_num++;
         }
-        ResetColor();
     }
 
     // Bottom separator
@@ -622,7 +747,9 @@ static void Render() {
                     status << "  " << (pi+1) << ":" << all_paths[pi];
                 }
             }
-            status << "  " << g_nitems << " items  q:quit";
+            // Show view mode
+            const char* vname = view_mode == VIEW_LIST ? "list" : view_mode == VIEW_GRAPH ? "GRAPH" : "RAW";
+            status << "  v:" << vname << "  " << g_nitems << " items";
             PutStr(term_rows - 1, 0, status, W);
             ResetColor();
         }
